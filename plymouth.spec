@@ -23,11 +23,8 @@ URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires(post): plymouth-scripts
-Requires: initscripts >= 8.83-1
+Requires: initscripts >= 8.83
 BuildRequires: gtk2-devel
-BuildRequires: pango-devel >= 1.21.0
-BuildRequires: cairo-devel
-BuildRequires: libpng-devel
 
 %description
 Plymouth provides an attractive graphical boot animation in
