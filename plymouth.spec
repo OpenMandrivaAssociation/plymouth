@@ -2,7 +2,6 @@
 %define plymouthclient_execdir /bin
 %define plymouth_libdir /%{_lib}
 
-%define snapshot 20090515
 %define build_gdm 0
 
 %define lib_major 0
@@ -12,7 +11,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 0.%{snapshot}.1
+Release: %mkrel 1
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -110,6 +109,24 @@ This package contains the "Fade-In" boot splash plugin for
 Plymouth. It features a centered image that fades in and out
 while other images pulsate around during system boot up.
 
+%package plugin-script
+Group: System/Kernel and hardware
+Summary: Plymouth "Script" plugin
+Requires: %{lib_name} = %{version}-%{release}
+
+%description plugin-script
+This package contains the "Script" plugin for Plymouth. 
+
+%package theme-script
+Group: System/Kernel and hardware
+Summary: Plymouth "Script" theme
+Requires: %{name}-plugin-script = %{version}-%{release}
+Requires(post): plymouth-scripts
+
+%description theme-script
+This package contains the "Script" boot splash theme for
+Plymouth. 
+
 %package theme-fade-in
 Group: System/Kernel and hardware
 Summary: Plymouth "Fade-In" theme
@@ -200,9 +217,9 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -q
 
 %build
-%configure2_5x --enable-tracing --disable-tests --without-boot-entry	\
+%configure2_5x --enable-tracing --disable-tests \
 	--without-default-plugin					\
-	--with-logo=%{_datadir}/pixmaps/system-logo-white.png		\
+	--with-logo=%{_datadir}/pixmaps/mandriva.png 			\
 	--with-background-start-color-stop=0x0073B3			\
 	--with-background-end-color-stop=0x00457E			\
 	--with-background-color=0x3391cd				\
@@ -213,7 +230,8 @@ This package contains the "Glow" boot splash theme for Plymouth.
 	--without-gdm-autostart-file					\
 %endif
 	--without-rhgb-compat-link					\
-	--with-system-root-install
+	--with-system-root-install 					\
+	--with-release-file=/etc/mandriva-release
 
 %make
 
@@ -237,10 +255,11 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow
-
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+[ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
 
 %postun
 if [ $1 -eq 0 ]; then
@@ -303,6 +322,24 @@ fi
 export LIB=%{_lib}
 if [ $1 -eq 0 ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "glow" ]; then
+        %{_sbindir}/plymouth-set-default-theme --reset
+    fi
+fi
+
+%post theme-script
+export LIB=%{_lib}
+if [ $1 -eq 1 ]; then
+    %{_sbindir}/plymouth-set-default-theme script
+else
+    if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "solar" ]; then
+        %{_sbindir}/plymouth-set-default-theme glow
+    fi
+fi
+
+%postun theme-script
+export LIB=%{_lib}
+if [ $1 -eq 0 ]; then
+    if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "script" ]; then
         %{_sbindir}/plymouth-set-default-theme --reset
     fi
 fi
@@ -370,6 +407,14 @@ fi
 %files plugin-throbgress
 %defattr(-, root, root)
 %{_libdir}/plymouth/throbgress.so
+
+%files plugin-script
+%defattr(-, root, root)
+%{_libdir}/plymouth/script.so
+
+%files theme-script
+%defattr(-, root, root)
+%{_datadir}/plymouth/themes/script
 
 %files theme-spinfinity
 %defattr(-, root, root)
