@@ -11,12 +11,14 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
+# (fc) 0.7.0-2mdv reconnect to tty if disconnected (GIT)
+Patch0: plymouth-0.7.0-tty-reconnect.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -215,6 +217,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
 %setup -q
+%patch0 -p1 -b .tty-reconnect
 
 %build
 %configure2_5x --enable-tracing --disable-tests \
