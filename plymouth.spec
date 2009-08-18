@@ -11,14 +11,19 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 2
+Release: %mkrel 3
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
+Source3: mdv.tar.bz2
 # (fc) 0.7.0-2mdv reconnect to tty if disconnected (GIT)
 Patch0: plymouth-0.7.0-tty-reconnect.patch
+# (fc) 0.7.0-3mdv fix resizing code
+Patch1: plymouth-0.7.0-fixresize.patch
+# (fc) 0.7.0-3mdv allow alternate libexec path
+Patch2: plymouth-0.7.0-libexec.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -37,6 +42,7 @@ after boot.
 Group: System/Kernel and hardware
 Summary: Plymouth default theme
 Requires: plymouth(system-theme) = %{version}-%{release}
+Requires: plymouth = %{version}-%{release}
 
 %description system-theme
 This metapackage tracks the current distribution default theme.
@@ -71,7 +77,7 @@ including a boot log viewing application.
 %package scripts
 Group: System/Kernel and hardware
 Summary: Plymouth related scripts
-Requires: nash
+Requires: mkinitrd >= 6.0.92
 
 %description scripts
 This package contains scripts that help integrate Plymouth with
@@ -200,7 +206,6 @@ Group: System/Kernel and hardware
 Summary: Plymouth "Charge" plugin
 Requires: %{name}-plugin-two-step = %{version}-%{release}
 Requires(post): plymouth-scripts
-Provides: plymouth(system-theme) = %{version}-%{release}
 
 %description theme-charge
 This package contains the "charge" boot splash theme for
@@ -211,13 +216,29 @@ and finally burst into full form.
 Group: System/Kernel and hardware
 Summary: Plymouth "Glow" plugin
 Requires(post): plymouth-scripts
+Requires: plugin-two-step = %{version}-%{release}
 
 %description theme-glow
 This package contains the "Glow" boot splash theme for Plymouth.
 
+%package theme-mdv
+Group: System/Kernel and hardware
+Summary: Plymouth "Mdv" plugin
+Requires(post): plymouth-scripts
+Requires: %{name}-plugin-script = %{version}-%{release}
+Provides: plymouth(system-theme) = %{version}-%{release}
+
+%description theme-mdv
+This package contains the "Mdv" boot splash theme for Plymouth.
+
 %prep
 %setup -q
 %patch0 -p1 -b .tty-reconnect
+%patch1 -p1 -b .fixresize
+%patch2 -p1 -b .libexec
+
+# needed by patch2
+autoreconf
 
 %build
 %configure2_5x --enable-tracing --disable-tests \
@@ -258,6 +279,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 
+# Add Mdv
+bzcat %{SOURCE3} | tar -C $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/ -xf -
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -271,25 +295,25 @@ fi
 
 %postun theme-spinfinity
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "spinfinity" ]; then
-        %{_sbindir}/plymouth-set-default-theme text
+        %{_sbindir}/plymouth-set-default-theme --rebuild-initrd text
     fi
 fi
 
 %postun theme-fade-in
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "fade-in" ]; then
-        %{_sbindir}/plymouth-set-default-theme --reset
+        %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd 
     fi
 fi
 
 %postun theme-solar
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "solar" ]; then
-        %{_sbindir}/plymouth-set-default-theme --reset
+        %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd 
     fi
 fi
 
@@ -299,13 +323,13 @@ if [ $1 -eq 1 ]; then
     %{_sbindir}/plymouth-set-default-theme charge
 else
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "solar" ]; then
-        %{_sbindir}/plymouth-set-default-theme charge
+        %{_sbindir}/plymouth-set-default-theme --rebuild-initrd  charge
     fi
 fi
 
 %postun theme-charge
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "charge" ]; then
         %{_sbindir}/plymouth-set-default-theme --reset
     fi
@@ -317,15 +341,15 @@ if [ $1 -eq 1 ]; then
     %{_sbindir}/plymouth-set-default-theme glow
 else
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "solar" ]; then
-        %{_sbindir}/plymouth-set-default-theme glow
+        %{_sbindir}/plymouth-set-default-theme --rebuild-initrd glow
     fi
 fi
 
 %postun theme-glow
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "glow" ]; then
-        %{_sbindir}/plymouth-set-default-theme --reset
+        %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd
     fi
 fi
 
@@ -335,15 +359,33 @@ if [ $1 -eq 1 ]; then
     %{_sbindir}/plymouth-set-default-theme script
 else
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "solar" ]; then
-        %{_sbindir}/plymouth-set-default-theme glow
+        %{_sbindir}/plymouth-set-default-theme --rebuild-initrd glow
     fi
 fi
 
 %postun theme-script
 export LIB=%{_lib}
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -x %{_sbindir}/plymouth-set-default-theme ]; then
     if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "script" ]; then
-        %{_sbindir}/plymouth-set-default-theme --reset
+        %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd
+    fi
+fi
+
+%post theme-mdv
+export LIB=%{_lib}
+if [ $1 -eq 1 ]; then
+    %{_sbindir}/plymouth-set-default-theme --rebuild-initrd mdv
+else
+    if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "details" ]; then
+        %{_sbindir}/plymouth-set-default-theme --rebuild-initrd mdv
+    fi
+fi
+
+%postun theme-mdv
+export LIB=%{_lib}
+if [ $1 -eq 0 -a -x %{_sbindir}/plymouth-set-default-theme ]; then
+    if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "mdv" ]; then
+        %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd
     fi
 fi
 
@@ -442,6 +484,10 @@ fi
 %files theme-glow
 %defattr(-, root, root)
 %{_datadir}/plymouth/themes/glow
+
+%files theme-mdv
+%defattr(-, root, root)
+%{_datadir}/plymouth/themes/mdv
 
 %files system-theme
 %defattr(-, root, root)
