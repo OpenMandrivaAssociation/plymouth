@@ -13,7 +13,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 5
+Release: %mkrel 6
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -24,11 +24,15 @@ Source3: mdv.tar.bz2
 Patch0: plymouth-0.7.0-tty-reconnect.patch
 # (fc) 0.7.0-3mdv fix resizing code
 Patch1: plymouth-0.7.0-fixresize.patch
+# (fc) 0.7.0-6mdv text support (Charlie Brej)
+Patch2: text.patch
+# (fc) 0.7.0-6mdv add message script support (GIT)
+Patch3: plymouth-0.7.0-messagescript.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 Requires: initscripts >= 8.83
 Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
@@ -89,7 +93,7 @@ the system.
 Group: System/Kernel and hardware
 Summary: Plymouth GDM integration
 Requires: gdm >= 2.22.0
-Requires: plymouth-utils
+Requires: plymouth-utils = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}
 
 %description gdm-hooks
@@ -122,6 +126,7 @@ while other images pulsate around during system boot up.
 Group: System/Kernel and hardware
 Summary: Plymouth "Script" plugin
 Requires: %{lib_name} = %{version}-%{release}
+Requires: plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-script
 This package contains the "Script" plugin for Plymouth. 
@@ -130,7 +135,7 @@ This package contains the "Script" plugin for Plymouth.
 Group: System/Kernel and hardware
 Summary: Plymouth "Script" theme
 Requires: %{name}-plugin-script = %{version}-%{release}
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 
 %description theme-script
 This package contains the "Script" boot splash theme for
@@ -140,7 +145,7 @@ Plymouth.
 Group: System/Kernel and hardware
 Summary: Plymouth "Fade-In" theme
 Requires: %{name}-plugin-fade-throbber = %{version}-%{release}
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 
 %description theme-fade-in
 This package contains the "Fade-In" boot splash theme for
@@ -151,7 +156,7 @@ while stars twinkle around the logo during system boot up.
 Group: System/Kernel and hardware
 Summary: Plymouth "Throbgress" plugin
 Requires: %{lib_name} = %{version}-%{release}
-Requires: plymouth-plugin-label
+Requires: plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-throbgress
 This package contains the "throbgress" boot splash plugin for
@@ -163,7 +168,7 @@ the screen.
 Group: System/Kernel and hardware
 Summary: Plymouth "Spinfinity" theme
 Requires: %{name}-plugin-throbgress = %{version}-%{release}
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 
 %description theme-spinfinity
 This package contains the "Spinfinity" boot splash theme for
@@ -174,7 +179,7 @@ spins in the shape of an infinity sign.
 Group: System/Kernel and hardware
 Summary: Plymouth "space-flares" plugin
 Requires: %{lib_name} = %{version}-%{release}
-Requires: plymouth-plugin-label
+Requires: plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-space-flares
 This package contains the "space-flares" boot splash plugin for
@@ -184,7 +189,7 @@ Plymouth. It features a corner image with animated flares.
 Group: System/Kernel and hardware
 Summary: Plymouth "Solar" theme
 Requires: %{name}-plugin-space-flares = %{version}-%{release}
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 
 %description theme-solar
 This package contains the "Solar" boot splash theme for
@@ -194,7 +199,7 @@ Plymouth. It features a blue flamed sun with animated solar flares.
 Group: System/Kernel and hardware
 Summary: Plymouth "two-step" plugin
 Requires: %{lib_name} = %{version}-%{release}
-Requires: plymouth-plugin-label
+Requires: plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-two-step
 This package contains the "two-step" boot splash plugin for
@@ -206,7 +211,7 @@ short, fast one-shot animation.
 Group: System/Kernel and hardware
 Summary: Plymouth "Charge" plugin
 Requires: %{name}-plugin-two-step = %{version}-%{release}
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 
 %description theme-charge
 This package contains the "charge" boot splash theme for
@@ -216,7 +221,7 @@ and finally burst into full form.
 %package theme-glow
 Group: System/Kernel and hardware
 Summary: Plymouth "Glow" plugin
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts  = %{version}-%{release}
 Requires: plugin-two-step = %{version}-%{release}
 
 %description theme-glow
@@ -225,7 +230,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %package theme-mdv
 Group: System/Kernel and hardware
 Summary: Plymouth "Mdv" plugin
-Requires(post): plymouth-scripts
+Requires(post): plymouth-scripts = %{version}-%{release}
 Requires: %{name}-plugin-script = %{version}-%{release}
 Provides: plymouth(system-theme) = %{version}-%{release}
 
@@ -236,6 +241,8 @@ This package contains the "Mdv" boot splash theme for Plymouth.
 %setup -q
 %patch0 -p1 -b .tty-reconnect
 %patch1 -p1 -b .fixresize
+%patch2 -p1 -b .text
+%patch3 -p1 -b .messagescript
 
 %build
 %configure2_5x --enable-tracing --disable-tests \
