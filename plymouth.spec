@@ -11,7 +11,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 3
+Release: %mkrel 4
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -30,6 +30,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires(post): plymouth-scripts
 Requires: initscripts >= 8.83
+Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
 
 %description
@@ -243,7 +244,7 @@ autoreconf
 %build
 %configure2_5x --enable-tracing --disable-tests \
 	--without-default-plugin					\
-	--with-logo=%{_datadir}/pixmaps/mandriva.png 			\
+	--with-logo=%{_datadir}/icons/large/mandriva.png 			\
 	--with-background-start-color-stop=0x0073B3			\
 	--with-background-end-color-stop=0x00457E			\
 	--with-background-color=0x3391cd				\
