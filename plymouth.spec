@@ -13,7 +13,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.0
-Release: %mkrel 6
+Release: %mkrel 7
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -28,6 +28,8 @@ Patch1: plymouth-0.7.0-fixresize.patch
 Patch2: text.patch
 # (fc) 0.7.0-6mdv add message script support (GIT)
 Patch3: plymouth-0.7.0-messagescript.patch
+# (fc) 0.7.0-7mdv various git fixes
+Patch4: plymouth-0.7.0-gitfixes.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -243,6 +245,7 @@ This package contains the "Mdv" boot splash theme for Plymouth.
 %patch1 -p1 -b .fixresize
 %patch2 -p1 -b .text
 %patch3 -p1 -b .messagescript
+%patch4 -p1 -b .gitfixes
 
 %build
 %configure2_5x --enable-tracing --disable-tests \
@@ -405,8 +408,8 @@ fi
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_datadir}/plymouth/default-boot-duration
-%{_datadir}/plymouth/themes/details/details.plymouth
-%{_datadir}/plymouth/themes/text/text.plymouth
+%{_datadir}/plymouth/themes/details
+%{_datadir}/plymouth/themes/text
 %{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
