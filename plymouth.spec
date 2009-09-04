@@ -10,22 +10,20 @@
 %define lib_name %mklibname %{name} %{lib_major}
 %define lib_name_devel %mklibname %{name} -d
 
-
+%define snapshot 20090904
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
-Version: 0.7.1
-Release: %mkrel 2
+Version: 0.7.2
+Release: %mkrel 0.%{snapshot}.1
 License: GPLv2+
 Group: System/Kernel and hardware
-Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
+Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}-%{snapshot}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
 Source3: mdv.tar.bz2
 # (fc) 0.7.0-6mdv text support (Charlie Brej)
 Patch2: text.patch
-# (fc) 0.7.1-2mdv disable splash when splash=verbose is on cmdline
-Patch3: plymouth-0.7.1-splashverbose.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -239,8 +237,8 @@ This package contains the "Mdv" boot splash theme for Plymouth.
 %prep
 %setup -q
 %patch2 -p1 -b .text
-%patch3 -p1 -b .verbosesplash
 
+autoreconf --install --symlink
 %build
 %configure2_5x --enable-tracing --disable-tests \
 	--without-default-plugin					\
