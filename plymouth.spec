@@ -10,15 +10,15 @@
 %define lib_name %mklibname %{name} %{lib_major}
 %define lib_name_devel %mklibname %{name} -d
 
-%define snapshot 20090910
+%define snapshot 0
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 0.%{snapshot}.1
+Release: %mkrel 1
 License: GPLv2+
 Group: System/Kernel and hardware
-Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}-%{snapshot}.tar.bz2
+Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
 Source3: mdv.tar.bz2
