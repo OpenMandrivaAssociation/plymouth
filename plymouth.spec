@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 2
+Release: %mkrel 3
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -43,7 +43,7 @@ after boot.
 %package system-theme
 Group: System/Kernel and hardware
 Summary: Plymouth default theme
-Requires: plymouth(system-theme) = %{version}-%{release}
+Requires: plymouth(system-theme)
 Requires: plymouth = %{version}-%{release}
 
 %description system-theme
