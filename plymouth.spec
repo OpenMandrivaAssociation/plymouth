@@ -15,13 +15,12 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
-Source3: mdv.tar.bz2
 # (fc) 0.7.0-6mdv text support (Charlie Brej)
 Patch2: text.patch
 
@@ -32,6 +31,8 @@ Requires(post): plymouth-scripts = %{version}-%{release}
 Requires: initscripts >= 8.83
 Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
+Obsoletes: splashy
+Provides: splashy
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -226,16 +227,6 @@ Requires: plymouth-plugin-two-step = %{version}-%{release}
 %description theme-glow
 This package contains the "Glow" boot splash theme for Plymouth.
 
-%package theme-mdv
-Group: System/Kernel and hardware
-Summary: Plymouth "Mdv" plugin
-Requires(post): plymouth-scripts = %{version}-%{release}
-Requires: %{name}-plugin-script = %{version}-%{release}
-Provides: plymouth(system-theme) = %{version}-%{release}
-
-%description theme-mdv
-This package contains the "Mdv" boot splash theme for Plymouth.
-
 %prep
 %setup -q
 %patch2 -p1 -b .text
@@ -283,9 +274,6 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 
-# Add Mdv
-bzcat %{SOURCE3} | tar -C $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/ -xf -
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -330,7 +318,6 @@ fi \
 %theme_scripts charge
 %theme_scripts glow
 %theme_scripts script
-%theme_scripts mdv
 
 
 %files
@@ -428,10 +415,6 @@ fi \
 %files theme-glow
 %defattr(-, root, root)
 %{_datadir}/plymouth/themes/glow
-
-%files theme-mdv
-%defattr(-, root, root)
-%{_datadir}/plymouth/themes/mdv
 
 %files system-theme
 %defattr(-, root, root)
