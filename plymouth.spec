@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 3
+Release: %mkrel 4
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -279,8 +279,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
-if [ $1 -eq 1 ]; then
-  %{_libexecdir}/plymouth/plymouth-update-initrd
+if [ "x$DURING_INSTALL" = "x" ]; then
+  if [ $1 -eq 1 ]; then
+   %{_libexecdir}/plymouth/plymouth-update-initrd
+  fi
 fi
 
 
