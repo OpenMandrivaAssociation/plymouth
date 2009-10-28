@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 5
+Release: %mkrel 6
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -25,6 +25,8 @@ Source2: charge.plymouth
 Patch2: text.patch
 # (fc) 0.7.2-5mdv handle init= for shutdown and allow to force splash (fdo bug #22180)
 Patch3: plymouth-0.7.2-handle-init.patch
+# (fc) 0.7.2-6mdv backport array support (GIT)
+Patch4: plymouth-0.7.2-array.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -233,6 +235,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -q
 %patch2 -p1 -b .text
 %patch3 -p1 -b .handle-init
+%patch4 -p1 -b .array
 
 %if %{snapshot}
  autoreconf --install --symlink
