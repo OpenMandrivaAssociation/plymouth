@@ -33,6 +33,8 @@ Patch5: plymouth-0.7.2-onquit.patch
 Patch6: plymouth-0.7.2-optimize-image.patch
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
+# (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
+Patch8: plymouth-0.7.2-library-link-order.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
