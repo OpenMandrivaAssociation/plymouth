@@ -31,6 +31,8 @@ Patch4: plymouth-0.7.2-array.patch
 Patch5: plymouth-0.7.2-onquit.patch
 # (fc) 0.7.2-7mdv optimize image operations (Charles Brej)
 Patch6: plymouth-0.7.2-optimize-image.patch
+# (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
+Patch7:	plymouth-0.7.2-add-missing-header.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -242,6 +244,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .array
 %patch5 -p1 -b .onquit
 %patch6 -p1 -b .optimize-image
+%patch7 -p1 -b .header~
 
 %if %{snapshot}
  autoreconf --install --symlink
