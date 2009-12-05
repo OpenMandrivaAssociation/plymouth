@@ -71,7 +71,6 @@ used by Plymouth.
 Group: System/Kernel and hardware
 Summary: Libraries and headers for writing Plymouth splash plugins
 Group: Development/C
-Requires: %{name} = %{version}-%{release}
 Provides: %{name}-devel = %{version}-%{release}
 Provides: lib%{name}-devel = %{version}-%{release}
 
