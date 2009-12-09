@@ -41,6 +41,9 @@ Patch8: plymouth-0.7.2-library-link-order.patch
 # /usr. This so that ie. /usr/uclibc/usr/lib will be be /usr/uclibc/lib rather than
 # /uclibc/usr/lib. (should probably go upstream as well)
 Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
+# (proyvind) 0.7.2-8mdv specify absolute path to /bin/plymouth to ensure install
+# location with uclibc
+Patch10: plymouth-0.7.2-initrd-absolute-path.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -257,6 +260,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
 %patch9 -p1 -b .usrlib_subst~
+%patch10 -p1 -b .abspath~
 
 autoreconf --install --symlink
 
