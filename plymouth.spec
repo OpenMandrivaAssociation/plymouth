@@ -49,6 +49,9 @@ Requires(post): plymouth-scripts = %{version}-%{release}
 Requires: initscripts >= 8.83
 Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
+%if %{with uclibc}
+BuildRequires: uClibc-devel
+%endif
 Obsoletes: splashy
 Provides: splashy
 
