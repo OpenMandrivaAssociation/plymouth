@@ -12,10 +12,12 @@
 
 %define snapshot 0
 
+%bcond_without	uclibc
+
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 7
+Release: %mkrel 8
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -35,6 +37,10 @@ Patch6: plymouth-0.7.2-optimize-image.patch
 Patch7:	plymouth-0.7.2-add-missing-header.patch
 # (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
 Patch8: plymouth-0.7.2-library-link-order.patch
+# (proyvind) 0.7.2-8mdv substitute /usr/lib with /lib rather than just stripping away
+# /usr. This so that ie. /usr/uclibc/usr/lib will be be /usr/uclibc/lib rather than
+# /uclibc/usr/lib. (should probably go upstream as well)
+Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -246,14 +252,52 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch5 -p1 -b .onquit
 %patch6 -p1 -b .optimize-image
 %patch7 -p1 -b .header~
+%patch8 -p1 -b .link_order~
+%patch9 -p1 -b .usrlib_subst~
 
-%if %{snapshot}
- autoreconf --install --symlink
-%endif
+autoreconf --install --symlink
+
 %build
-%configure2_5x --enable-tracing --disable-tests \
+export CONFIGURE_TOP=`pwd`
+%if %{with uclibc}
+mkdir -p uclibc
+cd uclibc
+%configure2_5x CC="%{uclibc_cc}" \
+	CFLAGS="%{uclibc_cflags}" \
+	LDFLAGS="%{ldflags} -lz" \
+	--prefix=%{uclibc_root}%{_prefix} \
+	--libdir="%{uclibc_root}%{_libdir}" \
+	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
+	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
+	--enable-tracing --disable-tests \
 	--without-default-plugin					\
-	--with-logo=%{_datadir}/icons/large/mandriva.png 			\
+	--with-logo=%{_datadir}/icons/large/mandriva.png 		\
+	--with-background-start-color-stop=0x0073B3			\
+	--with-background-end-color-stop=0x00457E			\
+	--with-background-color=0x3391cd				\
+%if %{build_gdm}
+	--enable-gdm-transition						\
+%else
+	--disable-gdm-transition					\
+	--without-gdm-autostart-file					\
+%endif
+	--without-rhgb-compat-link					\
+	--with-system-root-install 					\
+	--with-release-file=/etc/mandriva-release
+# We don't build these for uclibc since they link against a lot of libraries
+# that we don't provide any uclibc linked version of
+sed -e 's#viewer##g' -i src/Makefile
+sed -e 's#label##g' -i src/plugins/controls/Makefile
+%make
+cd ..
+%endif
+
+mkdir -p system
+cd system
+%configure2_5x \
+	--enable-tracing --disable-tests \
+	--without-default-plugin					\
+	--with-logo=%{_datadir}/icons/large/mandriva.png 		\
 	--with-background-start-color-stop=0x0073B3			\
 	--with-background-end-color-stop=0x00457E			\
 	--with-background-color=0x3391cd				\
@@ -268,14 +312,18 @@ This package contains the "Glow" boot splash theme for Plymouth.
 	--with-release-file=/etc/mandriva-release
 
 %make
+cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%makeinstall_std
+%if %{with uclibc}
+%makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
+rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
+%endif
+%makeinstall_std -C system
 
-find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} \;
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} \;
+find $RPM_BUILD_ROOT -name \*.a -delete -o -name \*.la -delete
 
 # Temporary symlink until rc.sysinit is fixed
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -s ../../bin/plymouth)
@@ -357,6 +405,12 @@ fi \
 %{_localstatedir}/spool/plymouth
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
+%if %{with uclibc}
+%{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
+%{uclibc_root}%{plymouthclient_execdir}/plymouth
+%{uclibc_root}%{_libdir}/plymouth/details.so
+%{uclibc_root}%{_libdir}/plymouth/text.so
+%endif
 
 %files -n %{lib_name_devel}
 %defattr(-, root, root)
@@ -370,6 +424,11 @@ fi \
 %{plymouth_libdir}/libply.so.*
 %{_libdir}/libplybootsplash.so.*
 %dir %{_libdir}/plymouth
+%if %{with uclibc}
+%dir %{uclibc_root}%{_libdir}/plymouth
+%{uclibc_root}%{plymouth_libdir}/libply.so*
+%{uclibc_root}%{_libdir}/libplybootsplash.so*
+%endif
 
 %files scripts
 %defattr(-, root, root)
@@ -393,6 +452,9 @@ fi \
 %files plugin-fade-throbber
 %defattr(-, root, root)
 %{_libdir}/plymouth/fade-throbber.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
+%endif
 
 %files theme-fade-in
 %defattr(-, root, root)
@@ -401,10 +463,16 @@ fi \
 %files plugin-throbgress
 %defattr(-, root, root)
 %{_libdir}/plymouth/throbgress.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/throbgress.so
+%endif
 
 %files plugin-script
 %defattr(-, root, root)
 %{_libdir}/plymouth/script.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/script.so
+%endif
 
 %files theme-script
 %defattr(-, root, root)
@@ -417,6 +485,9 @@ fi \
 %files plugin-space-flares
 %defattr(-, root, root)
 %{_libdir}/plymouth/space-flares.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/space-flares.so
+%endif
 
 %files theme-solar
 %defattr(-, root, root)
@@ -425,6 +496,9 @@ fi \
 %files plugin-two-step
 %defattr(-, root, root)
 %{_libdir}/plymouth/two-step.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/two-step.so
+%endif
 
 %files theme-charge
 %defattr(-, root, root)
