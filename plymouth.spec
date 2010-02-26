@@ -12,7 +12,8 @@
 
 %define snapshot 0
 
-%bcond_without	uclibc
+%define         build_uclibc 0
+%{?_with_uclibc: %global build_uclibc 1}
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
@@ -52,7 +53,7 @@ Requires(post): plymouth-scripts = %{version}-%{release}
 Requires: initscripts >= 8.83
 Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
-%if %{with uclibc}
+%if %{build_uclibc}
 BuildRequires: uClibc-devel
 %endif
 Obsoletes: splashy
@@ -257,16 +258,18 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .array
 %patch5 -p1 -b .onquit
 %patch6 -p1 -b .optimize-image
+%if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
 %patch9 -p1 -b .usrlib_subst~
 %patch10 -p1 -b .abspath~
-
 autoreconf --install --symlink
+%endif
+
 
 %build
 export CONFIGURE_TOP=`pwd`
-%if %{with uclibc}
+%if %{build_uclibc}
 mkdir -p uclibc
 cd uclibc
 %configure2_5x CC="%{uclibc_cc}" \
@@ -324,7 +327,7 @@ cd ..
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with uclibc}
+%if %{build_uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
 rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
 %endif
@@ -412,7 +415,7 @@ fi \
 %{_localstatedir}/spool/plymouth
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
 %{uclibc_root}%{_libdir}/plymouth/details.so
@@ -431,7 +434,7 @@ fi \
 %{plymouth_libdir}/libply.so.*
 %{_libdir}/libplybootsplash.so.*
 %dir %{_libdir}/plymouth
-%if %{with uclibc}
+%if %{build_uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
 %{uclibc_root}%{_libdir}/libplybootsplash.so*
@@ -459,7 +462,7 @@ fi \
 %files plugin-fade-throbber
 %defattr(-, root, root)
 %{_libdir}/plymouth/fade-throbber.so
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
 %endif
 
@@ -470,14 +473,14 @@ fi \
 %files plugin-throbgress
 %defattr(-, root, root)
 %{_libdir}/plymouth/throbgress.so
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{_libdir}/plymouth/throbgress.so
 %endif
 
 %files plugin-script
 %defattr(-, root, root)
 %{_libdir}/plymouth/script.so
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{_libdir}/plymouth/script.so
 %endif
 
@@ -492,7 +495,7 @@ fi \
 %files plugin-space-flares
 %defattr(-, root, root)
 %{_libdir}/plymouth/space-flares.so
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{_libdir}/plymouth/space-flares.so
 %endif
 
@@ -503,7 +506,7 @@ fi \
 %files plugin-two-step
 %defattr(-, root, root)
 %{_libdir}/plymouth/two-step.so
-%if %{with uclibc}
+%if %{build_uclibc}
 %{uclibc_root}%{_libdir}/plymouth/two-step.so
 %endif
 
