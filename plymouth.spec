@@ -45,6 +45,8 @@ Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
 # (proyvind) 0.7.2-8mdv specify absolute path to /bin/plymouth to ensure install
 # location with uclibc
 Patch10: plymouth-0.7.2-initrd-absolute-path.patch
+# (fc) 0.7.2-8mdv shutdown tty should be tty1 (Mdv bug #55077)
+Patch11: plymouth-0.7.2-shutdown-tty.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -258,6 +260,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .array
 %patch5 -p1 -b .onquit
 %patch6 -p1 -b .optimize-image
+%patch11 -p1 -b .shutdown-tty
 %if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
