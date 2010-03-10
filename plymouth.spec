@@ -57,6 +57,7 @@ Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
 %if %{build_uclibc}
 BuildRequires: uClibc-devel
+BuildRequires: libpng-static-devel
 %endif
 Obsoletes: splashy
 Provides: splashy
