@@ -18,7 +18,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.7.2
-Release: %mkrel 8
+Release: %mkrel 9
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -91,6 +91,7 @@ Summary: Libraries and headers for writing Plymouth splash plugins
 Group: Development/C
 Provides: %{name}-devel = %{version}-%{release}
 Provides: lib%{name}-devel = %{version}-%{release}
+Requires: %{lib_name} = %{version}-%{release}
 
 %description -n %{lib_name_devel}
 This package contains the libply and libplybootsplash libraries
