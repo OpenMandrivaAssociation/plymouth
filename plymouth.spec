@@ -4,9 +4,7 @@
 
 %define _libexecdir %{_prefix}/libexec
 
-%define build_gdm 0
-
-%define lib_major 0
+%define lib_major 2
 %define lib_name %mklibname %{name} %{lib_major}
 %define lib_name_devel %mklibname %{name} -d
 
@@ -17,23 +15,15 @@
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
-Version: 0.7.2
-Release: %mkrel 9
+Version: 0.8.2
+Release: %mkrel 1
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
-# (fc) 0.7.0-6mdv text support (Charlie Brej)
-Patch2: text.patch
-# (fc) 0.7.2-5mdv handle init= for shutdown and allow to force splash (fdo bug #22180)
-Patch3: plymouth-0.7.2-handle-init.patch
-# (fc) 0.7.2-6mdv backport array support (GIT)
-Patch4: plymouth-0.7.2-array.patch
-# (fc) 0.7.2-7mdv add onquit support (GIT)
-Patch5: plymouth-0.7.2-onquit.patch
-# (fc) 0.7.2-7mdv optimize image operations (Charles Brej)
-Patch6: plymouth-0.7.2-optimize-image.patch
+# (fc) 0.8.2-1mdv fix build (GIT)
+Patch0: plymouth-0.8.2-fixbuild.patch
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
 # (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
@@ -45,8 +35,6 @@ Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
 # (proyvind) 0.7.2-8mdv specify absolute path to /bin/plymouth to ensure install
 # location with uclibc
 Patch10: plymouth-0.7.2-initrd-absolute-path.patch
-# (fc) 0.7.2-8mdv shutdown tty should be tty1 (Mdv bug #55077)
-Patch11: plymouth-0.7.2-shutdown-tty.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -80,6 +68,7 @@ This metapackage tracks the current distribution default theme.
 %package -n %{lib_name}
 Summary: Plymouth libraries
 Group: System/Libraries
+Obsoletes: %{mklibname %{name} 0} < 0.8.0
 
 %description -n %{lib_name}
 This package contains the libply and libplybootsplash libraries
@@ -115,20 +104,6 @@ Requires: plymouth = %{version}-%{release}
 %description scripts
 This package contains scripts that help integrate Plymouth with
 the system.
-
-%if %{build_gdm}
-%package gdm-hooks
-Group: System/Kernel and hardware
-Summary: Plymouth GDM integration
-Requires: gdm >= 2.22.0
-Requires: plymouth-utils = %{version}-%{release}
-Requires: %{name} = %{version}-%{release}
-
-%description gdm-hooks
-This package contains support files for integrating Plymouth with GDM
-Namely, it adds hooks to show boot messages at the login screen in the
-event start-up services fail.
-%endif
 
 %package plugin-label
 Group: System/Kernel and hardware
@@ -257,12 +232,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
 %setup -q
-%patch2 -p1 -b .text
-%patch3 -p1 -b .handle-init
-%patch4 -p1 -b .array
-%patch5 -p1 -b .onquit
-%patch6 -p1 -b .optimize-image
-%patch11 -p1 -b .shutdown-tty
+%patch0 -p1 -b .fixbuild
 %if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
@@ -285,19 +255,16 @@ cd uclibc
 	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
 	--enable-tracing --disable-tests \
-	--without-default-plugin					\
 	--with-logo=%{_datadir}/icons/large/mandriva.png 		\
 	--with-background-start-color-stop=0x0073B3			\
 	--with-background-end-color-stop=0x00457E			\
 	--with-background-color=0x3391cd				\
-%if %{build_gdm}
-	--enable-gdm-transition						\
-%else
 	--disable-gdm-transition					\
 	--without-gdm-autostart-file					\
-%endif
 	--without-rhgb-compat-link					\
 	--with-system-root-install 					\
+	--with-boot-tty=tty7						\
+	--with-shutdown-tty=tty1					\
 	--with-release-file=/etc/mandriva-release
 # We don't build these for uclibc since they link against a lot of libraries
 # that we don't provide any uclibc linked version of
@@ -311,19 +278,16 @@ mkdir -p system
 cd system
 %configure2_5x \
 	--enable-tracing --disable-tests \
-	--without-default-plugin					\
 	--with-logo=%{_datadir}/icons/large/mandriva.png 		\
 	--with-background-start-color-stop=0x0073B3			\
 	--with-background-end-color-stop=0x00457E			\
 	--with-background-color=0x3391cd				\
-%if %{build_gdm}
-	--enable-gdm-transition						\
-%else
 	--disable-gdm-transition					\
 	--without-gdm-autostart-file					\
-%endif
 	--without-rhgb-compat-link					\
 	--with-system-root-install 					\
+	--with-boot-tty=tty7						\
+	--with-shutdown-tty=tty1					\
 	--with-release-file=/etc/mandriva-release
 
 %make
@@ -404,6 +368,7 @@ fi \
 %files
 %defattr(-, root, root)
 %doc AUTHORS NEWS README
+%config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
 %{_datadir}/plymouth/default-boot-duration
@@ -413,13 +378,18 @@ fi \
 %{_bindir}/plymouth
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
+%dir %{_libdir}/plymouth/renderers
+%{_libdir}/plymouth/renderers/drm*
+%{_libdir}/plymouth/renderers/frame-buffer*
 %ghost %{_datadir}/plymouth/themes/default.plymouth
+%{_datadir}/plymouth/plymouthd.defaults
 %{_datadir}/plymouth/themes/details
 %{_datadir}/plymouth/themes/text
 %{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
+%{_mandir}/man8/
 %if %{build_uclibc}
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
@@ -430,19 +400,25 @@ fi \
 %files -n %{lib_name_devel}
 %defattr(-, root, root)
 %{plymouth_libdir}/libply.so
-%{_libdir}/libplybootsplash.so
-%{_libdir}/pkgconfig/plymouth-1.pc
+%{_libdir}/libply-boot-client.so
+%{_libdir}/libply-splash-graphics.so
+%{_libdir}/plymouth/renderers/x11*
+/%{_lib}/libply-splash-core.so
+%{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
 
 %files -n %{lib_name}
 %defattr(-, root, root)
-%{plymouth_libdir}/libply.so.*
-%{_libdir}/libplybootsplash.so.*
+%{plymouth_libdir}/libply.so.%{lib_major}*
+%{_libdir}/libply-boot-client.so.%{lib_major}*
+%{_libdir}/libply-splash-graphics.so.%{lib_major}*
+/%{_lib}/libply-splash-core.so.%{lib_major}*
 %dir %{_libdir}/plymouth
 %if %{build_uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
-%{uclibc_root}%{_libdir}/libplybootsplash.so*
+%{uclibc_root}%{_libdir}/libply-boot-client.so*
+%{uclibc_root}%{_libdir}/libply-splash-graphics.so*
 %endif
 
 %files scripts
@@ -453,12 +429,6 @@ fi \
 %files utils
 %defattr(-, root, root)
 %{_bindir}/plymouth-log-viewer
-
-%if %{build_gdm}
-%files gdm-hooks
-%defattr(-, root, root)
-%{_datadir}/gdm/autostart/LoginWindow/plymouth-log-viewer.desktop
-%endif
 
 %files plugin-label
 %defattr(-, root, root)
