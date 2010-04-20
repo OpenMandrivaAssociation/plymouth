@@ -16,7 +16,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.2
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -24,6 +24,8 @@ Source1: boot-duration
 Source2: charge.plymouth
 # (fc) 0.8.2-1mdv fix build (GIT)
 Patch0: plymouth-0.8.2-fixbuild.patch
+# (fc) 0.8.2-2mdv fix text alpha (GIT)
+Patch1: plymouth-0.8.2-fix-text-alpha.patch
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
 # (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
@@ -234,6 +236,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %prep
 %setup -q
 %patch0 -p1 -b .fixbuild
+%patch1 -p1 -b .fix-text-alpha
 %if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
