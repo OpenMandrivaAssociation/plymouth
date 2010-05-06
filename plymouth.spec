@@ -16,7 +16,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.2
-Release: %mkrel 5
+Release: %mkrel 6
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -28,6 +28,13 @@ Patch0: plymouth-0.8.2-fixbuild.patch
 Patch1: plymouth-0.8.2-fix-text-alpha.patch
 # (fc) 0.8.2-3mdv fix configuration dirs export (GIT)
 Patch2: plymouth-0.8.2-configdirs.patch
+# (fc) 0.8.2-6mdv add more debug (GIT)
+Patch3: plymouth-0.8.2-moredebug.patch
+# (fc) 0.8.2-6mdv wait for VT switch before quit (GIT)
+Patch4: plymouth-0.8.2-wait-vt-quit.patch
+# (fc) 0.8.2-6mdv ensure terminal is locked (GIT)
+Patch5: plymouth-0.8.2-lock-terminal.patch
+
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
 # (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
@@ -240,6 +247,9 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch0 -p1 -b .fixbuild
 %patch1 -p1 -b .fix-text-alpha
 %patch2 -p1 -b .configdirs
+%patch3 -p1 -b .moredebug
+%patch4 -p1 -b .vt-quit
+%patch5 -p1 -b .lock-terminal
 %if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
