@@ -16,7 +16,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 6
+Release: %mkrel 7
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -35,6 +35,8 @@ Patch3: plymouth-0.8.3-tty-OPOST-ONLCR.patch
 Patch4: plymouth-0.8.3-smarter_init_detection.patch
 # (bor) 0.8.3-6mdv change socket name (GIT)
 Patch5: plymouth-0.8.3-change_socket_path.patch
+# (bor) 0.8.3-7mdv fix previous patch (submitted upstream)
+Patch6: plymouth-0.8.3-change_socket_path-fix.patch
 
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
@@ -251,6 +253,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch3 -p1 -b .tty-OPOST-ONLCR
 %patch4 -p1 -b .smarter_init_detection
 %patch5 -p1 -b .change_socket_path
+%patch6 -p1 -b .change_socket_path-fix
 %if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
