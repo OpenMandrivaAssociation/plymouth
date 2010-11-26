@@ -10,8 +10,7 @@
 
 %define snapshot 0
 
-%define         build_uclibc 0
-%{?_with_uclibc: %global build_uclibc 1}
+%bcond_with uclibc
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
@@ -41,14 +40,14 @@ Patch6: plymouth-0.8.3-change_socket_path-fix.patch
 # (proyvind) 0.7.2-8mdv fix build with uclibc (should go upstream..)
 Patch7:	plymouth-0.7.2-add-missing-header.patch
 # (proyvind) 0.7.2-8mdv fix library link order for static linking (idem..)
-Patch8: plymouth-0.7.2-library-link-order.patch
+Patch8: plymouth-0.8.3-library-link-order.patch
 # (proyvind) 0.7.2-8mdv substitute /usr/lib with /lib rather than just stripping away
 # /usr. This so that ie. /usr/uclibc/usr/lib will be be /usr/uclibc/lib rather than
 # /uclibc/usr/lib. (should probably go upstream as well)
 Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
 # (proyvind) 0.7.2-8mdv specify absolute path to /bin/plymouth to ensure install
 # location with uclibc
-Patch10: plymouth-0.7.2-initrd-absolute-path.patch
+Patch10: plymouth-0.8.3-initrd-absolute-path.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -58,7 +57,7 @@ Requires: initscripts >= 8.83
 Requires: desktop-common-data >= 2010.0-1mdv
 BuildRequires: gtk2-devel
 BuildRequires: libdrm-devel
-%if %{build_uclibc}
+%if %{with uclibc}
 BuildRequires: uClibc-devel
 BuildRequires: libpng-static-devel
 %endif
@@ -254,18 +253,16 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .smarter_init_detection
 %patch5 -p1 -b .change_socket_path
 %patch6 -p1 -b .change_socket_path-fix
-%if %{build_uclibc}
 %patch7 -p1 -b .header~
 %patch8 -p1 -b .link_order~
 %patch9 -p1 -b .usrlib_subst~
 %patch10 -p1 -b .abspath~
 autoreconf --install --symlink
-%endif
 
 
 %build
 export CONFIGURE_TOP=`pwd`
-%if %{build_uclibc}
+%if %{with uclibc}
 mkdir -p uclibc
 cd uclibc
 %configure2_5x CC="%{uclibc_cc}" \
@@ -317,7 +314,7 @@ cd ..
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{build_uclibc}
+%if %{with uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
 rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
 %endif
@@ -411,7 +408,7 @@ fi \
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
 %{_mandir}/man8/
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
 %{uclibc_root}%{_libdir}/plymouth/details.so
@@ -435,7 +432,7 @@ fi \
 %{_libdir}/libply-splash-graphics.so.%{lib_major}*
 /%{_lib}/libply-splash-core.so.%{lib_major}*
 %dir %{_libdir}/plymouth
-%if %{build_uclibc}
+%if %{with uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
 %{uclibc_root}%{_libdir}/libply-boot-client.so*
@@ -458,7 +455,7 @@ fi \
 %files plugin-fade-throbber
 %defattr(-, root, root)
 %{_libdir}/plymouth/fade-throbber.so
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
 %endif
 
@@ -469,14 +466,14 @@ fi \
 %files plugin-throbgress
 %defattr(-, root, root)
 %{_libdir}/plymouth/throbgress.so
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/throbgress.so
 %endif
 
 %files plugin-script
 %defattr(-, root, root)
 %{_libdir}/plymouth/script.so
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/script.so
 %endif
 
@@ -491,7 +488,7 @@ fi \
 %files plugin-space-flares
 %defattr(-, root, root)
 %{_libdir}/plymouth/space-flares.so
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/space-flares.so
 %endif
 
@@ -502,7 +499,7 @@ fi \
 %files plugin-two-step
 %defattr(-, root, root)
 %{_libdir}/plymouth/two-step.so
-%if %{build_uclibc}
+%if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/two-step.so
 %endif
 
