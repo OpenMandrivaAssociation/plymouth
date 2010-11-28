@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 7
+Release: %mkrel 8
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -48,6 +48,9 @@ Patch9: plymouth-0.7.2-less-greedy-usr_lib-substitution.patch
 # (proyvind) 0.7.2-8mdv specify absolute path to /bin/plymouth to ensure install
 # location with uclibc
 Patch10: plymouth-0.8.3-initrd-absolute-path.patch
+# (proyvind): /usr/libexec/mkinird-functions has been moved to /lib/mkinitrd/functions
+#	      to be available, usable and /sbin/mkinitrd location sensible
+Patch11: SOURCES/plymouth-0.8.3-move-mkinitrd-functions-under-root-lib.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -257,6 +260,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch8 -p1 -b .link_order~
 %patch9 -p1 -b .usrlib_subst~
 %patch10 -p1 -b .abspath~
+%patch11 -p1 -b .mkinitrd_lib~
 autoreconf --install --symlink
 
 
