@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 9
+Release: %mkrel 10
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -51,8 +51,10 @@ Patch10: plymouth-0.8.3-initrd-absolute-path.patch
 # (proyvind): /usr/libexec/mkinird-functions has been moved to /lib/mkinitrd/functions
 #	      to be available, usable and /sbin/mkinitrd location sensible
 Patch11: SOURCES/plymouth-0.8.3-move-mkinitrd-functions-under-root-lib.patch
-# (bor) 0.8.3-8 "could not write bytes" is not error (GIT)
+# (bor) 0.8.3-9 "could not write bytes" is not error (GIT)
 Patch12: plymouth-0.8.3-boot-server-don-t-print-error-when-client-goes-away.patch
+# (bor) 0.8.3-10 fix password request on boot (https://bugzilla.redhat.com/show_bug.cgi?id=655538)
+Patch13: plymouth-0.8.3-ensure-unbuffered-tty-on-reconnect.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -264,6 +266,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch10 -p1 -b .abspath~
 %patch11 -p1 -b .mkinitrd_lib~
 %patch12 -p1 -b .could-not-write-bytes
+%patch13 -p1 -b .tty_locked_settings
 autoreconf --install --symlink
 
 
