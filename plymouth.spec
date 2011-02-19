@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 10
+Release: %mkrel 11
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -53,8 +53,9 @@ Patch10: plymouth-0.8.3-initrd-absolute-path.patch
 Patch11: SOURCES/plymouth-0.8.3-move-mkinitrd-functions-under-root-lib.patch
 # (bor) 0.8.3-9 "could not write bytes" is not error (GIT)
 Patch12: plymouth-0.8.3-boot-server-don-t-print-error-when-client-goes-away.patch
-# (bor) 0.8.3-10 fix password request on boot (https://bugzilla.redhat.com/show_bug.cgi?id=655538)
-Patch13: plymouth-0.8.3-ensure-unbuffered-tty-on-reconnect.patch
+# (bor) 0.8.3-10 fix password request on boot (GIT)
+#       ref: https://bugzilla.redhat.com/show_bug.cgi?id=655538
+Patch13: plymouth-0.8.3-terminal-unlock-tty-before-muc.patch
 
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
