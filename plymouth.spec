@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 11
+Release: %mkrel 12
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
