@@ -15,7 +15,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.3
-Release: %mkrel 14
+Release: %mkrel 15
 License: GPLv2+
 Group: System/Kernel and hardware
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -58,7 +58,7 @@ Patch12: plymouth-0.8.3-boot-server-don-t-print-error-when-client-goes-away.patc
 Patch13: plymouth-0.8.3-terminal-unlock-tty-before-muc.patch
 # (bor) 0.8.3-13 do not wait forver for non-existing daemon to quit
 Patch14: plymouth-0.8.3-do_not_hang_on_wait_without_daemon.patch
-
+Patch15: plymouth-0.8.3-libpng14.patch
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -271,6 +271,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch12 -p1 -b .could-not-write-bytes
 %patch13 -p1 -b .tty_locked_settings
 %patch14 -p1 -b .do_not_hang_on_wait
+%patch15 -p0 -b .png
 autoreconf --install --symlink
 
 
