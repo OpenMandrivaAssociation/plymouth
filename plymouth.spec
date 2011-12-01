@@ -327,7 +327,7 @@ cd system
 cd ..
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %if %{with uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
@@ -335,23 +335,23 @@ rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfi
 %endif
 %makeinstall_std -C system
 
-find $RPM_BUILD_ROOT -name \*.a -delete -o -name \*.la -delete
+find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
 # Temporary symlink until rc.sysinit is fixed
-(cd $RPM_BUILD_ROOT%{_bindir}; ln -s ../../bin/plymouth)
-touch $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/default.plymouth
+(cd %{buildroot}%{_bindir}; ln -s ../../bin/plymouth)
+touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
 
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/plymouth
-cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/plymouth/default-boot-duration
-touch $RPM_BUILD_ROOT%{_localstatedir}/lib/plymouth/{boot,shutdown}-duration
+mkdir -p %{buildroot}%{_localstatedir}/lib/plymouth
+cp %{SOURCE1} %{buildroot}%{_datadir}/plymouth/default-boot-duration
+touch %{buildroot}%{_localstatedir}/lib/plymouth/{boot,shutdown}-duration
 
 # Add charge
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
-cp %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
-cp $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
+mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
+cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
+cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
