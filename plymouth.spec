@@ -59,6 +59,8 @@ Patch13: plymouth-0.8.3-terminal-unlock-tty-before-muc.patch
 # (bor) 0.8.3-13 do not wait forver for non-existing daemon to quit
 Patch14: plymouth-0.8.3-do_not_hang_on_wait_without_daemon.patch
 Patch15: plymouth-0.8.3-libpng14.patch
+# (tpg) redirect output to /dev/null instead of /null
+Patch16: plymouth-0.8.3-redirect-to-dev-null.patch
 URL: http://freedesktop.org/software/plymouth/releases
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -272,6 +274,8 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch13 -p1 -b .tty_locked_settings
 %patch14 -p1 -b .do_not_hang_on_wait
 %patch15 -p0 -b .png
+%patch16 -p1 -b .null
+
 autoreconf --install --symlink
 
 
@@ -404,6 +408,7 @@ fi \
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
+%dir %{_libdir}/plymouth
 %{_datadir}/plymouth/default-boot-duration
 %dir %{_localstatedir}/lib/plymouth
 %{plymouthdaemon_execdir}/plymouthd
@@ -422,7 +427,7 @@ fi \
 %{_localstatedir}/spool/plymouth
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
-%{_mandir}/man8/
+%{_mandir}/man8/*
 %if %{with uclibc}
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
@@ -446,7 +451,6 @@ fi \
 %{_libdir}/libply-boot-client.so.%{lib_major}*
 %{_libdir}/libply-splash-graphics.so.%{lib_major}*
 /%{_lib}/libply-splash-core.so.%{lib_major}*
-%dir %{_libdir}/plymouth
 %if %{with uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
