@@ -15,13 +15,14 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.4
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source0:	http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1:	boot-duration
 Source2:	charge.plymouth
+Patch0:		plymouth-0.8.4-fix-dracut-functions-path.patch
 Requires(post):	plymouth-scripts = %{version}-%{release}
 Requires:	initscripts >= 8.83
 Requires:	desktop-common-data >= 2010.0-1mdv
@@ -227,6 +228,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
 %setup -q
+%patch0 -p1 -b .path
 
 %build
 export CONFIGURE_TOP=`pwd`
@@ -318,6 +320,8 @@ touch %{buildroot}%{_localstatedir}/lib/plymouth/{boot,shutdown}-duration
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
+
+find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
 %clean
 rm -rf %{buildroot}
