@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.4
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -23,6 +23,7 @@ Source0:	http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.ta
 Source1:	boot-duration
 Source2:	charge.plymouth
 Patch0:		plymouth-0.8.4-fix-dracut-functions-path.patch
+Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
 Requires(post):	plymouth-scripts = %{version}-%{release}
 Requires:	initscripts >= 8.83
 Requires:	desktop-common-data >= 2010.0-1mdv
@@ -229,6 +230,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %prep
 %setup -q
 %patch0 -p1 -b .path
+%patch1 -p1 -b .silent
 
 %build
 export CONFIGURE_TOP=`pwd`
