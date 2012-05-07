@@ -4,26 +4,27 @@
 
 %define _libexecdir %{_prefix}/libexec
 
-%define lib_major 2
-%define lib_name %mklibname %{name} %{lib_major}
-%define lib_name_devel %mklibname %{name} -d
+%define major 2
+%define libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
 
-%define snapshot 0
+%define snapshot 20120503
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.4
-Release:	3
+Release:	3.%{snapshot}.1
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
-Source0:	http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
+Source0:	http://freedesktop.org/software/plymouth/releases/%{name}-%{snapshot}.tar.xz
 Source1:	boot-duration
 Source2:	charge.plymouth
 Patch0:		plymouth-0.8.4-fix-dracut-functions-path.patch
 Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
+
 Requires(post):	plymouth-scripts = %{version}-%{release}
 Requires:	initscripts >= 8.83
 Requires:	desktop-common-data >= 2010.0-1mdv
@@ -35,7 +36,6 @@ BuildRequires:	libpng-static-devel
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -52,24 +52,23 @@ Requires:	plymouth = %{version}-%{release}
 %description system-theme
 This metapackage tracks the current distribution default theme.
 
-%package -n %{lib_name}
+%package -n %{libname}
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Obsoletes:	%{mklibname %{name} 0} < 0.8.0
 
-%description -n %{lib_name}
+%description -n %{libname}
 This package contains the libply and libplybootsplash libraries
 used by Plymouth.
 
-%package -n %{lib_name_devel}
+%package -n %{develname}
 Group:		System/Kernel and hardware
 Summary:	Libraries and headers for writing Plymouth splash plugins
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
-Provides:	lib%{name}-devel = %{version}-%{release}
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 
-%description -n %{lib_name_devel}
+%description -n %{develname}
 This package contains the libply and libplybootsplash libraries
 and headers needed to develop 3rd party splash plugins for Plymouth.
 
@@ -95,7 +94,7 @@ the system.
 %package plugin-label
 Group:		System/Kernel and hardware
 Summary:	Plymouth label plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 
 %description plugin-label
 This package contains the label control plugin for
@@ -105,7 +104,7 @@ graphical boot splashes using pango and cairo.
 %package plugin-fade-throbber
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Fade-Throbber" plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 
 %description plugin-fade-throbber
 This package contains the "Fade-In" boot splash plugin for
@@ -115,7 +114,7 @@ while other images pulsate around during system boot up.
 %package plugin-script
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Script" plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-script
@@ -145,7 +144,7 @@ while stars twinkle around the logo during system boot up.
 %package plugin-throbgress
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Throbgress" plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-throbgress
@@ -178,7 +177,7 @@ Plymouth.
 %package plugin-space-flares
 Group:		System/Kernel and hardware
 Summary:	Plymouth "space-flares" plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-space-flares
@@ -198,7 +197,7 @@ Plymouth. It features a blue flamed sun with animated solar flares.
 %package plugin-two-step
 Group:		System/Kernel and hardware
 Summary:	Plymouth "two-step" plugin
-Requires:	%{lib_name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
 %description plugin-two-step
@@ -228,11 +227,12 @@ Requires:	plymouth-plugin-two-step = %{version}-%{release}
 This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
-%setup -q
+%setup -qn %{name}
 %patch0 -p1 -b .path
 %patch1 -p1 -b .silent
 
 %build
+sh ./autogen.sh
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
@@ -302,7 +302,6 @@ cd system
 cd ..
 
 %install
-rm -rf %{buildroot}
 
 %if %{with uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
@@ -324,9 +323,6 @@ cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
 
 find %{buildroot} -name \*.a -delete -o -name \*.la -delete
-
-%clean
-rm -rf %{buildroot}
 
 %post
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
@@ -372,9 +368,7 @@ fi \
 %theme_scripts glow
 %theme_scripts script
 
-
 %files
-%defattr(-, root, root)
 %doc AUTHORS NEWS README
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
@@ -406,8 +400,7 @@ fi \
 %{uclibc_root}%{_libdir}/plymouth/text.so
 %endif
 
-%files -n %{lib_name_devel}
-%defattr(-, root, root)
+%files -n %{develname}
 %{plymouth_libdir}/libply.so
 %{_libdir}/libply-boot-client.so
 %{_libdir}/libply-splash-graphics.so
@@ -416,12 +409,11 @@ fi \
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
 
-%files -n %{lib_name}
-%defattr(-, root, root)
-%{plymouth_libdir}/libply.so.%{lib_major}*
-%{_libdir}/libply-boot-client.so.%{lib_major}*
-%{_libdir}/libply-splash-graphics.so.%{lib_major}*
-/%{_lib}/libply-splash-core.so.%{lib_major}*
+%files -n %{libname}
+%{plymouth_libdir}/libply.so.%{major}*
+%{_libdir}/libply-boot-client.so.%{major}*
+%{_libdir}/libply-splash-graphics.so.%{major}*
+/%{_lib}/libply-splash-core.so.%{major}*
 %if %{with uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
@@ -430,80 +422,65 @@ fi \
 %endif
 
 %files scripts
-%defattr(-, root, root)
 %{_sbindir}/plymouth-set-default-theme
 %{_libexecdir}/plymouth
 
 %files utils
-%defattr(-, root, root)
 %{_bindir}/plymouth-log-viewer
 
 %files plugin-label
-%defattr(-, root, root)
 %{_libdir}/plymouth/label.so
 
 %files plugin-fade-throbber
-%defattr(-, root, root)
 %{_libdir}/plymouth/fade-throbber.so
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
 %endif
 
 %files theme-fade-in
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/fade-in
 
 %files plugin-throbgress
-%defattr(-, root, root)
 %{_libdir}/plymouth/throbgress.so
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/throbgress.so
 %endif
 
 %files plugin-script
-%defattr(-, root, root)
 %{_libdir}/plymouth/script.so
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/script.so
 %endif
 
 %files theme-script
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/script
 
 %files theme-spinfinity
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/spinfinity
 
 %files theme-spinner
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/spinner
 
 %files plugin-space-flares
-%defattr(-, root, root)
 %{_libdir}/plymouth/space-flares.so
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/space-flares.so
 %endif
 
 %files theme-solar
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/solar
 
 %files plugin-two-step
-%defattr(-, root, root)
 %{_libdir}/plymouth/two-step.so
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/two-step.so
 %endif
 
 %files theme-charge
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/charge
 
 %files theme-glow
-%defattr(-, root, root)
 %{_datadir}/plymouth/themes/glow
 
 %files system-theme
-%defattr(-, root, root)
+
