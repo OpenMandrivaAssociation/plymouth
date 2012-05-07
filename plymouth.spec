@@ -230,9 +230,12 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -qn %{name}
 %patch0 -p1 -b .path
 %patch1 -p1 -b .silent
+%if %{snapshot}
+sh ./autogen.sh
+make distclean
+%endif
 
 %build
-sh ./autogen.sh
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
