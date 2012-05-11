@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.4
-Release:	3.%{snapshot}.1
+Release:	3.%{snapshot}.2
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -265,7 +265,7 @@ cd uclibc
 	--enable-libdrm_intel \
 %endif
 	--enable-libdrm_radeon \
-	--enable-libdrm_nouveau enable \
+	--enable-libdrm_nouveau \
 	--enable-libkms \
 	--with-log-viewer \
 	--with-release-file=/etc/mandriva-release
@@ -300,7 +300,7 @@ cd system
 	--enable-libdrm_intel \
 %endif
 	--enable-libdrm_radeon \
-	--enable-libdrm_nouveau enable \
+	--enable-libdrm_nouveau \
 	--enable-libkms \
 	--with-log-viewer \
 	--with-release-file=/etc/mandriva-release
