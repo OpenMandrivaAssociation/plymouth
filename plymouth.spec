@@ -261,7 +261,9 @@ cd uclibc
 	--with-shutdown-tty=tty1 \
 	--enable-systemd-integration \
 	--enable-pango \
+%ifarch %{ix86} x86_64
 	--enable-libdrm_intel \
+%endif
 	--enable-libdrm_radeon \
 	--enable-libdrm_nouveau enable \
 	--enable-libkms \
@@ -294,7 +296,9 @@ cd system
 	--with-shutdown-tty=tty1 \
 	--enable-systemd-integration \
 	--enable-pango \
+%ifarch %{ix86} x86_64
 	--enable-libdrm_intel \
+%endif
 	--enable-libdrm_radeon \
 	--enable-libdrm_nouveau enable \
 	--enable-libkms \
