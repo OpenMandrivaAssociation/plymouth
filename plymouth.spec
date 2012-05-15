@@ -8,14 +8,14 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
-%define snapshot 20120503
+%define snapshot 20120515
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.4
-Release:	3.%{snapshot}.3
+Release:	3.%{snapshot}.4
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -24,10 +24,6 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 Patch0:		plymouth-0.8.4-fix-dracut-functions-path.patch
 Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
-
-Requires(post):	plymouth-scripts = %{version}-%{release}
-Requires:	initscripts >= 8.83
-Requires:	desktop-common-data >= 2010.0-1mdv
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -36,6 +32,9 @@ BuildRequires:	libpng-static-devel
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
+Requires(post):	plymouth-scripts = %{version}-%{release}
+Requires:	initscripts >= 8.83
+Requires:	desktop-common-data >= 2010.0-1mdv
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -257,8 +256,6 @@ cd uclibc
 	--without-gdm-autostart-file \
 	--without-rhgb-compat-link \
 	--with-system-root-install \
-	--with-boot-tty=tty7 \
-	--with-shutdown-tty=tty1 \
 	--enable-systemd-integration \
 	--enable-pango \
 %ifnarch %{ix86} x86_64
@@ -290,8 +287,6 @@ cd system
 	--without-gdm-autostart-file \
 	--without-rhgb-compat-link \
 	--with-system-root-install \
-	--with-boot-tty=tty7 \
-	--with-shutdown-tty=tty1 \
 	--enable-systemd-integration \
 	--enable-pango \
 %ifnarch %{ix86} x86_64
