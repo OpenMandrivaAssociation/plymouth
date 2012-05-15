@@ -226,7 +226,7 @@ Requires:	plymouth-plugin-two-step = %{version}-%{release}
 This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
-%setup -qn %{name}
+%setup -qn %{name}-%{snapshot}
 %patch0 -p1 -b .path
 %patch1 -p1 -b .silent
 %if %{snapshot}
