@@ -83,7 +83,7 @@ including a boot log viewing application.
 %package scripts
 Group:		System/Kernel and hardware
 Summary:	Plymouth related scripts
-Requires:	mkinitrd >= 6.0.92-6mdv
+Conflicts:	mkinitrd < 6.0.92-6mdv
 Requires:	plymouth = %{version}-%{release}
 
 %description scripts
