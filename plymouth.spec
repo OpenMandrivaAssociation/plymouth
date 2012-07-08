@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.5.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -23,6 +23,8 @@ Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version
 Source1:	boot-duration
 Source2:	charge.plymouth
 Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
+Patch2:		0115-systemd-drop-weird-udev-trigger-attr-match-class-0x0.patch
+Patch3:		0116-systemd-more-udev-clean-ups.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -34,6 +36,7 @@ BuildRequires:	systemd-units
 Requires(post):	plymouth-scripts = %{version}-%{release}
 Requires:	initscripts >= 8.83
 Requires:	desktop-common-data >= 2010.0-1mdv
+Conflicts:	systemd-units < 186
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -228,6 +231,8 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -q
 #patch0 -p1 -b .path
 %patch1 -p1 -b .silent
+%patch2 -p1
+%patch3 -p1
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
@@ -306,6 +311,19 @@ rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfi
 %endif
 %makeinstall_std -C system
 
+
+# (tpg) enable plymouth services
+mkdir -p %{buildroot}/lib/systemd/system/{sysinit,poweroff,halt,kexec,reboot,multi-user}.target.wants
+ln -s ../plymouth-start.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
+ln -s ../plymouth-read-write.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
+ln -s ../plymouth-poweroff.service %{buildroot}/lib/systemd/system/poweroff.target.wants/
+ln -s ../plymouth-halt.service %{buildroot}/lib/systemd/system/halt.target.wants/
+ln -s ../plymouth-kexec.service %{buildroot}/lib/systemd/system/kexec.target.wants/
+ln -s ../plymouth-reboot.service %{buildroot}/lib/systemd/system/reboot.target.wants/
+ln -s ../plymouth-quit.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
+ln -s ../plymouth-quit-wait.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
+
+
 # Temporary symlink until rc.sysinit is fixed
 (cd %{buildroot}%{_bindir}; ln -s ../../bin/plymouth)
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
@@ -379,6 +397,7 @@ fi \
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 /lib/systemd/system/plymouth-*.service
+/lib/systemd/system/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
