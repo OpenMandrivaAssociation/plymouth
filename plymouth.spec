@@ -8,21 +8,20 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
-%define snapshot 20120515
+%define snapshot 0
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.8.4
-Release:	3.%{snapshot}.5
+Version:	0.8.5.1
+Release:	1
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
-Source0:	http://freedesktop.org/software/plymouth/releases/%{name}-%{snapshot}.tar.xz
+Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1:	boot-duration
 Source2:	charge.plymouth
-Patch0:		plymouth-0.8.4-fix-dracut-functions-path.patch
 Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
@@ -226,8 +225,8 @@ Requires:	plymouth-plugin-two-step = %{version}-%{release}
 This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
-%setup -qn %{name}-%{snapshot}
-%patch0 -p1 -b .path
+%setup -q
+#patch0 -p1 -b .path
 %patch1 -p1 -b .silent
 %if %{snapshot}
 sh ./autogen.sh
@@ -275,7 +274,7 @@ cd ..
 
 mkdir -p system
 cd system
-%configure \
+%configure2_5x \
 	--disable-static \
 	--enable-tracing \
 	--disable-tests \
@@ -379,6 +378,7 @@ fi \
 %{_bindir}/plymouth
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
+/lib/systemd/system/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
