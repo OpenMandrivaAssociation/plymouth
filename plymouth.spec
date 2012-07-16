@@ -14,17 +14,14 @@
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.8.5.1
-Release:	2
+Version:	0.8.6.1
+Release:	1
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1:	boot-duration
 Source2:	charge.plymouth
-Patch1:		1001-main-Also-show-splash-for-splash-silent-arguments-wh.patch
-Patch2:		0115-systemd-drop-weird-udev-trigger-attr-match-class-0x0.patch
-Patch3:		0116-systemd-more-udev-clean-ups.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -229,10 +226,6 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
 %setup -q
-#patch0 -p1 -b .path
-%patch1 -p1 -b .silent
-%patch2 -p1
-%patch3 -p1
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
@@ -266,8 +259,12 @@ cd uclibc
 	--disable-libdrm_intel \
 %endif
 	--enable-libkms \
-	--with-log-viewer \
-	--with-release-file=/etc/mandriva-release
+%if %mdvver >= 201200
+	--with-release-file=/etc/os-release \
+%else
+	--with-release-file=/etc/mandriva-release \
+%endif
+	--with-log-viewer
 
 # We don't build these for uclibc since they link against a lot of libraries
 # that we don't provide any uclibc linked version of
@@ -297,8 +294,13 @@ cd system
 	--disable-libdrm_intel \
 %endif
 	--enable-libkms \
-	--with-log-viewer \
-	--with-release-file=/etc/mandriva-release
+%if %mdvver >= 201200
+	--with-release-file=/etc/os-release \
+%else
+	--with-release-file=/etc/mandriva-release \
+%endif
+	--with-log-viewer
+
 
 %make
 cd ..
@@ -396,7 +398,8 @@ fi \
 %{_bindir}/plymouth
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
-/lib/systemd/system/plymouth-*.service
+/lib/systemd/system/*plymouth*.service
+/lib/systemd/system/systemd-*.path
 /lib/systemd/system/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
