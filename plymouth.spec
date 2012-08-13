@@ -31,6 +31,8 @@ Patch2:		plymouth-systemd-target.patch
 Patch3:		plymouth-0.8.6.1-fix-systemd-service-patch.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
+# PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
+Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -240,6 +242,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch2 -p1 -b .systemd~
 %patch3 -p1 -b .dashes~
 %patch4 -p1 -b .window_size~
+%patch5 -p1 -b .strip_quotes~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
