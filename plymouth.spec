@@ -24,7 +24,10 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
+# PATCH-OPENSUSE -- Change udevadm path
 Patch1:		plymouth-0.8.6.1-udevadm-path.patch
+# PATCH-FIX-UPSTREAM -- Create targets for plymouth systemd services
+Patch2:		plymouth-systemd-target.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -231,6 +234,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -q
 %patch0 -p1 -b .suspend~
 %patch1 -p1 -b .udevadm~
+%patch2 -p1 -b .systemd~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
