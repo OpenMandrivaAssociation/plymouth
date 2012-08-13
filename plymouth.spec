@@ -15,13 +15,15 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.6.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1:	boot-duration
 Source2:	charge.plymouth
+# PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
+Patch0:		plymouth-restore-suspend.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -226,6 +228,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
 %setup -q
+%patch0 -p1 -b .suspend~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
