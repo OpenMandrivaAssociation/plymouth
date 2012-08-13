@@ -24,6 +24,7 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
+Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -229,6 +230,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %prep
 %setup -q
 %patch0 -p1 -b .suspend~
+%patch1 -p1 -b .udevadm~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
