@@ -33,6 +33,8 @@ Patch3:		plymouth-0.8.6.1-fix-systemd-service-patch.patch
 Patch4:		plymouth-fix-window-size
 # PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
 Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
+# PATCH-OPENSUSE -- Add line numbers to tracing output
+Patch6:         plymouth-trace-lines
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -243,6 +245,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch3 -p1 -b .dashes~
 %patch4 -p1 -b .window_size~
 %patch5 -p1 -b .strip_quotes~
+%patch6 -p1 -b .trace_lines~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
