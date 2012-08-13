@@ -29,6 +29,8 @@ Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 # PATCH-FIX-UPSTREAM -- Create targets for plymouth systemd services
 Patch2:		plymouth-systemd-target.patch
 Patch3:		plymouth-0.8.6.1-fix-systemd-service-patch.patch
+# PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
+Patch4:		plymouth-fix-window-size
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -237,6 +239,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch1 -p1 -b .udevadm~
 %patch2 -p1 -b .systemd~
 %patch3 -p1 -b .dashes~
+%patch4 -p1 -b .window_size~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
