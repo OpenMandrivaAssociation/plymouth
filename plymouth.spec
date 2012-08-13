@@ -28,6 +28,7 @@ Patch0:		plymouth-restore-suspend.patch
 Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 # PATCH-FIX-UPSTREAM -- Create targets for plymouth systemd services
 Patch2:		plymouth-systemd-target.patch
+Patch3:		plymouth-0.8.6.1-fix-systemd-service-patch.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -235,6 +236,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch0 -p1 -b .suspend~
 %patch1 -p1 -b .udevadm~
 %patch2 -p1 -b .systemd~
+%patch3 -p1 -b .dashes~
 %if %{snapshot}
 sh ./autogen.sh
 make distclean
