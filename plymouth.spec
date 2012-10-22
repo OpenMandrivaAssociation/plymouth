@@ -8,9 +8,7 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
-%define snapshot 0
-
-%bcond_with uclibc
+%bcond_with	uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
@@ -35,11 +33,12 @@ Patch4:		plymouth-fix-window-size
 Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch6:         plymouth-trace-lines
+Patch7:		plymouth-0.8.6.1-less-greedy-usr_lib-substitution.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
-BuildRequires:	libpng-static-devel
+BuildRequires:	png-static-devel
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
@@ -246,21 +245,16 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .window_size~
 %patch5 -p1 -b .strip_quotes~
 %patch6 -p1 -b .trace_lines~
-%if %{snapshot}
-sh ./autogen.sh
-make distclean
-%endif
+%patch7 -p1 -b .sysroot_subst~
+autoreconf -f
 
 %build
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
 cd uclibc
-%configure CC="%{uclibc_cc}" \
-	CFLAGS="%{uclibc_cflags}" \
-	LDFLAGS="%{ldflags} -lz" \
-	--prefix=%{uclibc_root}%{_prefix} \
-	--libdir="%{uclibc_root}%{_libdir}" \
+%uclibc_configure \
+	LDFLAGS="%{ldflags} -lz -lpciaccess" \
 	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
 	--enable-tracing \
@@ -274,22 +268,26 @@ cd uclibc
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--enable-pango \
+	--disable-pango \
+	--disable-gtk \
 %ifnarch %{ix86} x86_64
 	--disable-libdrm_intel \
+%else
+	--enable-libdrm_intel \
 %endif
+	--enable-libdrm_radeon \
 	--enable-libkms \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--with-log-viewer
+	--without-log-viewer
 
 # We don't build these for uclibc since they link against a lot of libraries
 # that we don't provide any uclibc linked version of
-sed -e 's#viewer##g' -i src/Makefile
-sed -e 's#label##g' -i src/plugins/controls/Makefile
+#sed -e 's#viewer##g' -i src/Makefile
+#sed -e 's#label##g' -i src/plugins/controls/Makefile
 %make
 cd ..
 %endif
@@ -436,8 +434,12 @@ fi \
 %if %{with uclibc}
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
+%dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{_libdir}/plymouth/details.so
 %{uclibc_root}%{_libdir}/plymouth/text.so
+%dir %{uclibc_root}%{_libdir}/plymouth/renderers
+%{uclibc_root}%{_libdir}/plymouth/renderers/drm*
+%{uclibc_root}%{_libdir}/plymouth/renderers/frame-buffer*
 %endif
 
 %files -n %{develname}
@@ -446,6 +448,9 @@ fi \
 %{_libdir}/libply-splash-graphics.so
 %{_libdir}/plymouth/renderers/x11*
 /%{_lib}/libply-splash-core.so
+%if %{with uclibc}
+%{uclibc_root}/%{_lib}/libply-splash-core.so
+%endif
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
 
@@ -457,6 +462,7 @@ fi \
 %if %{with uclibc}
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
+%{uclibc_root}/%{_lib}/libply-splash-core.so.%{major}*
 %{uclibc_root}%{_libdir}/libply-boot-client.so*
 %{uclibc_root}%{_libdir}/libply-splash-graphics.so*
 %endif
