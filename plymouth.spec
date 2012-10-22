@@ -332,18 +332,6 @@ rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfi
 %makeinstall_std -C system
 
 
-# (tpg) enable plymouth services
-mkdir -p %{buildroot}/lib/systemd/system/{sysinit,poweroff,halt,kexec,reboot,multi-user}.target.wants
-ln -s ../plymouth-start.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
-ln -s ../plymouth-read-write.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
-ln -s ../plymouth-poweroff.service %{buildroot}/lib/systemd/system/poweroff.target.wants/
-ln -s ../plymouth-halt.service %{buildroot}/lib/systemd/system/halt.target.wants/
-ln -s ../plymouth-kexec.service %{buildroot}/lib/systemd/system/kexec.target.wants/
-ln -s ../plymouth-reboot.service %{buildroot}/lib/systemd/system/reboot.target.wants/
-ln -s ../plymouth-quit.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
-ln -s ../plymouth-quit-wait.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
-
-
 # Temporary symlink until rc.sysinit is fixed
 (cd %{buildroot}%{_bindir}; ln -s ../../bin/plymouth)
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
