@@ -324,6 +324,7 @@ cd uclibc
 	LDFLAGS="%{ldflags} -lz -lpciaccess" \
 	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
+	--disable-static \
 	--enable-tracing \
 	--disable-tests \
 	--with-logo=%{_datadir}/icons/large/mandriva.png \
@@ -406,8 +407,6 @@ touch %{buildroot}%{_localstatedir}/lib/plymouth/{boot,shutdown}-duration
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
-
-find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
 %post
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
