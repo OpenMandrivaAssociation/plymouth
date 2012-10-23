@@ -321,7 +321,6 @@ export CONFIGURE_TOP=`pwd`
 mkdir -p uclibc
 cd uclibc
 %uclibc_configure \
-	LDFLAGS="%{ldflags} -lz -lpciaccess" \
 	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
 	--disable-static \
