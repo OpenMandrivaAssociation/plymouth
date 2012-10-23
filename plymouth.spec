@@ -8,7 +8,7 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
-%bcond_with	uclibc
+%bcond_without	uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
@@ -37,8 +37,7 @@ Patch7:		plymouth-0.8.6.1-less-greedy-usr_lib-substitution.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
-BuildRequires:	uClibc-devel
-BuildRequires:	png-static-devel
+BuildRequires:	uClibc-devel >= 0.9.33.2-14
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
@@ -53,7 +52,15 @@ place of the text messages that normally get shown.  Text
 messages are instead redirected to a log file for viewing
 after boot.
 
-%package system-theme
+%package -n	uclibc-%{name}
+Summary:	uClibc build of %{name}
+Group:		System/Kernel and hardware
+Requires:	%{name} = %{EVRD}
+
+%description -n	uclibc-%{name}
+uClibc linked build of %{name}.
+
+%package	system-theme
 Group:		System/Kernel and hardware
 Summary:	Plymouth default theme
 Requires:	plymouth(system-theme)
@@ -71,12 +78,23 @@ Obsoletes:	%{mklibname %{name} 0} < 0.8.0
 This package contains the libply and libplybootsplash libraries
 used by Plymouth.
 
+%package -n	uclibc-%{libname}
+Summary:	Plymouth libraries (uClibc builld)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libname}
+This package contains the libply and libplybootsplash libraries
+used by Plymouth.
+
 %package -n	%{develname}
 Group:		System/Kernel and hardware
 Summary:	Libraries and headers for writing Plymouth splash plugins
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
+%if %{with uclibc}
+Requires:	uclibc-%{libname} = %{version}
+%endif
 
 %description -n	%{develname}
 This package contains the libply and libplybootsplash libraries
@@ -121,11 +139,29 @@ This package contains the "Fade-In" boot splash plugin for
 Plymouth. It features a centered image that fades in and out
 while other images pulsate around during system boot up.
 
+%package -n	uclibc-%{name}-plugin-fade-throbber
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Fade-Throbber" plugin (uClibc build)
+Requires:	uclibc-%{libname} = %{version}-%{release}
+
+%description -n	uclibc-%{name}-plugin-fade-throbber
+This package contains the "Fade-In" boot splash plugin for
+Plymouth. It features a centered image that fades in and out
+while other images pulsate around during system boot up.
+
 %package	plugin-script
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Script" plugin
 Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
+
+%description	plugin-script
+This package contains the "Script" plugin for Plymouth. 
+
+%package -n	uclibc-%{name}-plugin-script
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Script" plugin (uClibc build)
+Requires:	uclibc-%{libname} = %{version}-%{release}
 
 %description	plugin-script
 This package contains the "Script" plugin for Plymouth. 
@@ -163,6 +199,17 @@ Plymouth. It features a centered logo and animated spinner that
 spins repeatedly while a progress bar advances at the bottom of
 the screen.
 
+%package -n	uclibc-%{name}-plugin-throbgress
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Throbgress" plugin (uClibc build)
+Requires:	uclibc-%{libname} = %{version}-%{release}
+
+%description -n	uclibc-%{name}-plugin-throbgress
+This package contains the "throbgress" boot splash plugin for
+Plymouth. It features a centered logo and animated spinner that
+spins repeatedly while a progress bar advances at the bottom of
+the screen.
+
 %package	theme-spinfinity
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Spinfinity" theme
@@ -194,6 +241,15 @@ Requires:	plymouth-plugin-label = %{version}-%{release}
 This package contains the "space-flares" boot splash plugin for
 Plymouth. It features a corner image with animated flares.
 
+%package -n	uclibc-%{name}-plugin-space-flares
+Group:		System/Kernel and hardware
+Summary:	Plymouth "space-flares" plugin (uClibc build)
+Requires:	uclibc-%{libname} = %{version}-%{release}
+
+%description -n	uclibc-%{name}-plugin-space-flares
+This package contains the "space-flares" boot splash plugin for
+Plymouth. It features a corner image with animated flares.
+
 %package	theme-solar
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Solar" theme
@@ -211,6 +267,17 @@ Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
 %description	plugin-two-step
+This package contains the "two-step" boot splash plugin for
+Plymouth. It features a two phased boot process that starts with
+a progressing animation synced to boot time and finishes with a
+short, fast one-shot animation.
+
+%package -n	uclibc-%{name}-plugin-two-step
+Group:		System/Kernel and hardware
+Summary:	Plymouth "two-step" plugin (uClibc build)
+Requires:	uclibc-%{libname} = %{version}-%{release}
+
+%description -n	uclibc-%{name}-plugin-two-step
 This package contains the "two-step" boot splash plugin for
 Plymouth. It features a two phased boot process that starts with
 a progressing animation synced to boot time and finishes with a
@@ -284,10 +351,6 @@ cd uclibc
 %endif
 	--without-log-viewer
 
-# We don't build these for uclibc since they link against a lot of libraries
-# that we don't provide any uclibc linked version of
-#sed -e 's#viewer##g' -i src/Makefile
-#sed -e 's#label##g' -i src/plugins/controls/Makefile
 %make
 cd ..
 %endif
@@ -324,7 +387,6 @@ cd system
 cd ..
 
 %install
-
 %if %{with uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
 rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
@@ -419,7 +481,9 @@ fi \
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
 %{_mandir}/man8/*
+
 %if %{with uclibc}
+%files -n uclibc-plymouth
 %{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
 %{uclibc_root}%{plymouthclient_execdir}/plymouth
 %dir %{uclibc_root}%{_libdir}/plymouth
@@ -431,28 +495,32 @@ fi \
 %endif
 
 %files -n %{develname}
-%{plymouth_libdir}/libply.so
+/%{_lib}/libply.so
+/%{_lib}/libply-splash-core.so
 %{_libdir}/libply-boot-client.so
 %{_libdir}/libply-splash-graphics.so
-%{_libdir}/plymouth/renderers/x11*
-/%{_lib}/libply-splash-core.so
 %if %{with uclibc}
+%{uclibc_root}/%{_lib}/libply.so
 %{uclibc_root}/%{_lib}/libply-splash-core.so
+%{uclibc_root}%{_libdir}/libply-boot-client.so
+%{uclibc_root}%{_libdir}/libply-splash-graphics.so
 %endif
+%{_libdir}/plymouth/renderers/x11*
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
 
 %files -n %{libname}
-%{plymouth_libdir}/libply.so.%{major}*
+/%{_lib}/libply.so.%{major}*
+/%{_lib}/libply-splash-core.so.%{major}*
 %{_libdir}/libply-boot-client.so.%{major}*
 %{_libdir}/libply-splash-graphics.so.%{major}*
-/%{_lib}/libply-splash-core.so.%{major}*
+
 %if %{with uclibc}
-%dir %{uclibc_root}%{_libdir}/plymouth
-%{uclibc_root}%{plymouth_libdir}/libply.so*
+%files -n uclibc-%{libname}
+%{uclibc_root}/%{_lib}/libply.so.%{major}*
 %{uclibc_root}/%{_lib}/libply-splash-core.so.%{major}*
-%{uclibc_root}%{_libdir}/libply-boot-client.so*
-%{uclibc_root}%{_libdir}/libply-splash-graphics.so*
+%{uclibc_root}%{_libdir}/libply-boot-client.so.%{major}*
+%{uclibc_root}%{_libdir}/libply-splash-graphics.so.%{major}*
 %endif
 
 %files scripts
@@ -467,7 +535,9 @@ fi \
 
 %files plugin-fade-throbber
 %{_libdir}/plymouth/fade-throbber.so
+
 %if %{with uclibc}
+%files -n uclibc-%{name}-plugin-fade-throbber
 %{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
 %endif
 
@@ -476,13 +546,17 @@ fi \
 
 %files plugin-throbgress
 %{_libdir}/plymouth/throbgress.so
+
 %if %{with uclibc}
+%files -n uclibc-%{name}-plugin-throbgress
 %{uclibc_root}%{_libdir}/plymouth/throbgress.so
 %endif
 
 %files plugin-script
 %{_libdir}/plymouth/script.so
+
 %if %{with uclibc}
+%files -n uclibc-%{name}-plugin-script
 %{uclibc_root}%{_libdir}/plymouth/script.so
 %endif
 
@@ -497,7 +571,9 @@ fi \
 
 %files plugin-space-flares
 %{_libdir}/plymouth/space-flares.so
+
 %if %{with uclibc}
+%files -n uclibc-%{name}-plugin-space-flares
 %{uclibc_root}%{_libdir}/plymouth/space-flares.so
 %endif
 
@@ -506,7 +582,9 @@ fi \
 
 %files plugin-two-step
 %{_libdir}/plymouth/two-step.so
+
 %if %{with uclibc}
+%files -n uclibc-%{name}-plugin-two-step
 %{uclibc_root}%{_libdir}/plymouth/two-step.so
 %endif
 
@@ -517,4 +595,3 @@ fi \
 %{_datadir}/plymouth/themes/glow
 
 %files system-theme
-
