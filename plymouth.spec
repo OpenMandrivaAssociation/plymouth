@@ -12,8 +12,8 @@
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.8.6.1
-Release:	2
+Version:	0.8.8
+Release:	1
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -32,7 +32,7 @@ Patch4:		plymouth-fix-window-size
 # PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
 Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 # PATCH-OPENSUSE -- Add line numbers to tracing output
-Patch6:         plymouth-trace-lines
+Patch6:		plymouth-trace-lines
 Patch7:		plymouth-0.8.6.1-less-greedy-usr_lib-substitution.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
@@ -52,7 +52,7 @@ place of the text messages that normally get shown.  Text
 messages are instead redirected to a log file for viewing
 after boot.
 
-%package -n	uclibc-%{name}
+%package -n uclibc-%{name}
 Summary:	uClibc build of %{name}
 Group:		System/Kernel and hardware
 Requires:	%{name} = %{EVRD}
@@ -60,16 +60,16 @@ Requires:	%{name} = %{EVRD}
 %description -n	uclibc-%{name}
 uClibc linked build of %{name}.
 
-%package	system-theme
-Group:		System/Kernel and hardware
+%package system-theme
 Summary:	Plymouth default theme
+Group:		System/Kernel and hardware
 Requires:	plymouth(system-theme)
 Requires:	plymouth = %{version}-%{release}
 
 %description	system-theme
 This metapackage tracks the current distribution default theme.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Obsoletes:	%{mklibname %{name} 0} < 0.8.0
@@ -78,7 +78,7 @@ Obsoletes:	%{mklibname %{name} 0} < 0.8.0
 This package contains the libply and libplybootsplash libraries
 used by Plymouth.
 
-%package -n	uclibc-%{libname}
+%package -n uclibc-%{libname}
 Summary:	Plymouth libraries (uClibc builld)
 Group:		System/Libraries
 
@@ -86,8 +86,7 @@ Group:		System/Libraries
 This package contains the libply and libplybootsplash libraries
 used by Plymouth.
 
-%package -n	%{develname}
-Group:		System/Kernel and hardware
+%package -n %{develname}
 Summary:	Libraries and headers for writing Plymouth splash plugins
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
@@ -100,48 +99,48 @@ Requires:	uclibc-%{libname} = %{version}
 This package contains the libply and libplybootsplash libraries
 and headers needed to develop 3rd party splash plugins for Plymouth.
 
-%package	utils
-Group:		System/Kernel and hardware
+%package utils
 Summary:	Plymouth related utilities
+Group:		System/Kernel and hardware
 Requires:	%{name} = %{version}-%{release}
 
-%description	utils
+%description utils
 This package contains utilities that integrate with Plymouth
 including a boot log viewing application.
 
-%package	scripts
-Group:		System/Kernel and hardware
+%package scripts
 Summary:	Plymouth related scripts
+Group:		System/Kernel and hardware
 Conflicts:	mkinitrd < 6.0.92-6mdv
 Requires:	plymouth = %{version}-%{release}
 
-%description	scripts
+%description scripts
 This package contains scripts that help integrate Plymouth with
 the system.
 
-%package	plugin-label
-Group:		System/Kernel and hardware
+%package plugin-label
 Summary:	Plymouth label plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 
-%description	plugin-label
+%description plugin-label
 This package contains the label control plugin for
 Plymouth. It provides the ability to render text on
 graphical boot splashes using pango and cairo.
 
-%package	plugin-fade-throbber
-Group:		System/Kernel and hardware
+%package plugin-fade-throbber
 Summary:	Plymouth "Fade-Throbber" plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 
-%description	plugin-fade-throbber
+%description plugin-fade-throbber
 This package contains the "Fade-In" boot splash plugin for
 Plymouth. It features a centered image that fades in and out
 while other images pulsate around during system boot up.
 
-%package -n	uclibc-%{name}-plugin-fade-throbber
-Group:		System/Kernel and hardware
+%package -n uclibc-%{name}-plugin-fade-throbber
 Summary:	Plymouth "Fade-Throbber" plugin (uClibc build)
+Group:		System/Kernel and hardware
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
 %description -n	uclibc-%{name}-plugin-fade-throbber
@@ -149,132 +148,132 @@ This package contains the "Fade-In" boot splash plugin for
 Plymouth. It features a centered image that fades in and out
 while other images pulsate around during system boot up.
 
-%package	plugin-script
-Group:		System/Kernel and hardware
+%package plugin-script
 Summary:	Plymouth "Script" plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
-%description	plugin-script
+%description plugin-script
 This package contains the "Script" plugin for Plymouth. 
 
-%package -n	uclibc-%{name}-plugin-script
-Group:		System/Kernel and hardware
+%package -n uclibc-%{name}-plugin-script
 Summary:	Plymouth "Script" plugin (uClibc build)
+Group:		System/Kernel and hardware
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
-%description	plugin-script
+%description -n uclibc-%{name}-plugin-script
 This package contains the "Script" plugin for Plymouth. 
 
-%package	theme-script
-Group:		System/Kernel and hardware
+%package theme-script
 Summary:	Plymouth "Script" theme
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-script = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-script
+%description theme-script
 This package contains the "Script" boot splash theme for
-Plymouth. 
+Plymouth.
 
-%package	theme-fade-in
-Group:		System/Kernel and hardware
+%package theme-fade-in
 Summary:	Plymouth "Fade-In" theme
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-fade-throbber = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-fade-in
+%description theme-fade-in
 This package contains the "Fade-In" boot splash theme for
 Plymouth. It features a centered logo that fades in and out
 while stars twinkle around the logo during system boot up.
 
-%package	plugin-throbgress
-Group:		System/Kernel and hardware
+%package plugin-throbgress
 Summary:	Plymouth "Throbgress" plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
-%description	plugin-throbgress
+%description plugin-throbgress
 This package contains the "throbgress" boot splash plugin for
 Plymouth. It features a centered logo and animated spinner that
 spins repeatedly while a progress bar advances at the bottom of
 the screen.
 
-%package -n	uclibc-%{name}-plugin-throbgress
-Group:		System/Kernel and hardware
+%package -n uclibc-%{name}-plugin-throbgress
 Summary:	Plymouth "Throbgress" plugin (uClibc build)
+Group:		System/Kernel and hardware
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
-%description -n	uclibc-%{name}-plugin-throbgress
+%description -n uclibc-%{name}-plugin-throbgress
 This package contains the "throbgress" boot splash plugin for
 Plymouth. It features a centered logo and animated spinner that
 spins repeatedly while a progress bar advances at the bottom of
 the screen.
 
-%package	theme-spinfinity
-Group:		System/Kernel and hardware
+%package theme-spinfinity
 Summary:	Plymouth "Spinfinity" theme
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-throbgress = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-spinfinity
+%description theme-spinfinity
 This package contains the "Spinfinity" boot splash theme for
 Plymouth. It features a centered logo and animated spinner that
 spins in the shape of an infinity sign.
 
-%package	theme-spinner
-Group:		System/Kernel and hardware
+%package theme-spinner
 Summary:	Plymouth "Spinner" theme
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-two-step = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-spinner
+%description theme-spinner
 This package contains the "Spinner" boot splash theme for
 Plymouth.
 
-%package	plugin-space-flares
-Group:		System/Kernel and hardware
+%package plugin-space-flares
 Summary:	Plymouth "space-flares" plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
-%description	plugin-space-flares
+%description plugin-space-flares
 This package contains the "space-flares" boot splash plugin for
 Plymouth. It features a corner image with animated flares.
 
-%package -n	uclibc-%{name}-plugin-space-flares
-Group:		System/Kernel and hardware
+%package -n uclibc-%{name}-plugin-space-flares
 Summary:	Plymouth "space-flares" plugin (uClibc build)
+Group:		System/Kernel and hardware
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
-%description -n	uclibc-%{name}-plugin-space-flares
+%description -n uclibc-%{name}-plugin-space-flares
 This package contains the "space-flares" boot splash plugin for
 Plymouth. It features a corner image with animated flares.
 
-%package	theme-solar
-Group:		System/Kernel and hardware
+%package theme-solar
 Summary:	Plymouth "Solar" theme
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-space-flares = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-solar
+%description theme-solar
 This package contains the "Solar" boot splash theme for
 Plymouth. It features a blue flamed sun with animated solar flares.
 
-%package	plugin-two-step
-Group:		System/Kernel and hardware
+%package plugin-two-step
 Summary:	Plymouth "two-step" plugin
+Group:		System/Kernel and hardware
 Requires:	%{libname} = %{version}-%{release}
 Requires:	plymouth-plugin-label = %{version}-%{release}
 
-%description	plugin-two-step
+%description plugin-two-step
 This package contains the "two-step" boot splash plugin for
 Plymouth. It features a two phased boot process that starts with
 a progressing animation synced to boot time and finishes with a
 short, fast one-shot animation.
 
-%package -n	uclibc-%{name}-plugin-two-step
-Group:		System/Kernel and hardware
+%package -n uclibc-%{name}-plugin-two-step
 Summary:	Plymouth "two-step" plugin (uClibc build)
+Group:		System/Kernel and hardware
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
 %description -n	uclibc-%{name}-plugin-two-step
@@ -283,24 +282,24 @@ Plymouth. It features a two phased boot process that starts with
 a progressing animation synced to boot time and finishes with a
 short, fast one-shot animation.
 
-%package	theme-charge
-Group:		System/Kernel and hardware
+%package theme-charge
 Summary:	Plymouth "Charge" plugin
+Group:		System/Kernel and hardware
 Requires:	%{name}-plugin-two-step = %{version}-%{release}
 Requires(post):	plymouth-scripts = %{version}-%{release}
 
-%description	theme-charge
+%description theme-charge
 This package contains the "charge" boot splash theme for
 Plymouth. It features the shadowy hull of a logo charge up and
 and finally burst into full form.
 
-%package	theme-glow
-Group:		System/Kernel and hardware
+%package theme-glow
 Summary:	Plymouth "Glow" plugin
+Group:		System/Kernel and hardware
 Requires(post):	plymouth-scripts  = %{version}-%{release}
 Requires:	plymouth-plugin-two-step = %{version}-%{release}
 
-%description	theme-glow
+%description theme-glow
 This package contains the "Glow" boot splash theme for Plymouth.
 
 %prep
