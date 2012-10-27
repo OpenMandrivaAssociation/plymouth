@@ -8,7 +8,7 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
@@ -23,17 +23,11 @@ Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
 # PATCH-OPENSUSE -- Change udevadm path
-Patch1:		plymouth-0.8.6.1-udevadm-path.patch
-# PATCH-FIX-UPSTREAM -- Create targets for plymouth systemd services
-Patch2:		plymouth-systemd-target.patch
-Patch3:		plymouth-0.8.6.1-fix-systemd-service-patch.patch
+Patch1:		plymouth-0.8.8-udevadm-path.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
-# PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
-Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch6:		plymouth-trace-lines
-Patch7:		plymouth-0.8.6.1-less-greedy-usr_lib-substitution.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -306,12 +300,8 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %setup -q
 %patch0 -p1 -b .suspend~
 %patch1 -p1 -b .udevadm~
-%patch2 -p1 -b .systemd~
-%patch3 -p1 -b .dashes~
 %patch4 -p1 -b .window_size~
-%patch5 -p1 -b .strip_quotes~
 %patch6 -p1 -b .trace_lines~
-%patch7 -p1 -b .sysroot_subst~
 autoreconf -f
 
 %build
