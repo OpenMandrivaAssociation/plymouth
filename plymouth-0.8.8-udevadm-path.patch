@@ -1,0 +1,12 @@
+diff -Naur plymouth-0.8.8/systemd-units/plymouth-start.service.in plymouth-0.8.8.tpg/systemd-units/plymouth-start.service.in
+--- plymouth-0.8.8/systemd-units/plymouth-start.service.in	2012-09-26 16:50:53.000000000 +0000
++++ plymouth-0.8.8.tpg/systemd-units/plymouth-start.service.in	2012-10-28 00:34:46.745207606 +0000
+@@ -8,7 +8,7 @@
+ 
+ [Service]
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
+-ExecStartPost=-/bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
++ExecStartPost=-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+ KillMode=none
+ SendSIGKILL=no
