@@ -1,0 +1,9 @@
+--- plymouth-0.8.6.1/systemd-units/plymouth-start.service.in.dashes~	2012-08-13 20:31:10.000000000 +0200
++++ plymouth-0.8.6.1/systemd-units/plymouth-start.service.in	2012-08-13 20:31:29.601007839 +0200
+@@ -9,5 +9,5 @@ ConditionPathExists=!@plymouthruntimedir
+ 
+ [Service]
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
+-ExecStartPost=-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev;-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev; -@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
++ExecStartPost=-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking

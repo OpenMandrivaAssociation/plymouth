@@ -1,0 +1,7 @@
+diff -Nur plymouth-0.8.6.1.old/scripts/plymouth-update-initrd plymouth-0.8.6.1/scripts/plymouth-update-initrd
+--- plymouth-0.8.6.1.old/scripts/plymouth-update-initrd	2012-06-06 18:14:48.000000000 +0400
++++ plymouth-0.8.6.1/scripts/plymouth-update-initrd	2012-11-20 19:23:21.051664290 +0400
+@@ -1,2 +1,2 @@
+ #!/bin/bash
+-mkinitrd -f /boot/initrd-$(uname -r).img $(uname -r)
++dracut -f /boot/initrd-$(uname -r).img $(uname -r)

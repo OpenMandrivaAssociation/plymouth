@@ -1,0 +1,22 @@
+diff -Nur plymouth-0.8.6.1.old/systemd-units/plymouth-quit.service plymouth-0.8.6.1/systemd-units/plymouth-quit.service
+--- plymouth-0.8.6.1.old/systemd-units/plymouth-quit.service	2012-07-10 18:19:34.000000000 +0400
++++ plymouth-0.8.6.1/systemd-units/plymouth-quit.service	2012-11-15 17:11:19.353036430 +0400
+@@ -3,6 +3,6 @@
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
+ 
+ [Service]
+-ExecStart=-/bin/plymouth quit
++ExecStart=/bin/plymouth quit
+ Type=oneshot
+ TimeoutSec=20
+diff -Nur plymouth-0.8.6.1.old/systemd-units/plymouth-quit-wait.service plymouth-0.8.6.1/systemd-units/plymouth-quit-wait.service
+--- plymouth-0.8.6.1.old/systemd-units/plymouth-quit-wait.service	2012-07-10 18:19:34.000000000 +0400
++++ plymouth-0.8.6.1/systemd-units/plymouth-quit-wait.service	2012-11-15 17:11:15.317506806 +0400
+@@ -3,6 +3,6 @@
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
+ 
+ [Service]
+-ExecStart=-/bin/plymouth --wait
++ExecStart=/bin/plymouth --wait
+ Type=oneshot
+ TimeoutSec=20

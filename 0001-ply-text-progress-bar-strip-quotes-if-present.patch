@@ -1,0 +1,29 @@
+From fe7008c13b38898d78ff4ecf897fea127982fd9b Mon Sep 17 00:00:00 2001
+From: Jan Engelhardt <jengelh@inai.de>
+Date: Sun, 29 Jul 2012 20:25:21 +0200
+Subject: [PATCH] ply-text-progress-bar: strip quotes if present
+
+The syntax for sysconfig-style files allows for quotes.
+---
+ src/libply-splash-core/ply-text-progress-bar.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/src/libply-splash-core/ply-text-progress-bar.c b/src/libply-splash-core/ply-text-progress-bar.c
+index 0f4d74e..0b29690 100644
+--- a/src/libply-splash-core/ply-text-progress-bar.c
++++ b/src/libply-splash-core/ply-text-progress-bar.c
+@@ -137,6 +137,11 @@ get_os_string (void)
+           if (pos2 != NULL)
+             *pos2 = '\0';
+ 
++          if ((*pos == '\"' && pos2[-1] == '\"') ||
++              (*pos == '\'' && pos2[-1] == '\'')) {
++		++pos;
++		*--pos2 = '\0';
++          }
+           asprintf (&os_string, " %s", pos);
+         }
+       goto out;
+-- 
+1.7.7
+
