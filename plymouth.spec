@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -34,9 +34,9 @@ Patch4:		plymouth-fix-window-size
 # PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
 Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 # PATCH-OPENSUSE -- Add line numbers to tracing output
-Patch6:         plymouth-trace-lines
-Patch7:         plymouth-0.8.6.1.quitsplash.patch
-Patch8:         plymouth-0.8.6.1.mkinitrd-to-dracut.patch
+Patch6:		plymouth-trace-lines
+Patch7:		plymouth-0.8.6.1.quitsplash.patch
+Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
 %if %{with uclibc}
@@ -47,7 +47,7 @@ BuildRequires:	systemd-units
 %rename		splashy
 Requires(post):	plymouth-scripts = %{version}-%{release}
 Requires:	initscripts >= 8.83
-Requires(post): dracut
+Requires(post):	dracut
 Requires:	desktop-common-data >= 2010.0-1mdv
 Conflicts:	systemd-units < 186
 
@@ -258,10 +258,11 @@ make distclean
 %endif
 
 %build
+autoreconf -f
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
-cd uclibc
+pushd uclibc
 %configure CC="%{uclibc_cc}" \
 	CFLAGS="%{uclibc_cflags}" \
 	LDFLAGS="%{ldflags} -lz" \
@@ -297,11 +298,11 @@ cd uclibc
 sed -e 's#viewer##g' -i src/Makefile
 sed -e 's#label##g' -i src/plugins/controls/Makefile
 %make
-cd ..
+popd
 %endif
 
 mkdir -p system
-cd system
+pushd system
 %configure2_5x \
 	--disable-static \
 	--enable-tracing \
@@ -329,7 +330,7 @@ cd system
 
 
 %make
-cd ..
+popd
 
 %install
 
@@ -338,19 +339,6 @@ cd ..
 rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
 %endif
 %makeinstall_std -C system
-
-
-# (tpg) enable plymouth services
-mkdir -p %{buildroot}/lib/systemd/system/{sysinit,poweroff,halt,kexec,reboot,multi-user}.target.wants
-ln -s ../plymouth-start.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
-ln -s ../plymouth-read-write.service %{buildroot}/lib/systemd/system/sysinit.target.wants/
-ln -s ../plymouth-poweroff.service %{buildroot}/lib/systemd/system/poweroff.target.wants/
-ln -s ../plymouth-halt.service %{buildroot}/lib/systemd/system/halt.target.wants/
-ln -s ../plymouth-kexec.service %{buildroot}/lib/systemd/system/kexec.target.wants/
-ln -s ../plymouth-reboot.service %{buildroot}/lib/systemd/system/reboot.target.wants/
-ln -s ../plymouth-quit.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
-ln -s ../plymouth-quit-wait.service %{buildroot}/lib/systemd/system/multi-user.target.wants/
-
 
 # Temporary symlink until rc.sysinit is fixed
 (cd %{buildroot}%{_bindir}; ln -s ../../bin/plymouth)
