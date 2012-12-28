@@ -28,8 +28,6 @@ Patch0:		plymouth-restore-suspend.patch
 Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
-# PATCH-FIX-UPSTREAM -- Recognize quotes often used in sysconfig-style files
-Patch5:		0001-ply-text-progress-bar-strip-quotes-if-present.patch
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch6:		plymouth-trace-lines
 Patch7:		plymouth-0.8.6.1.quitsplash.patch
@@ -242,7 +240,6 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch0 -p1 -b .suspend~
 %patch1 -p1 -b .udevadm~
 %patch4 -p1 -b .window_size~
-%patch5 -p1 -b .strip_quotes~
 %patch6 -p1 -b .trace_lines~
 %patch7 -p1
 %patch8 -p1
