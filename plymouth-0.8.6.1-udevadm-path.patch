@@ -1,9 +1,12 @@
---- plymouth-0.8.6.1/systemd-units/plymouth-start.service.in.udevadm~	2012-08-13 20:19:40.629474667 +0200
-+++ plymouth-0.8.6.1/systemd-units/plymouth-start.service.in	2012-08-13 20:20:03.991788809 +0200
-@@ -9,5 +9,5 @@ ConditionPathExists=!@plymouthruntimedir
+diff -Naur plymouth-0.8.8/systemd-units/plymouth-start.service.in plymouth-0.8.8.tpg/systemd-units/plymouth-start.service.in
+--- plymouth-0.8.8/systemd-units/plymouth-start.service.in	2012-09-26 16:50:53.000000000 +0000
++++ plymouth-0.8.8.tpg/systemd-units/plymouth-start.service.in	2012-10-28 00:34:46.745207606 +0000
+@@ -8,7 +8,7 @@
  
  [Service]
  ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
--ExecStartPost=-/bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev;-/bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev; -@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
-+ExecStartPost=-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev;-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev; -@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+-ExecStartPost=-/bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
++ExecStartPost=-/sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /sbin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
+ KillMode=none
+ SendSIGKILL=no
