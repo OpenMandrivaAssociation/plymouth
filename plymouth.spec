@@ -30,7 +30,6 @@ Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 Patch4:		plymouth-fix-window-size
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch6:		plymouth-trace-lines
-Patch7:		plymouth-0.8.6.1.quitsplash.patch
 Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
@@ -241,7 +240,6 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch1 -p1 -b .udevadm~
 %patch4 -p1 -b .window_size~
 %patch6 -p1 -b .trace_lines~
-%patch7 -p1
 %patch8 -p1
 
 %if %{snapshot}
