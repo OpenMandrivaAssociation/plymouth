@@ -248,7 +248,8 @@ make distclean
 %endif
 
 %build
-autoreconf -f
+libtoolize --copy --force 
+autoreconf -fi
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
