@@ -33,8 +33,8 @@ Patch6:		plymouth-trace-lines
 Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
 Patch9:		plymouth-0.8.8-fix-path-to-pid-files.patch
 
-#BuildRequires:	gtk2-devel
-#BuildRequires:	libdrm-devel
+BuildRequires:	gtk2-devel
+BuildRequires:	libdrm-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 BuildRequires:	libpng-static-devel
