@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -31,8 +31,10 @@ Patch4:		plymouth-fix-window-size
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch6:		plymouth-trace-lines
 Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
-BuildRequires:	gtk2-devel
-BuildRequires:	libdrm-devel
+Patch9:		plymouth-0.8.8-fix-path-to-pid-files.patch
+
+#BuildRequires:	gtk2-devel
+#BuildRequires:	libdrm-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 BuildRequires:	libpng-static-devel
@@ -241,6 +243,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %patch4 -p1 -b .window_size~
 %patch6 -p1 -b .trace_lines~
 %patch8 -p1
+%patch9 -p1 -b .pid
 
 %if %{snapshot}
 sh ./autogen.sh
@@ -248,7 +251,7 @@ make distclean
 %endif
 
 %build
-libtoolize --copy --force 
+libtoolize --copy --force
 autoreconf -fi
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
