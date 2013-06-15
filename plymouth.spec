@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	4
+Release:	5
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -24,14 +24,12 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
-# PATCH-OPENSUSE -- Change udevadm path
-Patch1:		plymouth-0.8.6.1-udevadm-path.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
 # PATCH-OPENSUSE -- Add line numbers to tracing output
-Patch6:		plymouth-trace-lines
 Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
-Patch9:		plymouth-0.8.8-fix-path-to-pid-files.patch
+# (tpg) sync with current git
+Patch10:	0001-tag-0.8.8-0d610f91e2bfc85f2e9a4c037adc91306e4faf62.patch
 
 BuildRequires:	gtk2-devel
 BuildRequires:	libdrm-devel
@@ -239,11 +237,9 @@ This package contains the "Glow" boot splash theme for Plymouth.
 %prep
 %setup -q
 %patch0 -p1 -b .suspend~
-%patch1 -p1 -b .udevadm~
 %patch4 -p1 -b .window_size~
-%patch6 -p1 -b .trace_lines~
 %patch8 -p1
-%patch9 -p1 -b .pid
+%patch10 -p1 -b .git
 
 %if %{snapshot}
 sh ./autogen.sh
