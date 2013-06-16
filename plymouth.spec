@@ -31,8 +31,8 @@ Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
 # (tpg) sync with current git
 Patch10:	0001-tag-0.8.8-0d610f91e2bfc85f2e9a4c037adc91306e4faf62.patch
 
-BuildRequires:	gtk2-devel
-BuildRequires:	libdrm-devel
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(libdrm)
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 BuildRequires:	libpng-static-devel
