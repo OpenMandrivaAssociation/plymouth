@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	5
+Release:	6
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -251,6 +251,8 @@ make distclean
 libtoolize --copy --force
 autoreconf -fi
 export CONFIGURE_TOP=`pwd`
+%global optflags %{optflags} -Os
+
 %if %{with uclibc}
 mkdir -p uclibc
 pushd uclibc
