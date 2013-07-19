@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	6
+Release:	7
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -29,7 +29,7 @@ Patch4:		plymouth-fix-window-size
 # PATCH-OPENSUSE -- Add line numbers to tracing output
 Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
 # (tpg) sync with current git
-Patch10:	0001-tag-0.8.8-0d610f91e2bfc85f2e9a4c037adc91306e4faf62.patch
+Patch10:	0001-tag-0.8.8-de4f23a86837a0a212995c7e6e90f2be902c790b.patch
 
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)
