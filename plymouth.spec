@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	7
+Release:	8
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -265,7 +265,7 @@ pushd uclibc
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
 	--enable-tracing \
 	--disable-tests \
-	--with-logo=%{_datadir}/icons/large/mandriva.png \
+	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
@@ -300,7 +300,7 @@ pushd system
 	--disable-static \
 	--enable-tracing \
 	--disable-tests \
-	--with-logo=%{_datadir}/icons/large/mandriva.png \
+	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
