@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	8
+Release:	9
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -94,7 +94,7 @@ including a boot log viewing application.
 Group:		System/Kernel and hardware
 Summary:	Plymouth related scripts
 Conflicts:	mkinitrd < 6.0.92-6mdv
-Requires:	plymouth = %{version}-%{release}
+Requires(pre):	%{name} = %{version}-%{release}
 
 %description scripts
 This package contains scripts that help integrate Plymouth with
