@@ -183,6 +183,18 @@ Requires(post):	plymouth-scripts = %{version}-%{release}
 This package contains the "Spinner" boot splash theme for
 Plymouth.
 
+%package plugin-two-step
+Group:		System/Kernel and hardware
+Summary:	Plymouth "two-step" plugin
+Requires:	%{libname} = %{version}-%{release}
+Requires:	plymouth-plugin-label = %{version}-%{release}
+
+%description plugin-two-step
+This package contains the "two-step" boot splash plugin for
+Plymouth. It features a two phased boot process that starts with
+a progressing animation synced to boot time and finishes with a
+short, fast one-shot animation.
+
 %package plugin-space-flares
 Group:		System/Kernel and hardware
 Summary:	Plymouth "space-flares" plugin
