@@ -249,7 +249,7 @@ Plymouth.
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Tribar" plugin
 Requires(post):	plymouth-scripts  = %{version}-%{release}
-Requires:	plymouth-tribar = %{version}-%{release}
+Requires:	plymouth-plugin-tribar = %{version}-%{release}
 
 %description theme-tribar
 This package contains the "Tribar" boot splash theme for Plymouth.
