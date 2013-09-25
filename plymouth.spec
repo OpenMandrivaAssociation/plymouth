@@ -137,7 +137,7 @@ Requires(post):	plymouth-scripts = %{version}-%{release}
 
 %description theme-script
 This package contains the "Script" boot splash theme for
-Plymouth. 
+Plymouth.
 
 %package theme-fade-in
 Group:		System/Kernel and hardware
@@ -174,10 +174,10 @@ Plymouth. It features a centered logo and animated spinner that
 spins in the shape of an infinity sign.
 
 %package theme-spinner
-Group: System/Kernel and hardware
-Summary: Plymouth "Spinner" theme
-Requires: %{name}-plugin-two-step = %{version}-%{release}
-Requires(post): plymouth-scripts = %{version}-%{release}
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Spinner" theme
+Requires:	%{name}-plugin-two-step = %{version}-%{release}
+Requires(post):	plymouth-scripts = %{version}-%{release}
 
 %description theme-spinner
 This package contains the "Spinner" boot splash theme for
@@ -203,18 +203,6 @@ Requires(post):	plymouth-scripts = %{version}-%{release}
 This package contains the "Solar" boot splash theme for
 Plymouth. It features a blue flamed sun with animated solar flares.
 
-%package plugin-two-step
-Group:		System/Kernel and hardware
-Summary:	Plymouth "two-step" plugin
-Requires:	%{libname} = %{version}-%{release}
-Requires:	plymouth-plugin-label = %{version}-%{release}
-
-%description plugin-two-step
-This package contains the "two-step" boot splash plugin for
-Plymouth. It features a two phased boot process that starts with
-a progressing animation synced to boot time and finishes with a
-short, fast one-shot animation.
-
 %package theme-charge
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Charge" plugin
@@ -234,6 +222,25 @@ Requires:	plymouth-plugin-two-step = %{version}-%{release}
 
 %description theme-glow
 This package contains the "Glow" boot splash theme for Plymouth.
+
+%package plugin-tribar
+Group:		System/Kernel and hardware
+Summary:	Plymouth "tribar" plugin
+Requires:	%{libname} = %{version}-%{release}
+Requires:	plymouth-plugin-label = %{version}-%{release}
+
+%description plugin-tribar
+This package contains the "tribar" boot splash plugin for
+Plymouth.
+
+%package theme-tribar
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Tribar" plugin
+Requires(post):	plymouth-scripts  = %{version}-%{release}
+Requires:	plymouth-tribar = %{version}-%{release}
+
+%description theme-tribar
+This package contains the "Tribar" boot splash theme for Plymouth.
 
 %prep
 %setup -q
@@ -263,7 +270,6 @@ pushd uclibc
 	--libdir="%{uclibc_root}%{_libdir}" \
 	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
 	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
-	--enable-tracing \
 	--disable-tests \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
@@ -274,11 +280,10 @@ pushd uclibc
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
+	--enable-drm-renderer \
+	--with-boot-tty=/dev/tty7 \
+	--with-shutdown-tty=/dev/tty1 \
 	--enable-pango \
-%ifnarch %{ix86} x86_64
-	--disable-libdrm_intel \
-%endif
-	--enable-libkms \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
@@ -298,7 +303,6 @@ mkdir -p system
 pushd system
 %configure2_5x \
 	--disable-static \
-	--enable-tracing \
 	--disable-tests \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
@@ -309,11 +313,10 @@ pushd system
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
+	--enable-drm-renderer \
+	--with-boot-tty=/dev/tty7 \
+	--with-shutdown-tty=/dev/tty1 \
 	--enable-pango \
-%ifnarch %{ix86} x86_64
-	--disable-libdrm_intel \
-%endif
-	--enable-libkms \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
@@ -355,7 +358,6 @@ if [ "x$DURING_INSTALL" = "x" ]; then
    %{_libexecdir}/plymouth/plymouth-update-initrd
   fi
 fi
-
 
 %postun
 if [ $1 -eq 0 ]; then
@@ -502,6 +504,15 @@ fi \
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/plymouth/two-step.so
 %endif
+
+%files plugin-tribar
+%{_libdir}/plymouth/tribar.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/plymouth/tribar.so
+%endif
+
+%files theme-tribar
+%{_datadir}/plymouth/themes/tribar
 
 %files theme-charge
 %{_datadir}/plymouth/themes/charge
