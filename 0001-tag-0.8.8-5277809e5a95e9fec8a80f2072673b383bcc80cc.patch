@@ -1,0 +1,4496 @@
+diff --git a/configure.ac b/configure.ac
+index 2ab0893..65ab02e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -6,7 +6,7 @@ AC_CONFIG_AUX_DIR(build-tools)
+ AC_USE_SYSTEM_EXTENSIONS
+ AC_SYS_LARGEFILE
+ AC_PROG_AWK
+-AC_PROG_CC
++AC_PROG_CC_STDC
+ AM_PROG_CC_C_O
+ AC_HEADER_STDC
+ AC_C_CONST
+@@ -16,7 +16,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+ AM_MAINTAINER_MODE([enable])
+ 
+ PKG_PROG_PKG_CONFIG
+-LT_INIT
++LT_INIT([dlopen disable-static pic-only])
+ 
+ ## increment if the interface has additions, changes, removals.
+ LT_CURRENT=3
+@@ -44,6 +44,9 @@ PLYMOUTH_LIBS="-lm -lrt -ldl"
+ AC_SUBST(PLYMOUTH_CFLAGS)
+ AC_SUBST(PLYMOUTH_LIBS)
+ 
++AC_PATH_PROG([SYSTEMD_ASK_PASSWORD_AGENT], [systemd-tty-ask-password-agent])
++AC_PATH_PROG([UDEVADM], [udevadm])
++
+ AC_ARG_ENABLE(pango, AS_HELP_STRING([--enable-pango],[enable building with pango, disabled there is no encryption prompts]),enable_pango=$enableval,enable_pango=yes)
+ AM_CONDITIONAL(ENABLE_PANGO,  [test "$enable_pango" = yes])
+ 
+@@ -62,148 +65,6 @@ if test x$enable_gtk = xyes; then
+   AC_SUBST(GTK_LIBS)
+ fi
+ 
+-AC_ARG_ENABLE(libdrm_intel, AS_HELP_STRING([--enable-libdrm_intel],[enable building with libdrm_intel support]),enable_libdrm_intel=$enableval,enable_libdrm_intel=no)
+-AM_CONDITIONAL(ENABLE_LIBDRM_INTEL,  [test "$enable_libdrm_intel" = yes])
+-
+-if test x$enable_libdrm_intel = xyes; then
+-  PKG_CHECK_MODULES(DRM_INTEL, [libdrm libdrm_intel])
+-  OLD_CFLAGS="$CFLAGS"
+-  CFLAGS="$CFLAGS $DRM_INTEL_CFLAGS"
+-  AC_MSG_CHECKING([if i915_drm.h is in include path])
+-  AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-  [[
+-    #include <stdint.h>
+-    #include <stdlib.h>
+-    #include "i915_drm.h"
+-  ]],[[]]),[found_drm_intel_kernel_headers=yes],[found_drm_intel_kernel_headers=no])
+-
+-  if test "$found_drm_intel_kernel_headers" = "yes"; then
+-    AC_MSG_RESULT([yes])
+-  else
+-    AC_MSG_RESULT([no])
+-    AC_MSG_CHECKING([if we can find them anyway])
+-
+-    MORE_DRM_CFLAGS="-I`$PKG_CONFIG --variable includedir libdrm`/drm"
+-    CFLAGS="$CFLAGS $MORE_DRM_CFLAGS"
+-    AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-    [[
+-      #include <stdint.h>
+-      #include <stdlib.h>
+-      #include "i915_drm.h"
+-    ]],[[]]),[found_drm_intel_kernel_headers=yes],[found_drm_intel_kernel_headers=no])
+-
+-    if test "$found_drm_intel_kernel_headers" = "yes"; then
+-      AC_MSG_RESULT([yes])
+-      DRM_INTEL_CFLAGS="$DRM_INTEL_CFLAGS $MORE_DRM_CFLAGS"
+-    else
+-      AC_MSG_RESULT([no])
+-      AC_MSG_ERROR([Could not find i915_drm.h])
+-    fi
+-  fi
+-
+-  AC_SUBST(DRM_INTEL_CFLAGS)
+-  AC_SUBST(DRM_INTEL_LIBS)
+-  AC_DEFINE(PLY_ENABLE_LIBDRM_INTEL, 1, [Enable support for libdrm_intel driver])
+-fi
+-
+-AC_ARG_ENABLE(libdrm_radeon, AS_HELP_STRING([--enable-libdrm_radeon],[enable building with libdrm_radeon support]),enable_libdrm_radeon=$enableval,enable_libdrm_radeon=no)
+-AM_CONDITIONAL(ENABLE_LIBDRM_RADEON,  [test "$enable_libdrm_radeon" = yes])
+-
+-if test x$enable_libdrm_radeon = xyes; then
+-  PKG_CHECK_MODULES(DRM_RADEON, [libdrm libdrm_radeon])
+-  OLD_CFLAGS="$CFLAGS"
+-  CFLAGS="$CFLAGS $DRM_RADEON_CFLAGS"
+-  AC_MSG_CHECKING([if radeon_drm.h is in include path])
+-  AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-  [[
+-    #include <stdint.h>
+-    #include <stdlib.h>
+-    #include "radeon_drm.h"
+-  ]],[[]]),[found_drm_radeon_kernel_headers=yes],[found_drm_radeon_kernel_headers=no])
+-
+-  if test "$found_drm_radeon_kernel_headers" = "yes"; then
+-    AC_MSG_RESULT([yes])
+-  else
+-    AC_MSG_RESULT([no])
+-    AC_MSG_CHECKING([if we can find them anyway])
+-
+-    MORE_DRM_CFLAGS="-I`$PKG_CONFIG --variable includedir libdrm`/drm"
+-    CFLAGS="$CFLAGS $MORE_DRM_RADEON_CFLAGS"
+-    AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-    [[
+-      #include <stdint.h>
+-      #include <stdlib.h>
+-      #include "radeon_drm.h"
+-    ]],[[]]),[found_drm_radeon_kernel_headers=yes],[found_drm_radeon_kernel_headers=no])
+-
+-    if test "$found_drm_radeon_kernel_headers" = "yes"; then
+-      AC_MSG_RESULT([yes])
+-      DRM_RADEON_CFLAGS="$DRM_RADEON_CFLAGS $MORE_DRM_CFLAGS"
+-    else
+-      AC_MSG_RESULT([no])
+-      AC_MSG_ERROR([Could not find radeon_drm.h])
+-    fi
+-  fi
+-
+-  AC_SUBST(DRM_RADEON_CFLAGS)
+-  AC_SUBST(DRM_RADEON_LIBS)
+-  AC_DEFINE(PLY_ENABLE_LIBDRM_RADEON, 1, [Enable support for libdrm_radeon driver])
+-fi
+-
+-AC_ARG_ENABLE(libdrm_nouveau, AS_HELP_STRING([--enable-libdrm_nouveau],[enable building with libdrm_nouveau support]),enable_libdrm_nouveau=$enableval,enable_libdrm_nouveau=no)
+-AM_CONDITIONAL(ENABLE_LIBDRM_NOUVEAU,  [test "$enable_libdrm_nouveau" = yes])
+-
+-if test x$enable_libdrm_nouveau = xyes; then
+-  PKG_CHECK_MODULES(DRM_NOUVEAU, [libdrm libdrm_nouveau])
+-  OLD_CFLAGS="$CFLAGS"
+-  CFLAGS="$CFLAGS $DRM_NOUVEAU_CFLAGS"
+-  AC_MSG_CHECKING([if nouveau_drm.h is in include path])
+-  AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-  [[
+-    #include <stdint.h>
+-    #include <stdlib.h>
+-    #include "nouveau_drm.h"
+-  ]],[[]]),[found_drm_nouveau_kernel_headers=yes],[found_drm_nouveau_kernel_headers=no])
+-
+-  if test "$found_drm_nouveau_kernel_headers" = "yes"; then
+-    AC_MSG_RESULT([yes])
+-  else
+-    AC_MSG_RESULT([no])
+-    AC_MSG_CHECKING([if we can find them anyway])
+-
+-    MORE_DRM_CFLAGS="-I`$PKG_CONFIG --variable includedir libdrm`/drm"
+-    CFLAGS="$CFLAGS $MORE_DRM_CFLAGS"
+-    AC_COMPILE_IFELSE(AC_LANG_PROGRAM(
+-    [[
+-      #include <stdint.h>
+-      #include <stdlib.h>
+-      #include "nouveau_drm.h"
+-    ]],[[]]),[found_drm_nouveau_kernel_headers=yes],[found_drm_nouveau_kernel_headers=no])
+-
+-    if test "$found_drm_nouveau_kernel_headers" = "yes"; then
+-      AC_MSG_RESULT([yes])
+-      DRM_NOUVEAU_CFLAGS="$DRM_NOUVEAU_CFLAGS $MORE_DRM_CFLAGS"
+-    else
+-      AC_MSG_RESULT([no])
+-      AC_MSG_ERROR([Could not find nouveau_drm.h])
+-    fi
+-  fi
+-
+-  AC_SUBST(DRM_NOUVEAU_CFLAGS)
+-  AC_SUBST(DRM_NOUVEAU_LIBS)
+-  AC_DEFINE(PLY_ENABLE_LIBDRM_NOUVEAU, 1, [Enable support for libdrm_nouveau driver])
+-fi
+-
+-AC_ARG_ENABLE(libkms, AS_HELP_STRING([--enable-libkms],[enable building with libkms support]),enable_libkms=$enableval,enable_libkms=no)
+-AM_CONDITIONAL(ENABLE_LIBKMS,  [test "$enable_libkms" = yes])
+-
+-if test x$enable_libkms = xyes; then
+-  PKG_CHECK_MODULES(LIBKMS, [libdrm libkms])
+-  AC_SUBST(LIBKMS_CFLAGS)
+-  AC_SUBST(LIBKMS_LIBS)
+-  AC_DEFINE(PLY_ENABLE_LIBKMS, 1, [Enable support for libkms abstraction over drm drivers])
+-fi
+-
+ AC_ARG_ENABLE(drm, AS_HELP_STRING([--enable-drm-renderer],[enable building drm kms support]),enable_drm_renderer=$enableval,enable_drm_renderer=yes)
+ AM_CONDITIONAL(ENABLE_DRM_RENDERER,  [test "$enable_drm_renderer" = yes])
+ 
+@@ -211,17 +72,6 @@ if test x$enable_drm_renderer = xyes; then
+   PKG_CHECK_MODULES(DRM, [libdrm])
+ fi
+ 
+-DRM_CFLAGS="$DRM_CFLAGS $DRM_INTEL_CFLAGS $DRM_RADEON_CFLAGS $DRM_NOUVEAU_CFLAGS $LIBKMS_CFLAG"
+-DRM_LIBS="$DRM_LIBS $DRM_INTEL_LIBS $DRM_RADEON_LIBS $DRM_NOUVEAU_LIBS $LIBKMS_LIBS"
+-AC_SUBST(DRM_CFLAGS)
+-AC_SUBST(DRM_LIBS)
+-
+-AC_ARG_ENABLE(tracing, AS_HELP_STRING([--enable-tracing],[enable verbose tracing code]),enable_tracing=$enableval,enable_tracing=yes)
+-
+-if test x$enable_tracing = xyes; then
+-  AC_DEFINE(PLY_ENABLE_TRACING, 1, [Build in verbose debug tracing spew])
+-fi
+-
+ AC_ARG_ENABLE(tests, AS_HELP_STRING([--enable-tests],[build tests]),enable_tests=$enableval,enable_tests=yes)
+ 
+ AM_CONDITIONAL(ENABLE_TESTS,  [test "$enable_tests" = yes])
+@@ -254,7 +104,7 @@ AM_CONDITIONAL(ENABLE_SYSTEMD_INTEGRATION, [test "$enable_systemd_integration" =
+ 
+ if test x$enable_systemd_integration = xyes; then
+   AC_DEFINE(PLY_ENABLE_SYSTEMD_INTEGRATION, 1, [Coordinate boot up with systemd])
+-  SYSTEMD_UNIT_DIR=/lib/systemd/system
++  SYSTEMD_UNIT_DIR=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)
+   AC_SUBST(SYSTEMD_UNIT_DIR)
+ fi
+ 
+@@ -278,7 +128,7 @@ AS_AC_EXPAND(PLYMOUTH_CLIENT_DIR, $plymouthclientdir)
+ AS_AC_EXPAND(PLYMOUTH_DAEMON_DIR, $plymouthdaemondir)
+ AS_AC_EXPAND(PLYMOUTH_RUNTIME_DIR, $plymouthruntimedir)
+ 
+-AC_ARG_WITH(rhgb-compat-link, AS_HELP_STRING([--with-rhgb-compat-link],[Install /usr/bin/rhgb-client compatability symlink]),with_rhgb_compat_link=${withval},with_rhgb_compat_link=yes)
++AC_ARG_WITH(rhgb-compat-link, AS_HELP_STRING([--with-rhgb-compat-link],[Install /usr/bin/rhgb-client compatability symlink]),with_rhgb_compat_link=${withval},with_rhgb_compat_link=no)
+ AM_CONDITIONAL(WITH_RHGB_COMPAT_LINK,  [test "$with_rhgb_compat_link" = yes])
+ 
+ AC_ARG_WITH(log-viewer, AS_HELP_STRING([--with-log-viewer],[Install plymouth log viewer]),with_log_viewer=${withval},with_log_viewer=no)
+@@ -427,6 +277,7 @@ AC_CONFIG_FILES([Makefile
+            src/plugins/splash/Makefile
+            src/plugins/splash/throbgress/Makefile
+            src/plugins/splash/fade-throbber/Makefile
++           src/plugins/splash/tribar/Makefile
+            src/plugins/splash/text/Makefile
+            src/plugins/splash/details/Makefile
+            src/plugins/splash/space-flares/Makefile
+@@ -445,6 +296,7 @@ AC_CONFIG_FILES([Makefile
+            themes/Makefile
+            themes/spinfinity/Makefile
+            themes/fade-in/Makefile
++           themes/tribar/Makefile
+            themes/text/Makefile
+            themes/details/Makefile
+            themes/solar/Makefile
+diff --git a/scripts/plymouth-generate-initrd.in b/scripts/plymouth-generate-initrd.in
+index 35509a1..c44ca4c 100755
+--- a/scripts/plymouth-generate-initrd.in
++++ b/scripts/plymouth-generate-initrd.in
+@@ -13,11 +13,12 @@ PLYMOUTH_INITRD_DIR="$(mktemp --tmpdir -d plymouth-XXXXXXX)"
+ $PLYMOUTH_POPULATE_INITRD -t "$PLYMOUTH_INITRD_DIR"
+ 
+ if [ $? -eq 0 ]; then
++    command -v pigz &>/dev/null && gzip=pigz || gzip=gzip
+     (cd $PLYMOUTH_INITRD_DIR;
+         # FIXME: might make sense to add a flag to plymouth-populate-initrd to
+         #        skip these from the start
+         rm -f lib*/{ld*,libc*,libdl*,libm*,libz*,libpthread*}
+-        find | cpio -Hnewc -o | gzip -9 > $PLYMOUTH_IMAGE_FILE
++        find | cpio -Hnewc -o | $gzip -9 > $PLYMOUTH_IMAGE_FILE
+     )
+ fi
+ 
+diff --git a/scripts/plymouth-populate-initrd.in b/scripts/plymouth-populate-initrd.in
+index 8d1eec0..d25ab07 100755
+--- a/scripts/plymouth-populate-initrd.in
++++ b/scripts/plymouth-populate-initrd.in
+@@ -8,6 +8,7 @@
+ [ -z "$PLYMOUTH_DATADIR" ] && PLYMOUTH_DATADIR="@PLYMOUTH_DATADIR@"
+ [ -z "$PLYMOUTH_PLUGIN_PATH" ] && PLYMOUTH_PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
+ [ -z "$PLYMOUTH_LOGO_FILE" ] && PLYMOUTH_LOGO_FILE="@PLYMOUTH_LOGO_FILE@"
++[ -n "$PLYMOUTH_THEME_NAME" ] && THEME_OVERRIDE=1
+ [ -z "$PLYMOUTH_THEME_NAME" ] && PLYMOUTH_THEME_NAME=$(plymouth-set-default-theme)
+ [ -z "$PLYMOUTH_CONFDIR" ] && PLYMOUTH_CONFDIR="@PLYMOUTH_CONF_DIR@"
+ [ -z "$PLYMOUTH_POLICYDIR" ] && PLYMOUTH_POLICYDIR="@PLYMOUTH_POLICY_DIR@"
+@@ -388,6 +389,12 @@ if [ -z "$PLYMOUTH_THEME_NAME" ]; then
+     exit 1
+ fi
+ 
++if [ $THEME_OVERRIDE ]; then
++    conf=$INITRDDIR/${PLYMOUTH_CONFDIR}/plymouthd.conf
++    echo "modifying plymouthd.conf: Theme=$PLYMOUTH_THEME_NAME" > /dev/stderr
++    sed -i "s/^ *Theme *=.*/# theme modified by plymouth-populate-initrd\nTheme=$PLYMOUTH_THEME_NAME/" $conf
++fi
++
+ PLYMOUTH_MODULE_NAME=$(grep "ModuleName *= *" ${PLYMOUTH_DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ModuleName *= *//')
+ 
+ if [ ! -f ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so ]; then
+@@ -425,6 +432,7 @@ if [ -n "$SYSTEMD_UNIT_DIR" -a -d "$SYSTEMD_UNIT_DIR" ]; then
+     inst $SYSTEMD_UNIT_DIR/plymouth-halt.service $INITRDDIR
+ 
+     inst $SYSTEMD_UNIT_DIR/initrd-switch-root.target.wants/plymouth-switch-root.service $INITRDDIR
++    inst $SYSTEMD_UNIT_DIR/initrd-switch-root.target.wants/plymouth-start.service $INITRDDIR
+     inst $SYSTEMD_UNIT_DIR/sysinit.target.wants/plymouth-start.service $INITRDDIR
+     inst $SYSTEMD_UNIT_DIR/multi-user.target.wants/plymouth-quit.service $INITRDDIR
+     inst $SYSTEMD_UNIT_DIR/multi-user.target.wants/plymouth-quit-wait.service $INITRDDIR
+diff --git a/src/libply-splash-core/Makefile.am b/src/libply-splash-core/Makefile.am
+index b289b65..1758556 100644
+--- a/src/libply-splash-core/Makefile.am
++++ b/src/libply-splash-core/Makefile.am
+@@ -22,7 +22,8 @@ libply_splash_core_HEADERS = \
+ 		    ply-renderer-plugin.h                                     \
+ 		    ply-terminal.h                                            \
+ 		    ply-text-display.h                                        \
+-		    ply-text-progress-bar.h
++		    ply-text-progress-bar.h                                   \
++		    ply-text-step-bar.h
+ 
+ libply_splash_core_la_CFLAGS = $(PLYMOUTH_CFLAGS)                               \
+                              -DPLYMOUTH_BACKGROUND_COLOR=$(background_color)   \
+@@ -39,6 +40,7 @@ libply_splash_core_la_SOURCES = \
+ 		    ply-pixel-display.c                                      \
+ 		    ply-text-display.c                                       \
+ 		    ply-text-progress-bar.c                                  \
++		    ply-text-step-bar.c                                      \
+ 		    ply-terminal.c                                           \
+ 		    ply-pixel-buffer.c                                       \
+ 		    ply-renderer.c                                           \
+diff --git a/src/libply-splash-core/ply-text-progress-bar.c b/src/libply-splash-core/ply-text-progress-bar.c
+index bf4b378..8c4e759 100644
+--- a/src/libply-splash-core/ply-text-progress-bar.c
++++ b/src/libply-splash-core/ply-text-progress-bar.c
+@@ -104,7 +104,7 @@ get_os_string (void)
+ 
+   buf = NULL;
+ 
+-  fd = open (RELEASE_FILE, O_RDONLY);
++  fd = open (RELEASE_FILE, O_RDONLY|O_CLOEXEC);
+   if (fd == -1)
+     goto out;
+ 
+@@ -136,6 +136,8 @@ get_os_string (void)
+ 
+           if (pos2 != NULL)
+             *pos2 = '\0';
++          else
++            pos2 = pos + strlen(pos) - 1;
+ 
+           if ((*pos == '\"' && pos2[-1] == '\"') ||
+               (*pos == '\'' && pos2[-1] == '\''))
+diff --git a/src/libply-splash-core/ply-text-step-bar.c b/src/libply-splash-core/ply-text-step-bar.c
+new file mode 100644
+index 0000000..552a39f
+--- /dev/null
++++ b/src/libply-splash-core/ply-text-step-bar.c
+@@ -0,0 +1,163 @@
++/*
++ * Copyright (C) 2008-2012 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++ * 02111-1307, USA.
++ *
++ */
++#include "config.h"
++
++#include <assert.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include "ply-text-display.h"
++#include "ply-text-step-bar.h"
++
++struct _ply_text_step_bar
++{
++  ply_text_display_t *display;
++
++  int column;
++  int row;
++  int number_of_rows;
++  int number_of_columns;
++
++  double percent_done;
++  uint32_t is_hidden : 1;
++};
++
++ply_text_step_bar_t *
++ply_text_step_bar_new (void)
++{
++  ply_text_step_bar_t *step_bar;
++
++  step_bar = calloc (1, sizeof (ply_text_step_bar_t));
++
++  step_bar->row = 0;
++  step_bar->column = 0;
++  step_bar->number_of_columns = 0;
++  step_bar->number_of_rows = 0;
++
++  return step_bar;
++}
++
++void
++ply_text_step_bar_free (ply_text_step_bar_t *step_bar)
++{
++  if (step_bar == NULL)
++    return;
++
++  free (step_bar);
++}
++
++void
++ply_text_step_bar_draw (ply_text_step_bar_t *step_bar)
++{
++  int i;
++  int cur;
++
++  if (step_bar->is_hidden)
++    return;
++
++  ply_text_display_set_background_color (step_bar->display,
++                                         PLY_TERMINAL_COLOR_BLACK);
++
++  ply_text_display_set_cursor_position (step_bar->display,
++                                        step_bar->column,
++                                        step_bar->row);
++
++  cur = step_bar->percent_done * step_bar->number_of_columns;
++  for (i = 0; i < step_bar->number_of_columns; i++)
++    {
++      if (i == cur)
++        {
++          ply_text_display_set_foreground_color (step_bar->display,
++                                                 PLY_TERMINAL_COLOR_WHITE);
++        }
++      else
++        {
++          ply_text_display_set_foreground_color (step_bar->display,
++                                                 PLY_TERMINAL_COLOR_BROWN);
++        }
++
++      ply_text_display_write (step_bar->display, "%c", '■');
++      ply_text_display_write (step_bar->display, "%c", ' ');
++    }
++
++  ply_text_display_set_foreground_color (step_bar->display,
++                                         PLY_TERMINAL_COLOR_DEFAULT);
++}
++
++void
++ply_text_step_bar_show (ply_text_step_bar_t  *step_bar,
++                        ply_text_display_t       *display)
++{
++  int screen_rows;
++  int screen_cols;
++
++  assert (step_bar != NULL);
++
++  step_bar->display = display;
++
++
++  screen_rows = ply_text_display_get_number_of_rows (display);
++  screen_cols = ply_text_display_get_number_of_columns (display);
++
++  step_bar->number_of_rows = 1;
++  step_bar->row = screen_rows * .66;
++  step_bar->number_of_columns = 3;
++  step_bar->column = screen_cols / 2.0 - step_bar->number_of_columns / 2.0;
++
++  step_bar->is_hidden = false;
++
++  ply_text_step_bar_draw (step_bar);
++}
++
++void
++ply_text_step_bar_hide (ply_text_step_bar_t *step_bar)
++{
++  step_bar->display = NULL;
++  step_bar->is_hidden = true;
++}
++
++void
++ply_text_step_bar_set_percent_done (ply_text_step_bar_t  *step_bar,
++                                    double percent_done)
++{
++  step_bar->percent_done = percent_done;
++}
++
++double
++ply_text_step_bar_get_percent_done (ply_text_step_bar_t  *step_bar)
++{
++  return step_bar->percent_done;
++}
++
++int
++ply_text_step_bar_get_number_of_columns (ply_text_step_bar_t *step_bar)
++{
++  return step_bar->number_of_columns;
++}
++
++int
++ply_text_step_bar_get_number_of_rows (ply_text_step_bar_t *step_bar)
++{
++  return step_bar->number_of_rows;
++}
++
++/* vim: set ts=4 sw=4 expandtab autoindent cindent cino={.5s,(0: */
+diff --git a/src/libply-splash-core/ply-text-step-bar.h b/src/libply-splash-core/ply-text-step-bar.h
+new file mode 100644
+index 0000000..0a4733f
+--- /dev/null
++++ b/src/libply-splash-core/ply-text-step-bar.h
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2008-2012 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++ * 02111-1307, USA.
++ *
++ */
++#ifndef PLY_TEXT_STEP_BAR_H
++#define PLY_TEXT_STEP_BAR_H
++
++#include <unistd.h>
++
++#include "ply-event-loop.h"
++#include "ply-text-display.h"
++
++typedef struct _ply_text_step_bar ply_text_step_bar_t;
++
++#ifndef PLY_HIDE_FUNCTION_DECLARATIONS
++ply_text_step_bar_t *ply_text_step_bar_new (void);
++void ply_text_step_bar_free (ply_text_step_bar_t *step_bar);
++
++void ply_text_step_bar_draw (ply_text_step_bar_t *step_bar);
++void ply_text_step_bar_show (ply_text_step_bar_t *step_bar,
++                             ply_text_display_t *display);
++void ply_text_step_bar_hide (ply_text_step_bar_t *step_bar);
++
++void ply_text_step_bar_set_percent_done (ply_text_step_bar_t *step_bar,
++                                         double percent_done);
++
++double ply_text_step_bar_get_percent_done (ply_text_step_bar_t *step_bar);
++
++int ply_text_step_bar_get_number_of_rows (ply_text_step_bar_t *step_bar);
++int ply_text_step_bar_get_number_of_columns (ply_text_step_bar_t *step_bar);
++#endif
++
++#endif /* PLY_TEXT_PULSER_H */
++/* vim: set ts=4 sw=4 expandtab autoindent cindent cino={.5s,(0: */
+diff --git a/src/libply-splash-graphics/ply-animation.c b/src/libply-splash-graphics/ply-animation.c
+index ed558cf..bba8490 100644
+--- a/src/libply-splash-graphics/ply-animation.c
++++ b/src/libply-splash-graphics/ply-animation.c
+@@ -182,14 +182,8 @@ on_timeout (ply_animation_t *animation)
+   animation->previous_time = animation->now;
+   animation->now = ply_get_timestamp ();
+ 
+-#ifdef REAL_TIME_ANIMATION
+   should_continue = animate_at_time (animation,
+                                      animation->now - animation->start_time);
+-#else
+-  static double time = 0.0;
+-  time += 1.0 / FRAMES_PER_SECOND;
+-  should_continue = animate_at_time (animation, time);
+-#endif
+ 
+   sleep_time = 1.0 / FRAMES_PER_SECOND;
+   sleep_time = MAX (sleep_time - (ply_get_timestamp () - animation->now),
+diff --git a/src/libply-splash-graphics/ply-image.c b/src/libply-splash-graphics/ply-image.c
+index 3e09f68..be85809 100644
+--- a/src/libply-splash-graphics/ply-image.c
++++ b/src/libply-splash-graphics/ply-image.c
+@@ -123,7 +123,7 @@ ply_image_load (ply_image_t *image)
+   
+   assert (image != NULL);
+   
+-  fp = fopen (image->filename, "r");
++  fp = fopen (image->filename, "re");
+   if (fp == NULL)
+     return false;
+   
+diff --git a/src/libply-splash-graphics/ply-throbber.c b/src/libply-splash-graphics/ply-throbber.c
+index 59cf10c..42044ba 100644
+--- a/src/libply-splash-graphics/ply-throbber.c
++++ b/src/libply-splash-graphics/ply-throbber.c
+@@ -178,14 +178,8 @@ on_timeout (ply_throbber_t *throbber)
+   bool should_continue;
+   throbber->now = ply_get_timestamp ();
+ 
+-#ifdef REAL_TIME_ANIMATION
+   should_continue = animate_at_time (throbber,
+-                                 throbber->now - throbber->start_time);
+-#else
+-  static double time = 0.0;
+-  time += 1.0 / FRAMES_PER_SECOND;
+-  should_continue = animate_at_time (throbber, time);
+-#endif
++                                     throbber->now - throbber->start_time);
+ 
+   sleep_time = 1.0 / FRAMES_PER_SECOND;
+   sleep_time = MAX (sleep_time - (ply_get_timestamp () - throbber->now),
+diff --git a/src/libply/ply-event-loop.c b/src/libply/ply-event-loop.c
+index 3cfad76..4abf25f 100644
+--- a/src/libply/ply-event-loop.c
++++ b/src/libply/ply-event-loop.c
+@@ -491,7 +491,7 @@ ply_event_loop_new (void)
+ 
+   loop = calloc (1, sizeof (ply_event_loop_t));
+ 
+-  loop->epoll_fd = epoll_create (PLY_EVENT_LOOP_NUM_EVENT_HANDLERS);
++  loop->epoll_fd =  epoll_create1(EPOLL_CLOEXEC);
+   loop->wakeup_time = PLY_EVENT_LOOP_NO_TIMED_WAKEUP;
+ 
+   assert (loop->epoll_fd >= 0);
+diff --git a/src/libply/ply-key-file.c b/src/libply/ply-key-file.c
+index a3d5a11..c62551e 100644
+--- a/src/libply/ply-key-file.c
++++ b/src/libply/ply-key-file.c
+@@ -25,6 +25,7 @@
+ #include "ply-key-file.h"
+ 
+ #include <assert.h>
++#include <ctype.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <string.h>
+@@ -75,7 +76,7 @@ ply_key_file_open_file (ply_key_file_t *key_file)
+ {
+   assert (key_file != NULL);
+ 
+-  key_file->fp = fopen (key_file->filename, "r");
++  key_file->fp = fopen (key_file->filename, "re");
+ 
+   if (key_file->fp == NULL)
+     {
+@@ -173,13 +174,18 @@ ply_key_file_load_group (ply_key_file_t *key_file,
+       ply_key_file_entry_t *entry;
+       char *key;
+       char *value;
+-      long offset;
++      off_t offset;
+       int first_byte;
+ 
+       key = NULL;
+       value = NULL;
+ 
+-      first_byte = fgetc (key_file->fp);
++      do
++        {
++          first_byte = fgetc (key_file->fp);
++        }
++      while (isspace (first_byte));
++
+       if (first_byte == '#')
+         {
+           char *line_to_toss;
+@@ -196,13 +202,13 @@ ply_key_file_load_group (ply_key_file_t *key_file,
+         }
+       ungetc (first_byte, key_file->fp);
+ 
+-      offset = ftell (key_file->fp);
+-      items_matched = fscanf (key_file->fp, " %a[^= \t\n] = %a[^\n] ", &key, &value);
++      offset = ftello (key_file->fp);
++      items_matched = fscanf (key_file->fp, " %m[^= \t\n] = %m[^\n] ", &key, &value);
+ 
+       if (items_matched != 2)
+         {
+           if (items_matched == 1)
+-            fseek (key_file->fp, offset, SEEK_SET);
++            fseeko (key_file->fp, offset, SEEK_SET);
+ 
+           free (key);
+           free (value);
+@@ -254,7 +260,7 @@ ply_key_file_load_groups (ply_key_file_t *key_file)
+       ungetc (first_byte, key_file->fp);
+ 
+       group_name = NULL;
+-      items_matched = fscanf (key_file->fp, " [ %a[^]] ] ", &group_name);
++      items_matched = fscanf (key_file->fp, " [ %m[^]] ] ", &group_name);
+ 
+       if (items_matched <= 0)
+         {
+diff --git a/src/libply/ply-logger.c b/src/libply/ply-logger.c
+index f51bb84..ec5b6e5 100644
+--- a/src/libply/ply-logger.c
++++ b/src/libply/ply-logger.c
+@@ -40,7 +40,7 @@
+ #include "ply-list.h"
+ 
+ #ifndef PLY_LOGGER_OPEN_FLAGS
+-#define PLY_LOGGER_OPEN_FLAGS (O_WRONLY | O_TRUNC | O_CREAT | O_NOFOLLOW)
++#define PLY_LOGGER_OPEN_FLAGS (O_WRONLY | O_TRUNC | O_CREAT | O_NOFOLLOW | O_CLOEXEC)
+ #endif
+ 
+ #ifndef PLY_LOGGER_MAX_INJECTION_SIZE
+@@ -357,6 +357,9 @@ ply_logger_close_file (ply_logger_t *logger)
+ {
+   assert (logger != NULL);
+ 
++  if (logger->output_fd < 0)
++      return;
++
+   close (logger->output_fd);
+   ply_logger_set_output_fd (logger, -1);
+ }
+diff --git a/src/libply/ply-logger.h b/src/libply/ply-logger.h
+index 36fe7d1..596bed5 100644
+--- a/src/libply/ply-logger.h
++++ b/src/libply/ply-logger.h
+@@ -91,8 +91,8 @@ do                                                                             \
+         ply_logger_flush (logger);                                             \
+         errno = _old_errno;                                                    \
+         ply_logger_inject (logger,                                             \
+-                           "[%s] %45.45s:" format "\r\n",                      \
+-                           __FILE__, __func__, ##args);                        \
++                           "[%s:%d] %45.45s:" format "\r\n",                   \
++                           __FILE__, __LINE__, __func__, ##args);              \
+         ply_logger_flush (logger);                                             \
+         errno = _old_errno;                                                    \
+       }                                                                        \
+diff --git a/src/libply/ply-progress.c b/src/libply/ply-progress.c
+index 2091a27..cf372cd 100644
+--- a/src/libply/ply-progress.c
++++ b/src/libply/ply-progress.c
+@@ -22,6 +22,10 @@
+  *             Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <assert.h>
+ #include <errno.h>
+ #include <math.h>
+diff --git a/src/libply/ply-terminal-session.c b/src/libply/ply-terminal-session.c
+index 3d43709..0bdb985 100644
+--- a/src/libply/ply-terminal-session.c
++++ b/src/libply/ply-terminal-session.c
+@@ -148,7 +148,8 @@ ply_terminal_session_free (ply_terminal_session_t *session)
+ 
+   ply_free_string_array (session->argv);
+ 
+-  close (session->pseudoterminal_master_fd);
++  if (session->pseudoterminal_master_fd >= 0)
++    close (session->pseudoterminal_master_fd);
+   free (session);
+ }
+ 
+@@ -213,8 +214,12 @@ ply_terminal_session_unredirect_console (ply_terminal_session_t *session)
+   assert (session->console_is_redirected);
+ 
+   fd = open ("/dev/console", O_RDWR | O_NOCTTY);
+-  if (fd >= 0)
++  if (fd >= 0) {
+     ioctl (fd, TIOCCONS);
++    close (fd);
++  } else {
++    ply_trace ("couldn't open /dev/console to stop redirecting it: %m");
++  }
+ 
+   session->console_is_redirected = false;
+ }
+diff --git a/src/libply/ply-utils.c b/src/libply/ply-utils.c
+index 60d59d1..8333485 100644
+--- a/src/libply/ply-utils.c
++++ b/src/libply/ply-utils.c
+@@ -87,27 +87,9 @@ ply_open_unidirectional_pipe (int *sender_fd,
+   assert (sender_fd != NULL);
+   assert (receiver_fd != NULL);
+ 
+-  if (pipe (pipe_fds) < 0)
++  if (pipe2 (pipe_fds, O_CLOEXEC) < 0)
+     return false;
+ 
+-  if (fcntl (pipe_fds[0], F_SETFD, O_NONBLOCK | FD_CLOEXEC) < 0)
+-    {
+-      ply_save_errno ();
+-      close (pipe_fds[0]);
+-      close (pipe_fds[1]);
+-      ply_restore_errno ();
+-      return false;
+-    }
+-
+-  if (fcntl (pipe_fds[1], F_SETFD, O_NONBLOCK | FD_CLOEXEC) < 0)
+-    {
+-      ply_save_errno ();
+-      close (pipe_fds[0]);
+-      close (pipe_fds[1]);
+-      ply_restore_errno ();
+-      return false;
+-    }
+-
+   *sender_fd = pipe_fds[1];
+   *receiver_fd = pipe_fds[0];
+ 
+@@ -120,20 +102,11 @@ ply_open_unix_socket (void)
+   int fd;
+   const int should_pass_credentials = true;
+ 
+-  fd = socket (PF_UNIX, SOCK_STREAM, 0);
++  fd = socket (PF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0);
+ 
+   if (fd < 0)
+     return -1;
+ 
+-  if (fcntl (fd, F_SETFD, O_NONBLOCK | FD_CLOEXEC) < 0)
+-    {
+-      ply_save_errno ();
+-      close (fd);
+-      ply_restore_errno ();
+-
+-      return -1;
+-    }
+-
+   if (setsockopt (fd, SOL_SOCKET, SO_PASSCRED,
+                   &should_pass_credentials, sizeof (should_pass_credentials)) < 0)
+     {
+@@ -822,11 +795,12 @@ ply_create_daemon (void)
+ 
+       if (!ply_read (receiver_fd, &byte, sizeof (uint8_t)))
+         {
++          int read_error = errno;
+           int status;
+ 
+           if (waitpid (pid, &status, WNOHANG) <= 0)
+             {
+-              ply_error ("failed to read status from child immediately after starting to daemonize");
++              ply_error ("failed to read status from child immediately after starting to daemonize: %s", strerror (read_error));
+             }
+           else if (WIFEXITED (status))
+             {
+@@ -971,7 +945,7 @@ ply_get_process_parent_pid (pid_t pid)
+   asprintf (&path, "/proc/%ld/stat", (long) pid);
+ 
+   ppid = 0;
+-  fp = fopen (path, "r");
++  fp = fopen (path, "re");
+ 
+   if (fp == NULL)
+     {
+diff --git a/src/main.c b/src/main.c
+index 88e5002..9c450c0 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -113,6 +113,7 @@ typedef struct
+   uint32_t should_be_attached : 1;
+   uint32_t should_retain_splash : 1;
+   uint32_t is_inactive : 1;
++  uint32_t is_shown : 1;
+   uint32_t should_force_details : 1;
+ 
+   char *kernel_console_tty;
+@@ -149,8 +150,11 @@ static void check_for_consoles (state_t    *state,
+                                 const char *default_tty,
+                                 bool        should_add_displays);
+ static void toggle_between_splash_and_details (state_t *state);
++#ifdef PLY_ENABLE_SYSTEMD_INTEGRATION
+ static void tell_systemd_to_print_details (state_t *state);
+ static void tell_systemd_to_stop_printing_details (state_t *state);
++#endif
++static const char * get_cache_file_for_mode (ply_mode_t mode);
+ 
+ static void
+ on_session_output (state_t    *state,
+@@ -355,6 +359,7 @@ find_system_default_splash (state_t *state)
+             PLYMOUTH_THEME_PATH "%s/%s.plymouth",
+             splash_string, splash_string);
+   free (splash_string);
++  ply_key_file_free (key_file);
+ }
+ 
+ static void
+@@ -587,17 +592,11 @@ static void
+ on_newroot (state_t    *state,
+             const char *root_dir)
+ {
+-  if (state->mode != PLY_MODE_BOOT)
+-    {
+-      ply_trace ("new root is only supported in boot mode ");
+-      return;
+-    }
+-
+   ply_trace ("new root mounted at \"%s\", switching to it", root_dir);
+   chdir(root_dir);
+   chroot(".");
+   chdir("/");
+-  ply_progress_load_cache (state->progress, BOOT_DURATION_FILE);
++  ply_progress_load_cache (state->progress, get_cache_file_for_mode (state->mode));
+   if (state->boot_splash != NULL)
+     ply_boot_splash_root_mounted (state->boot_splash);
+ }
+@@ -619,7 +618,7 @@ get_cache_file_for_mode (ply_mode_t mode)
+       filename = NULL;
+       break;
+     default:
+-      fprintf (stderr, "Unhandled case in %s line %d\n", __FILE__, __LINE__);
++      ply_error ("Unhandled case in %s line %d\n", __FILE__, __LINE__);
+       abort ();
+       break;
+     }
+@@ -643,7 +642,7 @@ get_log_file_for_mode (ply_mode_t mode)
+       filename = _PATH_DEVNULL;
+       break;
+     default:
+-      fprintf (stderr, "Unhandled case in %s line %d\n", __FILE__, __LINE__);
++      ply_error ("Unhandled case in %s line %d\n", __FILE__, __LINE__);
+       abort ();
+       break;
+     }
+@@ -667,7 +666,7 @@ get_log_spool_file_for_mode (ply_mode_t mode)
+       filename = NULL;
+       break;
+     default:
+-      fprintf (stderr, "Unhandled case in %s line %d\n", __FILE__, __LINE__);
++      ply_error ("Unhandled case in %s line %d\n", __FILE__, __LINE__);
+       abort ();
+       break;
+     }
+@@ -871,6 +870,12 @@ on_show_splash (state_t *state)
+ {
+   bool has_display;
+ 
++  if (state->is_shown)
++    {
++      ply_trace ("show splash called while already shown");
++      return;
++    }
++
+   if (state->is_inactive)
+     {
+       ply_trace ("show splash called while inactive");
+@@ -884,6 +889,8 @@ on_show_splash (state_t *state)
+       return;
+     }
+ 
++  state->is_shown = true;
++
+   check_for_consoles (state, state->default_tty, true);
+ 
+   has_display = ply_list_get_length (state->pixel_displays) > 0 ||
+@@ -1012,6 +1019,8 @@ dump_details_and_quit_splash (state_t *state)
+   if (state->boot_splash != NULL)
+     ply_boot_splash_hide (state->boot_splash);
+ 
++  state->is_shown = false;
++
+   quit_splash (state);
+ }
+ 
+@@ -1091,6 +1100,13 @@ deactivate_splash (state_t *state)
+       ply_terminal_stop_watching_for_vt_changes (state->local_console_terminal);
+       ply_terminal_set_buffered_input (state->local_console_terminal);
+       ply_terminal_ignore_mode_changes (state->local_console_terminal, true);
++      ply_terminal_close (state->local_console_terminal);
++    }
++
++  /* do not let any tty opened where we could write after deactivate */
++  if (command_line_has_argument (state->kernel_command_line, "plymouth.debug"))
++    {
++      ply_logger_close_file (ply_logger_get_error_default ());
+     }
+ 
+   state->is_inactive = true;
+@@ -1116,6 +1132,8 @@ on_boot_splash_idle (state_t *state)
+             ply_renderer_deactivate (state->renderer);
+           if (state->boot_splash != NULL)
+             ply_boot_splash_hide (state->boot_splash);
++
++          state->is_shown = false;
+         }
+ 
+       ply_trace ("quitting splash");
+@@ -1135,7 +1153,13 @@ static void
+ on_deactivate (state_t       *state,
+                ply_trigger_t *deactivate_trigger)
+ {
+-  if ((state->deactivate_trigger != NULL) || state->is_inactive)
++  if (state->is_inactive)
++    {
++      ply_trigger_pull (deactivate_trigger, NULL);
++      return;
++    }
++
++  if (state->deactivate_trigger != NULL)
+     {
+       ply_trigger_add_handler (state->deactivate_trigger,
+                                (ply_trigger_handler_t)
+@@ -1176,6 +1200,7 @@ on_reactivate (state_t *state)
+ 
+   if (state->local_console_terminal != NULL)
+     {
++      ply_terminal_open (state->local_console_terminal);
+       ply_terminal_watch_for_vt_changes (state->local_console_terminal);
+       ply_terminal_set_unbuffered_input (state->local_console_terminal);
+       ply_terminal_ignore_mode_changes (state->local_console_terminal, false);
+@@ -1875,6 +1900,33 @@ check_verbosity (state_t *state)
+               ply_logger_set_output_fd (ply_logger_get_error_default (), fd);
+             }
+           free (stream_copy);
++        } else {
++            const char* device;
++            char *file;
++
++            if (state->kernel_console_tty != NULL)
++                device = state->kernel_console_tty;
++            else
++                device = state->default_tty;
++
++            ply_trace ("redirecting debug output to %s", device);
++
++            if (strncmp (device, "/dev/", strlen ("/dev/")) == 0)
++                file = strdup (device);
++              else
++                asprintf (&file, "/dev/%s", device);
++
++            fd = open (file, O_RDWR | O_APPEND);
++
++            if (fd < 0)
++              {
++                 ply_trace ("could not redirected debug output to %s: %m", device);
++              }
++            else {
++                ply_logger_set_output_fd (ply_logger_get_error_default (), fd);
++            }
++
++            free (file);
+         }
+     }
+   else
+@@ -1947,7 +1999,7 @@ add_consoles_from_file (state_t         *state,
+     }
+ 
+   ply_trace ("reading file");
+-  contents_length = read (fd, contents, sizeof (contents));
++  contents_length = read (fd, contents, sizeof (contents) - 1);
+ 
+   if (contents_length <= 0)
+     {
+@@ -2142,21 +2194,11 @@ check_for_consoles (state_t    *state,
+ }
+ 
+ static bool
+-redirect_standard_io_to_device (const char *device)
++redirect_standard_io_to_dev_null (void)
+ {
+   int fd;
+-  char *file;
+-
+-  ply_trace ("redirecting stdio to %s", device);
+-
+-  if (strncmp (device, "/dev/", strlen ("/dev/")) == 0)
+-    file = strdup (device);
+-  else
+-    asprintf (&file, "/dev/%s", device);
+ 
+-  fd = open (file, O_RDWR | O_APPEND);
+-
+-  free (file);
++  fd = open ("/dev/null", O_RDWR | O_APPEND);
+ 
+   if (fd < 0)
+     return false;
+@@ -2199,19 +2241,11 @@ initialize_environment (state_t *state)
+   if (!get_kernel_command_line (state))
+     return false;
+ 
+-  check_verbosity (state);
+-  check_logging (state);
+-
+-  ply_trace ("source built on %s", __DATE__);
+-
+-  state->keystroke_triggers = ply_list_new ();
+-  state->entry_triggers = ply_list_new ();
+-  state->entry_buffer = ply_buffer_new();
+-  state->pixel_displays = ply_list_new ();
+-  state->text_displays = ply_list_new ();
+-  state->messages = ply_list_new ();
+-  state->keyboard = NULL;
+-
++  if (!state->default_tty)
++    {
++      if (getenv ("DISPLAY") != NULL && access (PLYMOUTH_PLUGIN_PATH "renderers/x11.so", F_OK) == 0)
++          state->default_tty = "/dev/tty";
++    }
+   if (!state->default_tty)
+     {
+       if (state->mode == PLY_MODE_SHUTDOWN)
+@@ -2232,12 +2266,23 @@ initialize_environment (state_t *state)
+         }
+     }
+ 
++  check_verbosity (state);
++  check_logging (state);
++
++  ply_trace ("source built on %s", __DATE__);
++
++  state->keystroke_triggers = ply_list_new ();
++  state->entry_triggers = ply_list_new ();
++  state->entry_buffer = ply_buffer_new();
++  state->pixel_displays = ply_list_new ();
++  state->text_displays = ply_list_new ();
++  state->messages = ply_list_new ();
++  state->keyboard = NULL;
++
++
+   check_for_consoles (state, state->default_tty, false);
+ 
+-  if (state->kernel_console_tty != NULL)
+-    redirect_standard_io_to_device (state->kernel_console_tty);
+-  else
+-    redirect_standard_io_to_device (state->default_tty);
++  redirect_standard_io_to_dev_null ();
+ 
+   ply_trace ("Making sure " PLYMOUTH_RUNTIME_DIR " exists");
+   if (!ply_create_directory (PLYMOUTH_RUNTIME_DIR))
+diff --git a/src/plugins/renderers/drm/Makefile.am b/src/plugins/renderers/drm/Makefile.am
+index 2209b30..8af55b0 100644
+--- a/src/plugins/renderers/drm/Makefile.am
++++ b/src/plugins/renderers/drm/Makefile.am
+@@ -21,27 +21,7 @@ drm_la_SOURCES = $(srcdir)/plugin.c                                           \
+ drm_la_SOURCES += $(srcdir)/ply-renderer-generic-driver.h                     \
+                   $(srcdir)/ply-renderer-generic-driver.c
+ 
+-if ENABLE_LIBDRM_INTEL
+-drm_la_SOURCES += $(srcdir)/ply-renderer-i915-driver.h                        \
+-                  $(srcdir)/ply-renderer-i915-driver.c
+-endif
+-
+-if ENABLE_LIBDRM_RADEON
+-drm_la_SOURCES += $(srcdir)/ply-renderer-radeon-driver.h                      \
+-                  $(srcdir)/ply-renderer-radeon-driver.c
+-endif
+ 
+-if ENABLE_LIBDRM_NOUVEAU
+-drm_la_SOURCES += $(srcdir)/ply-renderer-nouveau-driver.h                     \
+-                  $(srcdir)/ply-renderer-nouveau-driver.c
+-endif
+-
+-if ENABLE_LIBKMS
+-drm_la_LIBADD += $(LIBKMS_LIBS)
+-drm_la_CFLAGS += $(LIBKMS_CFLAGS)
+-drm_la_SOURCES += $(srcdir)/ply-renderer-libkms-driver.h                      \
+-                  $(srcdir)/ply-renderer-libkms-driver.c
+-endif
+ 
+ endif
+ 
+diff --git a/src/plugins/renderers/drm/plugin.c b/src/plugins/renderers/drm/plugin.c
+index db953e6..a845fff 100644
+--- a/src/plugins/renderers/drm/plugin.c
++++ b/src/plugins/renderers/drm/plugin.c
+@@ -60,19 +60,6 @@
+ #include "ply-renderer-plugin.h"
+ #include "ply-renderer-driver.h"
+ #include "ply-renderer-generic-driver.h"
+-#ifdef PLY_ENABLE_LIBDRM_INTEL
+-#include "ply-renderer-i915-driver.h"
+-#endif
+-#ifdef PLY_ENABLE_LIBDRM_RADEON
+-#include "ply-renderer-radeon-driver.h"
+-#endif
+-#ifdef PLY_ENABLE_LIBDRM_NOUVEAU
+-#include "ply-renderer-nouveau-driver.h"
+-#endif
+-
+-#ifdef PLY_ENABLE_LIBKMS
+-#include "ply-renderer-libkms-driver.h"
+-#endif
+ 
+ #define BYTES_PER_PIXEL (4)
+ 
+@@ -521,59 +508,16 @@ load_driver (ply_renderer_backend_t *backend)
+       free (driver_name);
+       return false;
+     }
+-  backend->driver_interface = NULL;
+ 
+-/* Try intel driver first if we're supporting the legacy GDM transition
+- * since it can map the kernel console, which gives us the ability to do
+- * a more seamless transition when plymouth quits before X starts
+- */
+-#if defined(PLY_ENABLE_DEPRECATED_GDM_TRANSITION) && defined(PLY_ENABLE_LIBDRM_INTEL)
+-  if (backend->driver_interface == NULL && strcmp (driver_name, "i915") == 0)
+-    {
+-      backend->driver_interface = ply_renderer_i915_driver_get_interface ();
+-      backend->driver_supports_mapping_console = true;
+-    }
+-#endif
+-
+-  if (backend->driver_interface == NULL)
+-    {
+-      backend->driver_interface = ply_renderer_generic_driver_get_interface (device_fd);
+-      backend->driver_supports_mapping_console = false;
+-    }
+-
+-#ifdef PLY_ENABLE_LIBDRM_INTEL
+-  if (backend->driver_interface == NULL && strcmp (driver_name, "i915") == 0)
+-    {
+-      backend->driver_interface = ply_renderer_i915_driver_get_interface ();
+-      backend->driver_supports_mapping_console = true;
+-    }
+-#endif
+-#ifdef PLY_ENABLE_LIBDRM_RADEON
+-  if (backend->driver_interface == NULL && strcmp (driver_name, "radeon") == 0)
+-    {
+-      backend->driver_interface = ply_renderer_radeon_driver_get_interface ();
+-      backend->driver_supports_mapping_console = false;
+-    }
+-#endif
+-#ifdef PLY_ENABLE_LIBDRM_NOUVEAU
+-  if (backend->driver_interface == NULL && strcmp (driver_name, "nouveau") == 0)
+-    {
+-      backend->driver_interface = ply_renderer_nouveau_driver_get_interface ();
+-      backend->driver_supports_mapping_console = false;
+-    }
+-#endif
++  backend->driver_interface = ply_renderer_generic_driver_get_interface (device_fd);
++  backend->driver_supports_mapping_console = false;
+ 
+   free (driver_name);
+ 
+   if (backend->driver_interface == NULL)
+     {
+-#ifdef PLY_ENABLE_LIBKMS
+-      backend->driver_interface = ply_renderer_libkms_driver_get_interface ();
+-      backend->driver_supports_mapping_console = false;
+-#else
+       close (device_fd);
+       return false;
+-#endif
+     }
+ 
+   backend->driver = backend->driver_interface->create_driver (device_fd);
+diff --git a/src/plugins/renderers/drm/ply-renderer-generic-driver.c b/src/plugins/renderers/drm/ply-renderer-generic-driver.c
+index 50fde64..45a8faa 100644
+--- a/src/plugins/renderers/drm/ply-renderer-generic-driver.c
++++ b/src/plugins/renderers/drm/ply-renderer-generic-driver.c
+@@ -71,6 +71,8 @@ struct _ply_renderer_driver
+ {
+   int device_fd;
+   ply_hashtable_t *buffers;
++
++  uint32_t requires_explicit_flushing : 1;
+ };
+ 
+ static bool
+@@ -123,7 +125,7 @@ create_driver (int device_fd)
+ 
+   driver = calloc (1, sizeof (ply_renderer_driver_t));
+   driver->device_fd = device_fd;
+-
++  driver->requires_explicit_flushing = true;
+   driver->buffers = ply_hashtable_new (ply_hashtable_direct_hash,
+                                        ply_hashtable_direct_compare);
+ 
+@@ -330,6 +332,22 @@ end_flush (ply_renderer_driver_t *driver,
+   buffer = get_buffer_from_id (driver, buffer_id);
+ 
+   assert (buffer != NULL);
++
++  if (driver->requires_explicit_flushing)
++    {
++      struct drm_clip_rect flush_area;
++      int ret;
++
++      flush_area.x1 = 0;
++      flush_area.y1 = 0;
++      flush_area.x2 = buffer->width;
++      flush_area.y2 = buffer->height;
++
++      ret = drmModeDirtyFB (driver->device_fd, buffer->id, &flush_area, 1);
++
++      if (ret == -ENOSYS)
++        driver->requires_explicit_flushing = false;
++    }
+ }
+ 
+ static void
+diff --git a/src/plugins/renderers/drm/ply-renderer-i915-driver.c b/src/plugins/renderers/drm/ply-renderer-i915-driver.c
+deleted file mode 100644
+index 907a061..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-i915-driver.c
++++ /dev/null
+@@ -1,383 +0,0 @@
+-/* ply-renderer-i915-driver.c - interface to i915 drm driver
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written by: Ray Strode <rstrode@redhat.com>
+- */
+-#include "config.h"
+-
+-#include "ply-renderer-i915-driver.h"
+-
+-#include <arpa/inet.h>
+-#include <assert.h>
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <signal.h>
+-#include <string.h>
+-#include <stdbool.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <sys/ioctl.h>
+-#include <sys/mman.h>
+-#include <sys/stat.h>
+-#include <sys/types.h>
+-#include <values.h>
+-#include <unistd.h>
+-
+-#include <drm.h>
+-#include <i915_drm.h>
+-#include <intel_bufmgr.h>
+-#include <xf86drm.h>
+-#include <xf86drmMode.h>
+-
+-#include "ply-hashtable.h"
+-#include "ply-logger.h"
+-#include "ply-renderer-driver.h"
+-
+-typedef struct _ply_renderer_buffer ply_renderer_buffer_t;
+-
+-struct _ply_renderer_buffer
+-{
+-  drm_intel_bo *object;
+-  uint32_t id;
+-  unsigned long width;
+-  unsigned long height;
+-  unsigned long row_stride;
+-
+-  uint32_t added_fb : 1;
+-};
+-
+-struct _ply_renderer_driver
+-{
+-  int device_fd;
+-  drm_intel_bufmgr *manager;
+-
+-  ply_hashtable_t *buffers;
+-};
+-
+-static ply_renderer_driver_t *
+-create_driver (int device_fd)
+-{
+-  ply_renderer_driver_t *driver;
+-  int page_size;
+-
+-  driver = calloc (1, sizeof (ply_renderer_driver_t));
+-  driver->device_fd = device_fd;
+-
+-  page_size = (int) sysconf (_SC_PAGE_SIZE);
+-
+-  driver->manager = drm_intel_bufmgr_gem_init (driver->device_fd, page_size);
+-  if (driver->manager == NULL)
+-    {
+-      ply_trace ("intel buffer manager could not be initialized");
+-      free (driver);
+-      return NULL;
+-    }
+-
+-  driver->buffers = ply_hashtable_new (ply_hashtable_direct_hash,
+-                                       ply_hashtable_direct_compare);
+-
+-  return driver;
+-}
+-
+-static void
+-destroy_driver (ply_renderer_driver_t *driver)
+-{
+-  ply_hashtable_free (driver->buffers);
+-
+-  ply_trace ("uninitializing intel buffer manager");
+-  drm_intel_bufmgr_destroy (driver->manager);
+-  free (driver);
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new (ply_renderer_driver_t *driver,
+-                         drm_intel_bo *buffer_object,
+-                         uint32_t id,
+-                         unsigned long width,
+-                         unsigned long height,
+-                         unsigned long row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = calloc (1, sizeof (ply_renderer_buffer_t));
+-  buffer->object = buffer_object;
+-  buffer->id = id;
+-  buffer->width = width;
+-  buffer->height = height;
+-  buffer->row_stride = row_stride;
+-
+-  ply_trace ("returning %lux%lu buffer with stride %lu",
+-             width, height, row_stride);
+-
+-  return buffer;
+-}
+-
+-static drm_intel_bo *
+-create_intel_bo_from_handle (ply_renderer_driver_t *driver,
+-                             uint32_t               handle)
+-{
+-  struct drm_gem_flink flink_request;
+-  char *name;
+-  drm_intel_bo *buffer_object;
+-
+-  /* FIXME: This can't be the right way to do this.
+-   *
+-   * 1) It requires skirting around the API and using ioctls
+-   * 2) It requires taking a local handle, turning it into a
+-   * a global handle ("name"), just so we can use an api that
+-   * will open the global name and grab the local handle from it.
+-   */
+-
+-  memset (&flink_request, 0, sizeof (struct drm_gem_flink));
+-  flink_request.handle = handle;
+-
+-  if (ioctl (driver->device_fd, DRM_IOCTL_GEM_FLINK, &flink_request) < 0)
+-    {
+-      ply_trace ("Could not export global name for handle %u", handle);
+-      return NULL;
+-    }
+-
+-  asprintf (&name, "buffer %u", handle);
+-
+-  buffer_object = drm_intel_bo_gem_create_from_name (driver->manager,
+-                                                     name, flink_request.name);
+-  free (name);
+-
+-  return buffer_object;
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new_from_id (ply_renderer_driver_t *driver,
+-                                 uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-  drmModeFB *fb;
+-  drm_intel_bo *buffer_object;
+-
+-  fb = drmModeGetFB (driver->device_fd, buffer_id);
+-
+-  if (fb == NULL)
+-    {
+-      ply_trace ("could not get FB with buffer id %u", buffer_id);
+-      return NULL;
+-    }
+-
+-  buffer_object = create_intel_bo_from_handle (driver, fb->handle);
+-
+-  if (buffer_object == NULL)
+-    {
+-      ply_trace ("could not create buffer object from handle %lu",
+-                 (unsigned long) fb->handle);
+-      drmModeFreeFB (fb);
+-      return NULL;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver, buffer_object, buffer_id,
+-                                    fb->width, fb->height, fb->pitch);
+-  drmModeFreeFB (fb);
+-
+-  return buffer;
+-}
+-
+-static ply_renderer_buffer_t *
+-get_buffer_from_id (ply_renderer_driver_t *driver,
+-                    uint32_t               buffer_id)
+-{
+-  static ply_renderer_buffer_t *buffer;
+-
+-  buffer = ply_hashtable_lookup (driver->buffers,
+-                                 (void *) (uintptr_t) buffer_id);
+-
+-  return buffer;
+-}
+-
+-static bool
+-fetch_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id,
+-              unsigned long         *width,
+-              unsigned long         *height,
+-              unsigned long         *row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  if (buffer == NULL)
+-    {
+-      ply_trace ("could not fetch buffer %u, creating one", buffer_id);
+-      buffer = ply_renderer_buffer_new_from_id (driver, buffer_id);
+-
+-      if (buffer == NULL)
+-        {
+-          ply_trace ("could not create buffer either %u", buffer_id);
+-          return false;
+-        }
+-
+-      ply_hashtable_insert (driver->buffers,
+-                            (void *) (uintptr_t) buffer_id,
+-                            buffer);
+-    }
+-
+-  if (width != NULL)
+-    *width = buffer->width;
+-
+-  if (height != NULL)
+-    *height = buffer->height;
+-
+-  if (row_stride != NULL)
+-    *row_stride = buffer->row_stride;
+-
+-  ply_trace ("fetched %lux%lu buffer with stride %lu",
+-             buffer->width, buffer->height, buffer->row_stride);
+-  return true;
+-}
+-
+-static uint32_t
+-create_buffer (ply_renderer_driver_t *driver,
+-               unsigned long          width,
+-               unsigned long          height,
+-               unsigned long         *row_stride)
+-{
+-  drm_intel_bo *buffer_object;
+-  ply_renderer_buffer_t *buffer;
+-  uint32_t buffer_id;
+-
+-  *row_stride = ply_round_to_multiple (width * 4, 256);
+-
+-  buffer_object = drm_intel_bo_alloc (driver->manager,
+-                                      "frame buffer",
+-                                      height * *row_stride, 0);
+-
+-  if (buffer_object == NULL)
+-    {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
+-      return 0;
+-    }
+-
+-  if (drmModeAddFB (driver->device_fd, width, height,
+-                    24, 32, *row_stride, buffer_object->handle,
+-                    &buffer_id) != 0)
+-    {
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
+-      drm_intel_bo_unreference (buffer_object);
+-      return 0;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver,
+-                                    buffer_object, buffer_id,
+-                                    width, height, *row_stride);
+-  buffer->added_fb = true;
+-  ply_hashtable_insert (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id,
+-                        buffer);
+-
+-  return buffer_id;
+-}
+-
+-static bool
+-map_buffer (ply_renderer_driver_t *driver,
+-            uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-  drm_intel_gem_bo_map_gtt (buffer->object);
+-
+-  return true;
+-}
+-
+-static void
+-unmap_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-  drm_intel_gem_bo_unmap_gtt (buffer->object);
+-}
+-
+-static char *
+-begin_flush (ply_renderer_driver_t *driver,
+-             uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return buffer->object->virtual;
+-}
+-
+-static void
+-end_flush (ply_renderer_driver_t *driver,
+-           uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-}
+-
+-static void
+-destroy_buffer (ply_renderer_driver_t *driver,
+-                uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  if (buffer->added_fb)
+-    drmModeRmFB (driver->device_fd, buffer->id);
+-
+-  drm_intel_bo_unreference (buffer->object);
+-
+-  ply_hashtable_remove (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id);
+-  free (buffer);
+-}
+-
+-ply_renderer_driver_interface_t *
+-ply_renderer_i915_driver_get_interface (void)
+-{
+-  static ply_renderer_driver_interface_t driver_interface =
+-    {
+-      .create_driver = create_driver,
+-      .destroy_driver = destroy_driver,
+-      .create_buffer = create_buffer,
+-      .fetch_buffer = fetch_buffer,
+-      .map_buffer = map_buffer,
+-      .unmap_buffer = unmap_buffer,
+-      .begin_flush = begin_flush,
+-      .end_flush = end_flush,
+-      .destroy_buffer = destroy_buffer,
+-    };
+-
+-  return &driver_interface;
+-}
+-
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-i915-driver.h b/src/plugins/renderers/drm/ply-renderer-i915-driver.h
+deleted file mode 100644
+index dcc983c..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-i915-driver.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* ply-renderer-i915-driver.h
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written By: Ray Strode <rstrode@redhat.com>
+- */
+-#ifndef PLY_RENDERER_I915_DRIVER_H
+-#define PLY_RENDERER_I915_DRIVER_H
+-
+-#include "ply-renderer-driver.h"
+-
+-#ifndef PLY_HIDE_FUNCTION_DECLARATIONS
+-ply_renderer_driver_interface_t *ply_renderer_i915_driver_get_interface (void);
+-#endif
+-
+-#endif /* PLY_RENDERER_I915_DRIVER_H */
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-libkms-driver.c b/src/plugins/renderers/drm/ply-renderer-libkms-driver.c
+deleted file mode 100644
+index 18c7ccf..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-libkms-driver.c
++++ /dev/null
+@@ -1,430 +0,0 @@
+-/* ply-renderer-libkms-driver.c - interface to libkms abstraction over drm drivers
+- *
+- * Copyright (C) 2010 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written by: Ray Strode <rstrode@redhat.com>
+- */
+-#include "config.h"
+-
+-#include "ply-renderer-libkms-driver.h"
+-
+-#include <arpa/inet.h>
+-#include <assert.h>
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <signal.h>
+-#include <string.h>
+-#include <stdbool.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <sys/ioctl.h>
+-#include <sys/mman.h>
+-#include <sys/stat.h>
+-#include <sys/types.h>
+-#include <values.h>
+-#include <unistd.h>
+-
+-#include <drm.h>
+-#include <libkms.h>
+-#include <xf86drm.h>
+-#include <xf86drmMode.h>
+-
+-#include "ply-array.h"
+-#include "ply-hashtable.h"
+-#include "ply-logger.h"
+-#include "ply-renderer-driver.h"
+-
+-typedef struct _ply_renderer_buffer ply_renderer_buffer_t;
+-
+-struct _ply_renderer_buffer
+-{
+-  struct kms_bo *object;
+-  uint32_t id;
+-  unsigned long width;
+-  unsigned long height;
+-  unsigned long row_stride;
+-
+-  void *map_address;
+-
+-  uint32_t added_fb : 1;
+-};
+-
+-struct _ply_renderer_driver
+-{
+-  int device_fd;
+-  struct kms_driver *driver;
+-
+-  ply_hashtable_t *buffers;
+-};
+-
+-static ply_renderer_driver_t *
+-create_driver (int device_fd)
+-{
+-  ply_renderer_driver_t *driver;
+-  int result;
+-
+-  driver = calloc (1, sizeof (ply_renderer_driver_t));
+-  driver->device_fd = device_fd;
+-
+-  result = kms_create (driver->device_fd, &driver->driver);
+-  if (result != 0)
+-    {
+-      ply_trace ("kms buffer driver could not be initialized: %d", result);
+-      free (driver);
+-      return NULL;
+-    }
+-
+-  driver->buffers = ply_hashtable_new (ply_hashtable_direct_hash,
+-                                       ply_hashtable_direct_compare);
+-
+-  return driver;
+-}
+-
+-static void
+-destroy_driver (ply_renderer_driver_t *driver)
+-{
+-  ply_hashtable_free (driver->buffers);
+-
+-  ply_trace ("uninitializing kms buffer driver");
+-  kms_destroy (&driver->driver);
+-  free (driver);
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new (ply_renderer_driver_t *driver,
+-                         struct kms_bo *buffer_object,
+-                         uint32_t id,
+-                         unsigned long width,
+-                         unsigned long height,
+-                         unsigned long row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = calloc (1, sizeof (ply_renderer_buffer_t));
+-  buffer->object = buffer_object;
+-  buffer->id = id;
+-  buffer->width = width;
+-  buffer->height = height;
+-  buffer->row_stride = row_stride;
+-
+-  ply_trace ("returning %lux%lu buffer with stride %lu",
+-             width, height, row_stride);
+-
+-  return buffer;
+-}
+-
+-static ply_renderer_buffer_t *
+-get_buffer_from_id (ply_renderer_driver_t *driver,
+-                    uint32_t               id)
+-{
+-  static ply_renderer_buffer_t *buffer;
+-
+-  buffer = ply_hashtable_lookup (driver->buffers, (void *) (uintptr_t) id);
+-
+-  return buffer;
+-}
+-
+-static struct kms_bo *
+-create_kms_bo_from_handle (ply_renderer_driver_t *driver,
+-                           uint32_t               handle)
+-{
+-  struct drm_gem_flink flink_request;
+-  struct kms_bo *buffer_object;
+-  ply_array_t *attributes;
+-  int result;
+-
+-  /* FIXME: This can't be the right way to do this.
+-   *
+-   * 1) It requires skirting around the API and using ioctls
+-   * 2) It requires taking a local handle, turning it into a
+-   * a global handle ("name"), just so we can use an api that
+-   * will open the global name and grab the local handle from it.
+-   */
+-
+-  memset (&flink_request, 0, sizeof (struct drm_gem_flink));
+-  flink_request.handle = handle;
+-
+-  if (ioctl (driver->device_fd, DRM_IOCTL_GEM_FLINK, &flink_request) < 0)
+-    {
+-      ply_trace ("Could not export global name for handle %u", handle);
+-      return NULL;
+-    }
+-
+-  attributes = ply_array_new (PLY_ARRAY_ELEMENT_TYPE_UINT32);
+-  ply_array_add_uint32_element (attributes, KMS_HANDLE);
+-  ply_array_add_uint32_element (attributes, flink_request.name);
+-  ply_array_add_uint32_element (attributes, KMS_TERMINATE_PROP_LIST);
+-  result = kms_bo_create (driver->driver,
+-                          (const unsigned *)
+-                          ply_array_get_uint32_elements (attributes),
+-                          &buffer_object);
+-  ply_array_free (attributes);
+-
+-  if (result != 0)
+-    {
+-      ply_trace ("could not create buffer object from global name %u: %d",
+-                 flink_request.name, result);
+-      return NULL;
+-    }
+-
+-  return buffer_object;
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new_from_id (ply_renderer_driver_t *driver,
+-                                 uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-  drmModeFB *fb;
+-  struct kms_bo *buffer_object;
+-
+-  fb = drmModeGetFB (driver->device_fd, buffer_id);
+-
+-  if (fb == NULL)
+-    {
+-      ply_trace ("could not get FB with buffer id %u", buffer_id);
+-      return NULL;
+-    }
+-
+-  buffer_object = create_kms_bo_from_handle (driver, fb->handle);
+-
+-  if (buffer_object == NULL)
+-    {
+-      ply_trace ("could not create buffer object from handle %lu",
+-                 (unsigned long) fb->handle);
+-      drmModeFreeFB (fb);
+-      return NULL;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver, buffer_object, buffer_id,
+-                                    fb->width, fb->height, fb->pitch);
+-  drmModeFreeFB (fb);
+-
+-  return buffer;
+-}
+-
+-static bool
+-fetch_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id,
+-              unsigned long         *width,
+-              unsigned long         *height,
+-              unsigned long         *row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  if (buffer == NULL)
+-    {
+-      ply_trace ("could not fetch buffer %u, creating one", buffer_id);
+-      buffer = ply_renderer_buffer_new_from_id (driver, buffer_id);
+-
+-      if (buffer == NULL)
+-        {
+-          ply_trace ("could not create buffer either %u", buffer_id);
+-          return false;
+-        }
+-
+-      ply_hashtable_insert (driver->buffers,
+-                            (void *) (uintptr_t) buffer_id,
+-                            buffer);
+-    }
+-
+-  if (width != NULL)
+-    *width = buffer->width;
+-
+-  if (height != NULL)
+-    *height = buffer->height;
+-
+-  if (row_stride != NULL)
+-    *row_stride = buffer->row_stride;
+-
+-  ply_trace ("fetched %lux%lu buffer with stride %lu",
+-             buffer->width, buffer->height, buffer->row_stride);
+-  return true;
+-}
+-
+-static uint32_t
+-create_buffer (ply_renderer_driver_t *driver,
+-               unsigned long          width,
+-               unsigned long          height,
+-               unsigned long         *row_stride)
+-{
+-  struct kms_bo *buffer_object;
+-  ply_renderer_buffer_t *buffer;
+-  uint32_t buffer_id;
+-  int result;
+-  unsigned int handle;
+-  ply_array_t *attributes;
+-
+-  *row_stride = ply_round_to_multiple (width * 4, 256);
+-
+-  attributes = ply_array_new (PLY_ARRAY_ELEMENT_TYPE_UINT32);
+-  ply_array_add_uint32_element (attributes, KMS_BO_TYPE);
+-  ply_array_add_uint32_element (attributes, KMS_BO_TYPE_SCANOUT_X8R8G8B8);
+-  ply_array_add_uint32_element (attributes, KMS_WIDTH);
+-  ply_array_add_uint32_element (attributes, (uint32_t) width);
+-  ply_array_add_uint32_element (attributes, KMS_HEIGHT);
+-  ply_array_add_uint32_element (attributes, (uint32_t) height);
+-  ply_array_add_uint32_element (attributes, KMS_PITCH);
+-  ply_array_add_uint32_element (attributes, (uint32_t) *row_stride);
+-  ply_array_add_uint32_element (attributes, KMS_TERMINATE_PROP_LIST);
+-  result = kms_bo_create (driver->driver,
+-                          (const unsigned *)
+-                          ply_array_get_uint32_elements (attributes),
+-                          &buffer_object);
+-  ply_array_free (attributes);
+-
+-  if (result != 0)
+-    {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %d", result);
+-      return 0;
+-    }
+-
+-  result = kms_bo_get_prop (buffer_object, KMS_HANDLE, &handle);
+-
+-  if (result != 0)
+-    {
+-      ply_trace ("Could not retrieve handle from GEM object: %d", result);
+-
+-      kms_bo_destroy (&buffer_object);
+-      return 0;
+-    }
+-
+-  if (drmModeAddFB (driver->device_fd, width, height,
+-                    24, 32, *row_stride, handle,
+-                    &buffer_id) != 0)
+-    {
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
+-      kms_bo_destroy (&buffer_object);
+-      return 0;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver,
+-                                    buffer_object, buffer_id,
+-                                    width, height, *row_stride);
+-  buffer->added_fb = true;
+-  ply_hashtable_insert (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id,
+-                        buffer);
+-
+-  return buffer_id;
+-}
+-
+-static bool
+-map_buffer (ply_renderer_driver_t *driver,
+-            uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-  int result;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  result = kms_bo_map (buffer->object, &buffer->map_address);
+-
+-  if (result != 0)
+-    {
+-      ply_trace ("could not map buffer %u: %d", buffer_id, result);
+-      buffer->map_address = MAP_FAILED;
+-      return false;
+-    }
+-
+-  return true;
+-}
+-
+-static void
+-unmap_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  kms_bo_unmap (buffer->object);
+-  buffer->map_address = MAP_FAILED;
+-}
+-
+-static char *
+-begin_flush (ply_renderer_driver_t *driver,
+-             uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return (char *) buffer->map_address;
+-}
+-
+-static void
+-end_flush (ply_renderer_driver_t *driver,
+-           uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-}
+-
+-static void
+-destroy_buffer (ply_renderer_driver_t *driver,
+-                uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  if (buffer->added_fb)
+-    drmModeRmFB (driver->device_fd, buffer->id);
+-
+-  kms_bo_destroy (&buffer->object);
+-
+-  ply_hashtable_remove (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id);
+-  free (buffer);
+-}
+-
+-ply_renderer_driver_interface_t *
+-ply_renderer_libkms_driver_get_interface (void)
+-{
+-  static ply_renderer_driver_interface_t driver_interface =
+-    {
+-      .create_driver = create_driver,
+-      .destroy_driver = destroy_driver,
+-      .create_buffer = create_buffer,
+-      .fetch_buffer = fetch_buffer,
+-      .map_buffer = map_buffer,
+-      .unmap_buffer = unmap_buffer,
+-      .begin_flush = begin_flush,
+-      .end_flush = end_flush,
+-      .destroy_buffer = destroy_buffer,
+-    };
+-
+-  return &driver_interface;
+-}
+-
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-libkms-driver.h b/src/plugins/renderers/drm/ply-renderer-libkms-driver.h
+deleted file mode 100644
+index b419a94..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-libkms-driver.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* ply-renderer-kms-driver.h
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written By: Ray Strode <rstrode@redhat.com>
+- */
+-#ifndef PLY_RENDERER_LIBKMS_DRIVER_H
+-#define PLY_RENDERER_LIBKMS_DRIVER_H
+-
+-#include "ply-renderer-driver.h"
+-
+-#ifndef PLY_HIDE_FUNCTION_DECLARATIONS
+-ply_renderer_driver_interface_t *ply_renderer_libkms_driver_get_interface (void);
+-#endif
+-
+-#endif /* PLY_RENDERER_LIBKMS_DRIVER_H */
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c b/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c
+deleted file mode 100644
+index 2cef56e..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c
++++ /dev/null
+@@ -1,352 +0,0 @@
+-/* ply-renderer-nouveau-driver.c - interface to nouveau drm driver
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written by: Ray Strode <rstrode@redhat.com>
+- */
+-#include "config.h"
+-
+-#include "ply-renderer-nouveau-driver.h"
+-
+-#include <arpa/inet.h>
+-#include <assert.h>
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <signal.h>
+-#include <string.h>
+-#include <stdbool.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <sys/ioctl.h>
+-#include <sys/mman.h>
+-#include <sys/stat.h>
+-#include <sys/types.h>
+-#include <values.h>
+-#include <unistd.h>
+-
+-#include <drm.h>
+-#include <nouveau_drm.h>
+-#include <nouveau_drmif.h>
+-#include <nouveau_bo.h>
+-#include <xf86drm.h>
+-#include <xf86drmMode.h>
+-
+-#include "ply-hashtable.h"
+-#include "ply-logger.h"
+-#include "ply-renderer-driver.h"
+-
+-typedef struct _ply_renderer_buffer ply_renderer_buffer_t;
+-
+-struct _ply_renderer_buffer
+-{
+-  struct nouveau_bo *object;
+-  uint32_t id;
+-  unsigned long width;
+-  unsigned long height;
+-  unsigned long row_stride;
+-
+-  uint32_t added_fb : 1;
+-};
+-
+-struct _ply_renderer_driver
+-{
+-  int device_fd;
+-  struct nouveau_device *device;
+-
+-  ply_hashtable_t *buffers;
+-};
+-
+-static ply_renderer_driver_t *
+-create_driver (int device_fd)
+-{
+-  ply_renderer_driver_t *driver;
+-
+-  driver = calloc (1, sizeof (ply_renderer_driver_t));
+-  driver->device_fd = device_fd;
+-
+-  if (nouveau_device_open_existing (&driver->device, true,
+-                                    driver->device_fd, 0) < 0)
+-    {
+-      ply_trace ("could not open nouveau device");
+-      free (driver);
+-      return NULL;
+-    }
+-
+-  driver->buffers = ply_hashtable_new (ply_hashtable_direct_hash,
+-                                       ply_hashtable_direct_compare);
+-
+-  return driver;
+-}
+-
+-static void
+-destroy_driver (ply_renderer_driver_t *driver)
+-{
+-  ply_hashtable_free (driver->buffers);
+-
+-  ply_trace ("closing nouveau device");
+-  nouveau_device_close (&driver->device);
+-  free (driver);
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new (ply_renderer_driver_t *driver,
+-                         struct nouveau_bo *buffer_object,
+-                         uint32_t id,
+-                         unsigned long width,
+-                         unsigned long height,
+-                         unsigned long row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = calloc (1, sizeof (ply_renderer_buffer_t));
+-  buffer->object = buffer_object;
+-  buffer->id = id;
+-  buffer->width = width;
+-  buffer->height = height;
+-  buffer->row_stride = row_stride;
+-
+-  ply_trace ("returning %lux%lu buffer with stride %lu",
+-             width, height, row_stride);
+-
+-  return buffer;
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new_from_id (ply_renderer_driver_t *driver,
+-                                 uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-  drmModeFB *fb;
+-  struct nouveau_bo *buffer_object;
+-
+-  fb = drmModeGetFB (driver->device_fd, buffer_id);
+-
+-  if (fb == NULL)
+-    {
+-      ply_trace ("could not get FB with buffer id %u", buffer_id);
+-      return NULL;
+-    }
+-
+-  if (nouveau_bo_wrap (driver->device,
+-                       fb->handle, &buffer_object) < 0)
+-    {
+-      ply_trace ("could not create buffer object from handle %lu",
+-                 (unsigned long) fb->handle);
+-      drmModeFreeFB (fb);
+-      return NULL;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver, buffer_object, buffer_id,
+-                                    fb->width, fb->height, fb->pitch);
+-  drmModeFreeFB (fb);
+-
+-  return buffer;
+-}
+-
+-static ply_renderer_buffer_t *
+-get_buffer_from_id (ply_renderer_driver_t *driver,
+-                    uint32_t               id)
+-{
+-  static ply_renderer_buffer_t *buffer;
+-
+-  buffer = ply_hashtable_lookup (driver->buffers, (void *) (uintptr_t) id);
+-
+-  return buffer;
+-}
+-
+-static bool
+-fetch_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id,
+-              unsigned long         *width,
+-              unsigned long         *height,
+-              unsigned long         *row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  if (buffer == NULL)
+-    {
+-      ply_trace ("could not fetch buffer %u, creating one", buffer_id);
+-      buffer = ply_renderer_buffer_new_from_id (driver, buffer_id);
+-
+-      if (buffer == NULL)
+-        {
+-          ply_trace ("could not create buffer either %u", buffer_id);
+-          return false;
+-        }
+-
+-      ply_hashtable_insert (driver->buffers,
+-                            (void *) (uintptr_t) buffer_id,
+-                            buffer);
+-    }
+-
+-  if (width != NULL)
+-    *width = buffer->width;
+-
+-  if (height != NULL)
+-    *height = buffer->height;
+-
+-  if (row_stride != NULL)
+-    *row_stride = buffer->row_stride;
+-
+-  ply_trace ("fetched %lux%lu buffer with stride %lu",
+-             buffer->width, buffer->height, buffer->row_stride);
+-  return true;
+-}
+-
+-
+-static uint32_t
+-create_buffer (ply_renderer_driver_t *driver,
+-               unsigned long          width,
+-               unsigned long          height,
+-               unsigned long         *row_stride)
+-{
+-  struct nouveau_bo *buffer_object;
+-  ply_renderer_buffer_t *buffer;
+-  uint32_t buffer_id;
+-
+-  *row_stride = ply_round_to_multiple (width * 4, 256);
+-
+-  buffer_object = NULL;
+-  if (nouveau_bo_new (driver->device,
+-                      NOUVEAU_BO_VRAM | NOUVEAU_BO_MAP, 0,
+-                      height * *row_stride, &buffer_object) < 0)
+-    {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
+-      return 0;
+-    }
+-
+-  /* The map here forces the buffer object to be instantiated
+-   * immediately (it's normally instantiated lazily when needed
+-   * by other nouveau_bo api)
+-   */
+-  nouveau_bo_map (buffer_object, NOUVEAU_BO_WR);
+-  if (drmModeAddFB (driver->device_fd, width, height,
+-                    24, 32, *row_stride, buffer_object->handle,
+-                    &buffer_id) != 0)
+-    {
+-      nouveau_bo_unmap (buffer_object);
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
+-      nouveau_bo_ref (NULL, &buffer_object);
+-      return 0;
+-    }
+-  nouveau_bo_unmap (buffer_object);
+-
+-  buffer = ply_renderer_buffer_new (driver,
+-                                    buffer_object, buffer_id,
+-                                    width, height, *row_stride);
+-  buffer->added_fb = true;
+-  ply_hashtable_insert (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id,
+-                        buffer);
+-
+-  return buffer_id;
+-}
+-
+-static bool
+-map_buffer (ply_renderer_driver_t *driver,
+-            uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return nouveau_bo_map (buffer->object, NOUVEAU_BO_WR) == 0;
+-}
+-
+-static void
+-unmap_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  nouveau_bo_unmap (buffer->object);
+-}
+-
+-static char *
+-begin_flush (ply_renderer_driver_t *driver,
+-             uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return buffer->object->map;
+-}
+-
+-static void
+-end_flush (ply_renderer_driver_t *driver,
+-           uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-}
+-
+-static void
+-destroy_buffer (ply_renderer_driver_t *driver,
+-                uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  if (buffer->added_fb)
+-    drmModeRmFB (driver->device_fd, buffer->id);
+-
+-  nouveau_bo_ref (NULL, &buffer->object);
+-
+-  ply_hashtable_remove (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id);
+-  free (buffer);
+-}
+-
+-ply_renderer_driver_interface_t *
+-ply_renderer_nouveau_driver_get_interface (void)
+-{
+-  static ply_renderer_driver_interface_t driver_interface =
+-    {
+-      .create_driver = create_driver,
+-      .destroy_driver = destroy_driver,
+-      .create_buffer = create_buffer,
+-      .fetch_buffer = fetch_buffer,
+-      .map_buffer = map_buffer,
+-      .unmap_buffer = unmap_buffer,
+-      .begin_flush = begin_flush,
+-      .end_flush = end_flush,
+-      .destroy_buffer = destroy_buffer,
+-    };
+-
+-  return &driver_interface;
+-}
+-
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.h b/src/plugins/renderers/drm/ply-renderer-nouveau-driver.h
+deleted file mode 100644
+index 1baed4a..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* ply-renderer-nouveau-driver.h
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written By: Ray Strode <rstrode@redhat.com>
+- */
+-#ifndef PLY_RENDERER_NOUVEAU_DRIVER_H
+-#define PLY_RENDERER_NOUVEAU_DRIVER_H
+-
+-#include "ply-renderer-driver.h"
+-
+-#ifndef PLY_HIDE_FUNCTION_DECLARATIONS
+-ply_renderer_driver_interface_t *ply_renderer_nouveau_driver_get_interface (void);
+-#endif
+-
+-#endif /* PLY_RENDERER_NOUVEAU_DRIVER_H */
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-radeon-driver.c b/src/plugins/renderers/drm/ply-renderer-radeon-driver.c
+deleted file mode 100644
+index 36cee47..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-radeon-driver.c
++++ /dev/null
+@@ -1,377 +0,0 @@
+-/* ply-renderer-radeon-driver.c - interface to radeon drm driver
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written by: Ray Strode <rstrode@redhat.com>
+- */
+-#include "config.h"
+-
+-#include "ply-renderer-radeon-driver.h"
+-
+-#include <arpa/inet.h>
+-#include <assert.h>
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <signal.h>
+-#include <string.h>
+-#include <stdbool.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <sys/ioctl.h>
+-#include <sys/mman.h>
+-#include <sys/stat.h>
+-#include <sys/types.h>
+-#include <values.h>
+-#include <unistd.h>
+-
+-#include <drm.h>
+-#include <radeon_drm.h>
+-#include <radeon_bo.h>
+-#include <radeon_bo_gem.h>
+-#include <xf86drm.h>
+-#include <xf86drmMode.h>
+-
+-#include "ply-hashtable.h"
+-#include "ply-logger.h"
+-#include "ply-renderer-driver.h"
+-
+-typedef struct _ply_renderer_buffer ply_renderer_buffer_t;
+-
+-struct _ply_renderer_buffer
+-{
+-  struct radeon_bo *object;
+-  uint32_t id;
+-  unsigned long width;
+-  unsigned long height;
+-  unsigned long row_stride;
+-
+-  uint32_t added_fb : 1;
+-};
+-
+-struct _ply_renderer_driver
+-{
+-  int device_fd;
+-  struct radeon_bo_manager *manager;
+-
+-  ply_hashtable_t *buffers;
+-};
+-
+-static ply_renderer_driver_t *
+-create_driver (int device_fd)
+-{
+-  ply_renderer_driver_t *driver;
+-
+-  driver = calloc (1, sizeof (ply_renderer_driver_t));
+-  driver->device_fd = device_fd;
+-
+-  driver->manager = radeon_bo_manager_gem_ctor (driver->device_fd);
+-  if (driver->manager == NULL)
+-    {
+-      ply_trace ("radeon buffer manager could not be initialized");
+-      free (driver);
+-      return NULL;
+-    }
+-
+-  driver->buffers = ply_hashtable_new (ply_hashtable_direct_hash,
+-                                       ply_hashtable_direct_compare);
+-
+-  return driver;
+-}
+-
+-static void
+-destroy_driver (ply_renderer_driver_t *driver)
+-{
+-  ply_hashtable_free (driver->buffers);
+-
+-  ply_trace ("uninitializing radeon buffer manager");
+-  radeon_bo_manager_gem_dtor (driver->manager);
+-  free (driver);
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new (ply_renderer_driver_t *driver,
+-                         struct radeon_bo *buffer_object,
+-                         uint32_t id,
+-                         unsigned long width,
+-                         unsigned long height,
+-                         unsigned long row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = calloc (1, sizeof (ply_renderer_buffer_t));
+-  buffer->object = buffer_object;
+-  buffer->id = id;
+-  buffer->width = width;
+-  buffer->height = height;
+-  buffer->row_stride = row_stride;
+-
+-  ply_trace ("returning %lux%lu buffer with stride %lu",
+-             width, height, row_stride);
+-
+-  return buffer;
+-}
+-
+-static ply_renderer_buffer_t *
+-get_buffer_from_id (ply_renderer_driver_t *driver,
+-                    uint32_t               id)
+-{
+-  static ply_renderer_buffer_t *buffer;
+-
+-  buffer = ply_hashtable_lookup (driver->buffers, (void *) (uintptr_t) id);
+-
+-  return buffer;
+-}
+-
+-static struct radeon_bo *
+-create_radeon_bo_from_handle (ply_renderer_driver_t *driver,
+-                              uint32_t               handle)
+-{
+-  struct drm_gem_flink flink_request;
+-  struct radeon_bo *buffer_object;
+-
+-  /* FIXME: This can't be the right way to do this.
+-   *
+-   * 1) It requires skirting around the API and using ioctls
+-   * 2) It requires taking a local handle, turning it into a
+-   * a global handle ("name"), just so we can use an api that
+-   * will open the global name and grab the local handle from it.
+-   */
+-
+-  memset (&flink_request, 0, sizeof (struct drm_gem_flink));
+-  flink_request.handle = handle;
+-
+-  if (ioctl (driver->device_fd, DRM_IOCTL_GEM_FLINK, &flink_request) < 0)
+-    {
+-      ply_trace ("Could not export global name for handle %u", handle);
+-      return NULL;
+-    }
+-
+-  buffer_object = radeon_bo_open (driver->manager, flink_request.name,
+-                                  0, 0, RADEON_GEM_DOMAIN_GTT, 0);
+-
+-  return buffer_object;
+-}
+-
+-static ply_renderer_buffer_t *
+-ply_renderer_buffer_new_from_id (ply_renderer_driver_t *driver,
+-                                 uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-  drmModeFB *fb;
+-  struct radeon_bo *buffer_object;
+-
+-  fb = drmModeGetFB (driver->device_fd, buffer_id);
+-
+-  if (fb == NULL)
+-    {
+-      ply_trace ("could not get FB with buffer id %u", buffer_id);
+-      return NULL;
+-    }
+-
+-  buffer_object = create_radeon_bo_from_handle (driver, fb->handle);
+-
+-  if (buffer_object == NULL)
+-    {
+-      ply_trace ("could not create buffer object from handle %lu",
+-                 (unsigned long) fb->handle);
+-      drmModeFreeFB (fb);
+-      return NULL;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver, buffer_object, buffer_id,
+-                                    fb->width, fb->height, fb->pitch);
+-  drmModeFreeFB (fb);
+-
+-  return buffer;
+-}
+-
+-
+-static bool
+-fetch_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id,
+-              unsigned long         *width,
+-              unsigned long         *height,
+-              unsigned long         *row_stride)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  if (buffer == NULL)
+-    {
+-      ply_trace ("could not fetch buffer %u, creating one", buffer_id);
+-      buffer = ply_renderer_buffer_new_from_id (driver, buffer_id);
+-
+-      if (buffer == NULL)
+-        {
+-          ply_trace ("could not create buffer either %u", buffer_id);
+-          return false;
+-        }
+-
+-      ply_hashtable_insert (driver->buffers,
+-                            (void *) (uintptr_t) buffer_id,
+-                            buffer);
+-    }
+-
+-  if (width != NULL)
+-    *width = buffer->width;
+-
+-  if (height != NULL)
+-    *height = buffer->height;
+-
+-  if (row_stride != NULL)
+-    *row_stride = buffer->row_stride;
+-
+-  ply_trace ("fetched %lux%lu buffer with stride %lu",
+-             buffer->width, buffer->height, buffer->row_stride);
+-  return true;
+-}
+-
+-static uint32_t
+-create_buffer (ply_renderer_driver_t *driver,
+-               unsigned long          width,
+-               unsigned long          height,
+-               unsigned long         *row_stride)
+-{
+-  struct radeon_bo *buffer_object;
+-  ply_renderer_buffer_t *buffer;
+-  uint32_t buffer_id;
+-
+-  *row_stride = ply_round_to_multiple (width * 4, 256);
+-
+-  buffer_object = radeon_bo_open (driver->manager, 0,
+-                                  height * *row_stride,
+-                                  0, RADEON_GEM_DOMAIN_GTT, 0);
+-
+-  if (buffer_object == NULL)
+-    {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
+-      return 0;
+-    }
+-
+-  if (drmModeAddFB (driver->device_fd, width, height,
+-                    24, 32, *row_stride, buffer_object->handle,
+-                    &buffer_id) != 0)
+-    {
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
+-      radeon_bo_unref (buffer_object);
+-      return 0;
+-    }
+-
+-  buffer = ply_renderer_buffer_new (driver,
+-                                    buffer_object, buffer_id,
+-                                    width, height, *row_stride);
+-  buffer->added_fb = true;
+-  ply_hashtable_insert (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id,
+-                        buffer);
+-
+-  return buffer_id;
+-}
+-
+-static bool
+-map_buffer (ply_renderer_driver_t *driver,
+-            uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return radeon_bo_map (buffer->object, true) == 0;
+-}
+-
+-static void
+-unmap_buffer (ply_renderer_driver_t *driver,
+-              uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  radeon_bo_unmap (buffer->object);
+-}
+-
+-static char *
+-begin_flush (ply_renderer_driver_t *driver,
+-             uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  return buffer->object->ptr;
+-}
+-
+-static void
+-end_flush (ply_renderer_driver_t *driver,
+-           uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-}
+-
+-static void
+-destroy_buffer (ply_renderer_driver_t *driver,
+-                uint32_t               buffer_id)
+-{
+-  ply_renderer_buffer_t *buffer;
+-
+-  buffer = get_buffer_from_id (driver, buffer_id);
+-
+-  assert (buffer != NULL);
+-
+-  if (buffer->added_fb)
+-    drmModeRmFB (driver->device_fd, buffer->id);
+-
+-  radeon_bo_unref (buffer->object);
+-
+-  ply_hashtable_remove (driver->buffers,
+-                        (void *) (uintptr_t) buffer_id);
+-  free (buffer);
+-}
+-
+-ply_renderer_driver_interface_t *
+-ply_renderer_radeon_driver_get_interface (void)
+-{
+-  static ply_renderer_driver_interface_t driver_interface =
+-    {
+-      .create_driver = create_driver,
+-      .destroy_driver = destroy_driver,
+-      .create_buffer = create_buffer,
+-      .fetch_buffer = fetch_buffer,
+-      .map_buffer = map_buffer,
+-      .unmap_buffer = unmap_buffer,
+-      .begin_flush = begin_flush,
+-      .end_flush = end_flush,
+-      .destroy_buffer = destroy_buffer,
+-    };
+-
+-  return &driver_interface;
+-}
+-
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/renderers/drm/ply-renderer-radeon-driver.h b/src/plugins/renderers/drm/ply-renderer-radeon-driver.h
+deleted file mode 100644
+index dcec1b1..0000000
+--- a/src/plugins/renderers/drm/ply-renderer-radeon-driver.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* ply-renderer-radeon-driver.h
+- *
+- * Copyright (C) 2009 Red Hat, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
+- *
+- * Written By: Ray Strode <rstrode@redhat.com>
+- */
+-#ifndef PLY_RENDERER_RADEON_DRIVER_H
+-#define PLY_RENDERER_RADEON_DRIVER_H
+-
+-#include "ply-renderer-driver.h"
+-
+-#ifndef PLY_HIDE_FUNCTION_DECLARATIONS
+-ply_renderer_driver_interface_t *ply_renderer_radeon_driver_get_interface (void);
+-#endif
+-
+-#endif /* PLY_RENDERER_RADEON_DRIVER_H */
+-/* vim: set ts=4 sw=4 et ai ci cino={.5s,^-2,+.5s,t0,g0,e-2,n-2,p2s,(0,=.5s,:.5s */
+diff --git a/src/plugins/splash/Makefile.am b/src/plugins/splash/Makefile.am
+index 02f94fa..a19197b 100644
+--- a/src/plugins/splash/Makefile.am
++++ b/src/plugins/splash/Makefile.am
+@@ -1,2 +1,2 @@
+-SUBDIRS = throbgress fade-throbber text details space-flares two-step script
++SUBDIRS = throbgress fade-throbber text details space-flares two-step script tribar
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/src/plugins/splash/script/script-debug.c b/src/plugins/splash/script/script-debug.c
+index 355c2b2..118574b 100644
+--- a/src/plugins/splash/script/script-debug.c
++++ b/src/plugins/splash/script/script-debug.c
+@@ -19,6 +19,10 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "ply-hashtable.h"
+ #include <stdlib.h>
+ #include <string.h>
+diff --git a/src/plugins/splash/script/script-execute.c b/src/plugins/splash/script/script-execute.c
+index 6abd3a6..c06959b 100644
+--- a/src/plugins/splash/script/script-execute.c
++++ b/src/plugins/splash/script/script-execute.c
+@@ -19,7 +19,11 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "ply-hashtable.h"
+ #include "ply-list.h"
+ #include "ply-logger.h"
+diff --git a/src/plugins/splash/script/script-lib-image.c b/src/plugins/splash/script/script-lib-image.c
+index 5be27fb..f08be31 100644
+--- a/src/plugins/splash/script/script-lib-image.c
++++ b/src/plugins/splash/script/script-lib-image.c
+@@ -19,7 +19,9 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#include "config.h"
++
+ #include "ply-image.h"
+ #include "ply-label.h"
+ #include "ply-pixel-buffer.h"
+@@ -36,8 +38,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "config.h"
+-
+ #include "script-lib-image.script.h"
+ 
+ static void image_free (script_obj_t *obj)
+diff --git a/src/plugins/splash/script/script-lib-math.c b/src/plugins/splash/script/script-lib-math.c
+index a1afc04..3f2dc79 100644
+--- a/src/plugins/splash/script/script-lib-math.c
++++ b/src/plugins/splash/script/script-lib-math.c
+@@ -19,7 +19,10 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#include "config.h"
++
++#include "ply-utils.h"
+ #include "script.h"
+ #include "script-parse.h"
+ #include "script-execute.h"
+@@ -31,7 +34,6 @@
+ #include <string.h>
+ #include <math.h>
+ 
+-#include "config.h"
+ 
+ #include "script-lib-math.script.h"
+ 
+diff --git a/src/plugins/splash/script/script-lib-plymouth.c b/src/plugins/splash/script/script-lib-plymouth.c
+index 5c648a6..ab2ec44 100644
+--- a/src/plugins/splash/script/script-lib-plymouth.c
++++ b/src/plugins/splash/script/script-lib-plymouth.c
+@@ -19,7 +19,9 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#include "config.h"
++
+ #include "ply-boot-splash-plugin.h"
+ #include "ply-utils.h"
+ #include "script.h"
+@@ -32,8 +34,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "config.h"
+-
+ #include "script-lib-plymouth.script.h"
+ 
+ static script_return_t plymouth_set_function (script_state_t *state,
+@@ -64,6 +64,7 @@ static script_return_t plymouth_get_mode (script_state_t *state,
+       case PLY_BOOT_SPLASH_MODE_UPDATES:
+         obj = script_obj_new_string ("updates");
+         break;
++      case PLY_BOOT_SPLASH_MODE_INVALID:
+       default:
+         obj = script_obj_new_string ("unknown");
+         break;
+diff --git a/src/plugins/splash/script/script-lib-string.c b/src/plugins/splash/script/script-lib-string.c
+index dbd63fe..0b836eb 100644
+--- a/src/plugins/splash/script/script-lib-string.c
++++ b/src/plugins/splash/script/script-lib-string.c
+@@ -19,7 +19,9 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#include "config.h"
++
+ #include "script.h"
+ #include "script-parse.h"
+ #include "script-execute.h"
+@@ -31,8 +33,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "config.h"
+-
+ #include "script-lib-string.script.h"
+ 
+ 
+diff --git a/src/plugins/splash/script/script-object.c b/src/plugins/splash/script/script-object.c
+index 465fef6..7c16c94 100644
+--- a/src/plugins/splash/script/script-object.c
++++ b/src/plugins/splash/script/script-object.c
+@@ -19,7 +19,11 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "ply-hashtable.h"
+ #include "ply-list.h"
+ #include "ply-bitarray.h"
+diff --git a/src/plugins/splash/script/script-parse.c b/src/plugins/splash/script/script-parse.c
+index 10eb667..4adf273 100644
+--- a/src/plugins/splash/script/script-parse.c
++++ b/src/plugins/splash/script/script-parse.c
+@@ -19,7 +19,11 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "ply-hashtable.h"
+ #include "ply-list.h"
+ #include "ply-bitarray.h"
+diff --git a/src/plugins/splash/script/script-scan.c b/src/plugins/splash/script/script-scan.c
+index ead752f..5d1aa64 100644
+--- a/src/plugins/splash/script/script-scan.c
++++ b/src/plugins/splash/script/script-scan.c
+@@ -19,6 +19,10 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <fcntl.h>
+@@ -26,6 +30,7 @@
+ #include <stdbool.h>
+ #include <unistd.h>
+ #include <string.h>
++#include <limits.h>
+ 
+ #include "ply-bitarray.h"
+ #include "script-scan.h"
+@@ -61,7 +66,7 @@ static script_scan_t *script_scan_new (void)
+ 
+ script_scan_t *script_scan_file (const char *filename)
+ {
+-  int fd = open (filename, O_RDONLY);
++  int fd = open (filename, O_RDONLY|O_CLOEXEC);
+   if (fd < 0) return NULL;
+   script_scan_t *scan = script_scan_new ();
+   scan->name = strdup (filename);
+@@ -367,11 +372,13 @@ static script_scan_token_t *script_scan_peek_token (script_scan_t *scan,
+ {
+   int i;
+ 
+-  if (scan->tokencount <= n)
++  /* we're screwed long before we ever actually hit INT_MAX; but at least
++   * we shouldn't get ourselves stuck in an infinite loop. */
++  if (scan->tokencount <= n && n < INT_MAX)
+     {
+       scan->tokens =
+         realloc (scan->tokens, (n + 1) * sizeof (script_scan_token_t *));
+-      for (i = scan->tokencount; i <= n; i++)                                   /* FIXME warning about possibely inifnite loop */
++      for (i = scan->tokencount; i <= n; i++)
+         {
+           scan->tokens[i] = malloc (sizeof (script_scan_token_t));
+           scan->tokens[i]->type = SCRIPT_SCAN_TOKEN_TYPE_EMPTY;
+diff --git a/src/plugins/splash/script/script.c b/src/plugins/splash/script/script.c
+index 635a8b4..3290825 100644
+--- a/src/plugins/splash/script/script.c
++++ b/src/plugins/splash/script/script.c
+@@ -19,7 +19,11 @@
+  *
+  * Written by: Charlie Brej <cbrej@cs.man.ac.uk>
+  */
+-#define _GNU_SOURCE
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "ply-hashtable.h"
+ #include "ply-list.h"
+ #include "ply-bitarray.h"
+diff --git a/src/plugins/splash/text/plugin.c b/src/plugins/splash/text/plugin.c
+index af81635..fb97c14 100644
+--- a/src/plugins/splash/text/plugin.c
++++ b/src/plugins/splash/text/plugin.c
+@@ -1,6 +1,5 @@
+-/* text.c - boot splash plugin
+- *
+- * Copyright (C) 2008 Red Hat, Inc.
++/*
++ * Copyright (C) 2008-2012 Red Hat, Inc.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -17,8 +16,6 @@
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  * 02111-1307, USA.
+  *
+- * Written by: Adam Jackson <ajax@redhat.com>
+- *             Ray Strode <rstrode@redhat.com>
+  */
+ #include "config.h"
+ 
+@@ -49,7 +46,7 @@
+ #include "ply-list.h"
+ #include "ply-logger.h"
+ #include "ply-text-display.h"
+-#include "ply-text-progress-bar.h"
++#include "ply-text-step-bar.h"
+ #include "ply-utils.h"
+ 
+ #include <linux/kd.h>
+@@ -78,7 +75,7 @@ typedef struct
+ {
+   ply_boot_splash_plugin_t *plugin;
+   ply_text_display_t *display;
+-  ply_text_progress_bar_t *progress_bar;
++  ply_text_step_bar_t *step_bar;
+ 
+ } view_t;
+ 
+@@ -97,7 +94,7 @@ view_new (ply_boot_splash_plugin_t *plugin,
+   view->plugin = plugin;
+   view->display = display;
+ 
+-  view->progress_bar = ply_text_progress_bar_new ();
++  view->step_bar = ply_text_step_bar_new ();
+ 
+   return view;
+ }
+@@ -105,7 +102,7 @@ view_new (ply_boot_splash_plugin_t *plugin,
+ static void
+ view_free (view_t *view)
+ {
+-  ply_text_progress_bar_free (view->progress_bar);
++  ply_text_step_bar_free (view->step_bar);
+ 
+   free (view);
+ }
+@@ -180,10 +177,10 @@ view_start_animation (view_t *view)
+                                     0xffffff);
+   ply_terminal_set_color_hex_value (terminal,
+                                     PLY_TERMINAL_COLOR_BLUE,
+-                                    0x0073B3);
++                                    0x3465a4);
+   ply_terminal_set_color_hex_value (terminal,
+                                     PLY_TERMINAL_COLOR_BROWN,
+-                                    0x00457E);
++                                    0x979a9b);
+ 
+   ply_text_display_set_background_color (view->display,
+                                          PLY_TERMINAL_COLOR_BLACK);
+@@ -192,11 +189,11 @@ view_start_animation (view_t *view)
+ 
+   if (plugin->mode == PLY_BOOT_SPLASH_MODE_SHUTDOWN)
+     {
+-      ply_text_progress_bar_hide (view->progress_bar);
++      ply_text_step_bar_hide (view->step_bar);
+       return;
+     }
+ 
+-  ply_text_progress_bar_show (view->progress_bar,
++  ply_text_step_bar_show (view->step_bar,
+                               view->display);
+ }
+ 
+@@ -452,7 +449,7 @@ stop_animation (ply_boot_splash_plugin_t *plugin)
+       view = ply_list_node_get_data (node);
+       next_node = ply_list_get_next_node (plugin->views, node);
+ 
+-      ply_text_progress_bar_hide (view->progress_bar);
++      ply_text_step_bar_hide (view->step_bar);
+ 
+       node = next_node;
+     }
+@@ -571,8 +568,8 @@ on_boot_progress (ply_boot_splash_plugin_t *plugin,
+       view = ply_list_node_get_data (node);
+       next_node = ply_list_get_next_node (plugin->views, node);
+ 
+-      ply_text_progress_bar_set_percent_done (view->progress_bar, percent_done);
+-      ply_text_progress_bar_draw (view->progress_bar);
++      ply_text_step_bar_set_percent_done (view->step_bar, percent_done);
++      ply_text_step_bar_draw (view->step_bar);
+ 
+       node = next_node;
+     }
+diff --git a/src/plugins/splash/throbgress/plugin.c b/src/plugins/splash/throbgress/plugin.c
+index 5ed6c06..fba809b 100644
+--- a/src/plugins/splash/throbgress/plugin.c
++++ b/src/plugins/splash/throbgress/plugin.c
+@@ -247,6 +247,8 @@ pause_views (ply_boot_splash_plugin_t *plugin)
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("pausing views");
++
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -267,6 +269,8 @@ unpause_views (ply_boot_splash_plugin_t *plugin)
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("unpausing views");
++
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -431,6 +435,8 @@ destroy_plugin (ply_boot_splash_plugin_t *plugin)
+   if (plugin == NULL)
+     return;
+ 
++  ply_trace ("destroying plugin");
++
+   if (plugin->loop != NULL)
+     {
+       ply_event_loop_stop_watching_for_exit (plugin->loop, (ply_event_loop_exit_handler_t)
+@@ -510,6 +516,8 @@ start_animation (ply_boot_splash_plugin_t *plugin)
+   if (plugin->is_animating)
+      return;
+ 
++  ply_trace ("starting animation");
++
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -542,6 +550,9 @@ stop_animation (ply_boot_splash_plugin_t *plugin,
+   if (!plugin->is_animating)
+      return;
+ 
++  ply_trace ("stopping animation%s",
++             trigger != NULL? " with trigger" : "");
++
+   plugin->is_animating = false;
+ 
+   node = ply_list_get_first_node (plugin->views);
+@@ -619,6 +630,7 @@ add_pixel_display (ply_boot_splash_plugin_t *plugin,
+ {
+   view_t *view;
+ 
++  ply_trace ("adding pixel display to plugin");
+   view = view_new (plugin, display);
+ 
+   ply_pixel_display_set_draw_handler (view->display,
+@@ -634,6 +646,7 @@ remove_pixel_display (ply_boot_splash_plugin_t *plugin,
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("removing pixel display from plugin");
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -745,6 +758,7 @@ hide_splash_screen (ply_boot_splash_plugin_t *plugin,
+ {
+   assert (plugin != NULL);
+ 
++  ply_trace ("hiding splash");
+   if (plugin->loop != NULL)
+     {
+       stop_animation (plugin, NULL);
+@@ -765,6 +779,7 @@ show_password_prompt (ply_boot_splash_plugin_t *plugin,
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("showing password prompt");
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -788,6 +803,7 @@ show_prompt (ply_boot_splash_plugin_t *plugin,
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("showing prompt");
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -807,6 +823,7 @@ show_prompt (ply_boot_splash_plugin_t *plugin,
+ static void
+ on_root_mounted (ply_boot_splash_plugin_t *plugin)
+ {
++  ply_trace ("root filesystem mounted");
+   plugin->root_is_mounted = true;
+ }
+ 
+@@ -814,8 +831,10 @@ static void
+ become_idle (ply_boot_splash_plugin_t *plugin,
+              ply_trigger_t            *idle_trigger)
+ {
++  ply_trace ("deactivation requested");
+   if (plugin->is_idle)
+     {
++      ply_trace ("plugin is already idle");
+       ply_trigger_pull (idle_trigger, NULL);
+       return;
+     }
+@@ -829,6 +848,7 @@ hide_prompt (ply_boot_splash_plugin_t *plugin)
+ {
+   ply_list_node_t *node;
+ 
++  ply_trace ("hiding prompt");
+   node = ply_list_get_first_node (plugin->views);
+   while (node != NULL)
+     {
+@@ -844,6 +864,7 @@ hide_prompt (ply_boot_splash_plugin_t *plugin)
+     }
+ }
+ 
++
+ static void
+ show_message (ply_boot_splash_plugin_t *plugin,
+               const char               *message)
+diff --git a/src/plugins/splash/tribar/Makefile.am b/src/plugins/splash/tribar/Makefile.am
+new file mode 100644
+index 0000000..c1b3099
+--- /dev/null
++++ b/src/plugins/splash/tribar/Makefile.am
+@@ -0,0 +1,23 @@
++INCLUDES = -I$(top_srcdir)                                                    \
++           -I$(srcdir)/../../../libply                                        \
++           -I$(srcdir)/../../../libply-splash-core                            \
++           -I$(srcdir)/../../..                                               \
++           -I$(srcdir)/../..                                                  \
++           -I$(srcdir)/..                                                     \
++           -I$(srcdir)
++
++plugindir = $(libdir)/plymouth
++plugin_LTLIBRARIES = tribar.la
++
++tribar_la_CFLAGS = $(PLYMOUTH_CFLAGS)                                           \
++                 -DPLYMOUTH_BACKGROUND_COLOR=$(background_color)              \
++                 -DPLYMOUTH_BACKGROUND_END_COLOR=$(background_end_color)      \
++                 -DPLYMOUTH_BACKGROUND_START_COLOR=$(background_start_color)
++
++tribar_la_LDFLAGS = -module -avoid-version -export-dynamic
++tribar_la_LIBADD = $(PLYMOUTH_LIBS)                                            \
++                 ../../../libply/libply.la                                   \
++                 ../../../libply-splash-core/libply-splash-core.la
++tribar_la_SOURCES = $(srcdir)/plugin.c
++
++MAINTAINERCLEANFILES = Makefile.in
+diff --git a/src/plugins/splash/tribar/plugin.c b/src/plugins/splash/tribar/plugin.c
+new file mode 100644
+index 0000000..4458bad
+--- /dev/null
++++ b/src/plugins/splash/tribar/plugin.c
+@@ -0,0 +1,740 @@
++/*
++ *
++ * Copyright (C) 2008 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++ * 02111-1307, USA.
++ *
++ * Written by: Adam Jackson <ajax@redhat.com>
++ *             Ray Strode <rstrode@redhat.com>
++ */
++#include "config.h"
++
++#include <assert.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <math.h>
++#include <signal.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/stat.h>
++#include <sys/time.h>
++#include <sys/types.h>
++#include <termios.h>
++#include <unistd.h>
++#include <values.h>
++#include <wchar.h>
++
++#include "ply-trigger.h"
++#include "ply-boot-splash-plugin.h"
++#include "ply-buffer.h"
++#include "ply-event-loop.h"
++#include "ply-key-file.h"
++#include "ply-list.h"
++#include "ply-logger.h"
++#include "ply-text-display.h"
++#include "ply-text-progress-bar.h"
++#include "ply-utils.h"
++
++#include <linux/kd.h>
++
++typedef enum {
++   PLY_BOOT_SPLASH_DISPLAY_NORMAL,
++   PLY_BOOT_SPLASH_DISPLAY_QUESTION_ENTRY,
++   PLY_BOOT_SPLASH_DISPLAY_PASSWORD_ENTRY
++} ply_boot_splash_display_type_t;
++
++struct _ply_boot_splash_plugin
++{
++  ply_event_loop_t *loop;
++  ply_boot_splash_mode_t mode;
++
++  ply_list_t *views;
++
++  ply_boot_splash_display_type_t state;
++
++  char *message;
++
++  uint32_t is_animating : 1;
++};
++
++typedef struct
++{
++  ply_boot_splash_plugin_t *plugin;
++  ply_text_display_t *display;
++  ply_text_progress_bar_t *progress_bar;
++
++} view_t;
++
++ply_boot_splash_plugin_interface_t *ply_boot_splash_plugin_get_interface (void);
++
++static void hide_splash_screen (ply_boot_splash_plugin_t *plugin,
++                                ply_event_loop_t         *loop);
++
++static view_t *
++view_new (ply_boot_splash_plugin_t *plugin,
++          ply_text_display_t       *display)
++{
++  view_t *view;
++
++  view = calloc (1, sizeof (view_t));
++  view->plugin = plugin;
++  view->display = display;
++
++  view->progress_bar = ply_text_progress_bar_new ();
++
++  return view;
++}
++
++static void
++view_free (view_t *view)
++{
++  ply_text_progress_bar_free (view->progress_bar);
++
++  free (view);
++}
++
++static void
++view_show_message (view_t *view)
++{
++  ply_boot_splash_plugin_t *plugin;
++  int display_width, display_height;
++
++  plugin = view->plugin;
++
++  display_width = ply_text_display_get_number_of_columns (view->display);
++  display_height = ply_text_display_get_number_of_rows (view->display);
++
++  ply_text_display_set_cursor_position (view->display, 0,
++                                        display_height / 2);
++  ply_text_display_clear_line (view->display);
++  ply_text_display_set_cursor_position (view->display,
++                                        (display_width -
++                                        strlen (plugin->message)) / 2,
++                                        display_height / 2);
++
++  ply_text_display_write (view->display, "%s", plugin->message);
++}
++
++static void
++view_show_prompt (view_t     *view,
++                  const char *prompt,
++                  const char *entered_text)
++{
++
++  int display_width, display_height;
++  int i;
++
++  display_width = ply_text_display_get_number_of_columns (view->display);
++  display_height = ply_text_display_get_number_of_rows (view->display);
++  ply_text_display_set_background_color (view->display, PLY_TERMINAL_COLOR_DEFAULT);
++  ply_text_display_clear_screen (view->display);
++
++  ply_text_display_set_cursor_position (view->display, 0, display_height / 2);
++
++  for (i=0; i < display_width; i++)
++    ply_text_display_write (view->display, "%c", ' ');
++
++  ply_text_display_set_cursor_position (view->display,
++                                        display_width / 2 - (strlen (prompt)),
++                                        display_height / 2);
++
++  ply_text_display_write (view->display, "%s:%s", prompt, entered_text);
++
++  ply_text_display_show_cursor (view->display);
++}
++
++static void
++view_start_animation (view_t *view)
++{
++  ply_boot_splash_plugin_t *plugin;
++  ply_terminal_t *terminal;
++
++  assert (view != NULL);
++
++  plugin = view->plugin;
++
++  terminal = ply_text_display_get_terminal (view->display);
++
++  ply_terminal_set_color_hex_value (terminal,
++                                    PLY_TERMINAL_COLOR_BLACK,
++                                    0x000000);
++  ply_terminal_set_color_hex_value (terminal,
++                                    PLY_TERMINAL_COLOR_WHITE,
++                                    0xffffff);
++  ply_terminal_set_color_hex_value (terminal,
++                                    PLY_TERMINAL_COLOR_BLUE,
++                                    0x0073B3);
++  ply_terminal_set_color_hex_value (terminal,
++                                    PLY_TERMINAL_COLOR_BROWN,
++                                    0x00457E);
++
++  ply_text_display_set_background_color (view->display,
++                                         PLY_TERMINAL_COLOR_BLACK);
++  ply_text_display_clear_screen (view->display);
++  ply_text_display_hide_cursor (view->display);
++
++  if (plugin->mode == PLY_BOOT_SPLASH_MODE_SHUTDOWN)
++    {
++      ply_text_progress_bar_hide (view->progress_bar);
++      return;
++    }
++
++  ply_text_progress_bar_show (view->progress_bar,
++                              view->display);
++}
++
++static void
++view_redraw (view_t *view)
++{
++  unsigned long screen_width, screen_height;
++
++  screen_width = ply_text_display_get_number_of_columns (view->display);
++  screen_height = ply_text_display_get_number_of_rows (view->display);
++
++  ply_text_display_draw_area (view->display, 0, 0,
++                              screen_width, screen_height);
++}
++
++static void
++redraw_views (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_redraw (view);
++
++      node = next_node;
++    }
++}
++
++static void
++view_hide (view_t *view)
++{
++  if (view->display != NULL)
++    {
++      ply_terminal_t *terminal;
++
++      terminal = ply_text_display_get_terminal (view->display);
++
++      ply_text_display_set_background_color (view->display, PLY_TERMINAL_COLOR_DEFAULT);
++      ply_text_display_clear_screen (view->display);
++      ply_text_display_show_cursor (view->display);
++
++      ply_terminal_reset_colors (terminal);
++    }
++}
++
++static void
++hide_views (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_hide (view);
++
++      node = next_node;
++    }
++}
++
++static void
++pause_views (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      ply_text_display_pause_updates (view->display);
++
++      node = next_node;
++    }
++}
++
++static void
++unpause_views (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      ply_text_display_unpause_updates (view->display);
++
++      node = next_node;
++    }
++}
++
++static ply_boot_splash_plugin_t *
++create_plugin (ply_key_file_t *key_file)
++{
++  ply_boot_splash_plugin_t *plugin;
++
++  ply_trace ("creating plugin");
++
++  plugin = calloc (1, sizeof (ply_boot_splash_plugin_t));
++  plugin->message = NULL;
++
++  plugin->views = ply_list_new ();
++
++  return plugin;
++}
++
++static void
++detach_from_event_loop (ply_boot_splash_plugin_t *plugin)
++{
++  plugin->loop = NULL;
++
++  ply_trace ("detaching from event loop");
++}
++
++static void
++free_views (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_free (view);
++      ply_list_remove_node (plugin->views, node);
++
++      node = next_node;
++    }
++
++  ply_list_free (plugin->views);
++  plugin->views = NULL;
++}
++
++static void
++destroy_plugin (ply_boot_splash_plugin_t *plugin)
++{
++  ply_trace ("destroying plugin");
++
++  if (plugin == NULL)
++    return;
++
++  /* It doesn't ever make sense to keep this plugin on screen
++   * after exit
++   */
++  hide_splash_screen (plugin, plugin->loop);
++
++  free_views (plugin);
++  if (plugin->message != NULL)
++    free (plugin->message);
++
++  free (plugin);
++}
++
++static void
++show_message (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_show_message (view);
++
++      node = next_node;
++    }
++}
++
++static void
++start_animation (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  assert (plugin != NULL);
++  assert (plugin->loop != NULL);
++
++  redraw_views (plugin);
++
++  if (plugin->message != NULL)
++    show_message (plugin);
++
++  if (plugin->is_animating)
++     return;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_start_animation (view);
++
++      node = next_node;
++    }
++
++  plugin->is_animating = true;
++}
++
++static void
++stop_animation (ply_boot_splash_plugin_t *plugin)
++{
++  ply_list_node_t *node;
++
++  assert (plugin != NULL);
++  assert (plugin->loop != NULL);
++
++  if (!plugin->is_animating)
++     return;
++
++  plugin->is_animating = false;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      ply_text_progress_bar_hide (view->progress_bar);
++
++      node = next_node;
++    }
++  redraw_views (plugin);
++}
++
++static void
++on_draw (view_t                   *view,
++         ply_terminal_t           *terminal,
++         int                       x,
++         int                       y,
++         int                       width,
++         int                       height)
++{
++  ply_text_display_clear_screen (view->display);
++}
++
++static void
++add_text_display (ply_boot_splash_plugin_t *plugin,
++                  ply_text_display_t       *display)
++{
++  view_t *view;
++  ply_terminal_t *terminal;
++
++  view = view_new (plugin, display);
++
++  terminal = ply_text_display_get_terminal (view->display);
++  if (ply_terminal_open (terminal))
++    ply_terminal_activate_vt (terminal);
++
++  ply_text_display_set_draw_handler (view->display,
++                                     (ply_text_display_draw_handler_t)
++                                     on_draw, view);
++
++  ply_list_append_data (plugin->views, view);
++}
++
++static void
++remove_text_display (ply_boot_splash_plugin_t *plugin,
++                     ply_text_display_t       *display)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      view_t *view;
++      ply_list_node_t *next_node;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      if (view->display == display)
++        {
++          ply_text_display_set_draw_handler (view->display,
++                                             NULL, NULL);
++          view_free (view);
++          ply_list_remove_node (plugin->views, node);
++          return;
++        }
++
++      node = next_node;
++    }
++}
++
++static bool
++show_splash_screen (ply_boot_splash_plugin_t *plugin,
++                    ply_event_loop_t         *loop,
++                    ply_buffer_t             *boot_buffer,
++                    ply_boot_splash_mode_t    mode)
++{
++  assert (plugin != NULL);
++
++  plugin->loop = loop;
++  plugin->mode = mode;
++  ply_event_loop_watch_for_exit (loop, (ply_event_loop_exit_handler_t)
++                                 detach_from_event_loop,
++                                 plugin);
++
++  ply_show_new_kernel_messages (false);
++  start_animation (plugin);
++
++  return true;
++}
++
++static void
++update_status (ply_boot_splash_plugin_t *plugin,
++               const char               *status)
++{
++  assert (plugin != NULL);
++
++  ply_trace ("status update");
++}
++
++static void
++on_boot_progress (ply_boot_splash_plugin_t *plugin,
++                  double                    duration,
++                  double                    percent_done)
++{
++  ply_list_node_t *node;
++  double total_duration;
++
++  total_duration = duration / percent_done;
++
++  /* Fun made-up smoothing function to make the growth asymptotic:
++   * fraction(time,estimate)=1-2^(-(time^1.45)/estimate) */
++  percent_done = 1.0 - pow (2.0, -pow (duration, 1.45) / total_duration) * (1.0 - percent_done);
++
++  node = ply_list_get_first_node (plugin->views);
++
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      ply_text_progress_bar_set_percent_done (view->progress_bar, percent_done);
++      ply_text_progress_bar_draw (view->progress_bar);
++
++      node = next_node;
++    }
++}
++
++static void
++hide_splash_screen (ply_boot_splash_plugin_t *plugin,
++                    ply_event_loop_t         *loop)
++{
++  assert (plugin != NULL);
++
++  ply_trace ("hiding splash screen");
++
++  if (plugin->loop != NULL)
++    {
++      stop_animation (plugin);
++
++      ply_event_loop_stop_watching_for_exit (plugin->loop,
++                                             (ply_event_loop_exit_handler_t)
++                                             detach_from_event_loop,
++                                             plugin);
++      detach_from_event_loop (plugin);
++    }
++
++  hide_views (plugin);
++  ply_show_new_kernel_messages (true);
++}
++
++static void
++display_normal (ply_boot_splash_plugin_t *plugin)
++{
++  pause_views (plugin);
++  if (plugin->state != PLY_BOOT_SPLASH_DISPLAY_NORMAL)
++    {
++      plugin->state = PLY_BOOT_SPLASH_DISPLAY_NORMAL;
++      start_animation (plugin);
++      redraw_views (plugin);
++    }
++  unpause_views (plugin);
++}
++
++static void
++display_message (ply_boot_splash_plugin_t *plugin,
++                 const char               *message)
++{
++  if (plugin->message != NULL)
++    free (plugin->message);
++
++  plugin->message = strdup (message);
++  start_animation (plugin);
++}
++
++static void
++show_password_prompt (ply_boot_splash_plugin_t *plugin,
++                      const char               *prompt,
++                      int                       bullets)
++{
++  ply_list_node_t *node;
++  int i;
++  char *entered_text;
++
++  entered_text = calloc (bullets + 1, sizeof (char));
++
++  for (i = 0; i < bullets; i++)
++    entered_text[i] = '*';
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_show_prompt (view, prompt, entered_text);
++
++      node = next_node;
++    }
++  free (entered_text);
++}
++
++static void
++show_prompt (ply_boot_splash_plugin_t *plugin,
++             const char               *prompt,
++             const char               *text)
++{
++  ply_list_node_t *node;
++
++  node = ply_list_get_first_node (plugin->views);
++  while (node != NULL)
++    {
++      ply_list_node_t *next_node;
++      view_t *view;
++
++      view = ply_list_node_get_data (node);
++      next_node = ply_list_get_next_node (plugin->views, node);
++
++      view_show_prompt (view, prompt, text);
++
++      node = next_node;
++    }
++}
++
++static void
++display_password (ply_boot_splash_plugin_t *plugin,
++                  const char               *prompt,
++                  int                       bullets)
++{
++  pause_views (plugin);
++  if (plugin->state == PLY_BOOT_SPLASH_DISPLAY_NORMAL)
++    stop_animation (plugin);
++
++  plugin->state = PLY_BOOT_SPLASH_DISPLAY_PASSWORD_ENTRY;
++
++  if (!prompt)
++    prompt = "Password";
++
++  show_password_prompt (plugin, prompt, bullets);
++
++  unpause_views (plugin);
++}
++
++static void
++display_question (ply_boot_splash_plugin_t *plugin,
++                  const char               *prompt,
++                  const char               *entry_text)
++{
++  pause_views (plugin);
++  if (plugin->state == PLY_BOOT_SPLASH_DISPLAY_NORMAL)
++    stop_animation (plugin);
++
++  plugin->state = PLY_BOOT_SPLASH_DISPLAY_PASSWORD_ENTRY;
++
++  if (!prompt)
++    prompt = "Password";
++
++  show_prompt (plugin, prompt, entry_text);
++
++  unpause_views (plugin);
++}
++
++ply_boot_splash_plugin_interface_t *
++ply_boot_splash_plugin_get_interface (void)
++{
++  static ply_boot_splash_plugin_interface_t plugin_interface =
++    {
++      .create_plugin = create_plugin,
++      .destroy_plugin = destroy_plugin,
++      .add_text_display = add_text_display,
++      .remove_text_display = remove_text_display,
++      .show_splash_screen = show_splash_screen,
++      .update_status = update_status,
++      .on_boot_progress = on_boot_progress,
++      .hide_splash_screen = hide_splash_screen,
++      .display_normal = display_normal,
++      .display_message = display_message,
++      .display_password = display_password,
++      .display_question = display_question,
++    };
++
++  return &plugin_interface;
++}
++
++/* vim: set ts=4 sw=4 expandtab autoindent cindent cino={.5s,(0: */
+diff --git a/src/plugins/splash/two-step/plugin.c b/src/plugins/splash/two-step/plugin.c
+index 2998beb..541a108 100644
+--- a/src/plugins/splash/two-step/plugin.c
++++ b/src/plugins/splash/two-step/plugin.c
+@@ -1067,6 +1067,9 @@ on_boot_progress (ply_boot_splash_plugin_t *plugin,
+   if (plugin->state != PLY_BOOT_SPLASH_DISPLAY_NORMAL)
+     return;
+ 
++  if (plugin->is_idle)
++    return;
++
+   if (percent_done >= SHOW_ANIMATION_PERCENT)
+     {
+       if (plugin->stop_trigger == NULL)
+diff --git a/src/ply-boot-server.c b/src/ply-boot-server.c
+index f15ade7..2d2a5b8 100644
+--- a/src/ply-boot-server.c
++++ b/src/ply-boot-server.c
+@@ -776,7 +776,7 @@ ply_boot_server_on_new_connection (ply_boot_server_t *server)
+ 
+   assert (server != NULL);
+ 
+-  fd = accept (server->socket_fd, NULL, NULL);
++  fd = accept4 (server->socket_fd, NULL, NULL, SOCK_CLOEXEC);
+ 
+   if (fd < 0)
+     return;
+diff --git a/src/viewer/plymouth-log-viewer.c b/src/viewer/plymouth-log-viewer.c
+index c20e391..ca54e0f 100644
+--- a/src/viewer/plymouth-log-viewer.c
++++ b/src/viewer/plymouth-log-viewer.c
+@@ -20,6 +20,10 @@
+  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
+  */
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/types.h>
+diff --git a/systemd-units/Makefile.am b/systemd-units/Makefile.am
+index 3aa44df..89355ac 100644
+--- a/systemd-units/Makefile.am
++++ b/systemd-units/Makefile.am
+@@ -25,7 +25,8 @@ install-data-hook:
+ 		$(DESTDIR)$(SYSTEMD_UNIT_DIR)/poweroff.target.wants          \
+ 		$(DESTDIR)$(SYSTEMD_UNIT_DIR)/halt.target.wants
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/initrd-switch-root.target.wants && \
+-		rm -f plymouth-switch-root.service &&                        \
++		rm -f plymouth-start.service plymouth-switch-root.service && \
++		$(LN_S) ../plymouth-start.service &&                         \
+ 		$(LN_S) ../plymouth-switch-root.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/sysinit.target.wants &&            \
+ 		rm -f plymouth-start.service plymouth-read-write.service &&  \
+@@ -51,7 +52,7 @@ install-data-hook:
+ uninstall-hook:
+ 	rm -f \
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/initrd-switch-root.target.wants && \
+-		rm -f plymouth-switch-root.service)                          \
++		rm -f plymouth-start.service plymouth-switch-root.service)   \
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/sysinit.target.wants &&            \
+ 		rm -f plymouth-start.service plymouth-read-write.service)    \
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/multi-user.target.wants &&         \
+diff --git a/systemd-units/plymouth-halt.service.in b/systemd-units/plymouth-halt.service.in
+index 8fd6c48..fd27e10 100644
+--- a/systemd-units/plymouth-halt.service.in
++++ b/systemd-units/plymouth-halt.service.in
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Show Plymouth Halt Screen
+-After=getty@tty1.service prefdm.service plymouth-start.service
+-Before=halt.service
++After=getty@tty1.service display-manager.service plymouth-start.service
++Before=systemd-halt.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+ 
+@@ -9,3 +9,6 @@ ConditionKernelCommandLine=!plymouth.enable=0
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
++
++[Install]
++WantedBy=halt.target
+diff --git a/systemd-units/plymouth-kexec.service.in b/systemd-units/plymouth-kexec.service.in
+index 6ee0461..8aa661d 100644
+--- a/systemd-units/plymouth-kexec.service.in
++++ b/systemd-units/plymouth-kexec.service.in
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Show Plymouth Reboot with kexec Screen
+-After=getty@tty1.service prefdm.service plymouth-start.service
+-Before=kexec.service
++After=getty@tty1.service display-manager.service plymouth-start.service
++Before=systemd-kexec.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+ 
+@@ -9,3 +9,6 @@ ConditionKernelCommandLine=!plymouth.enable=0
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
++
++[Install]
++WantedBy=kexec.target
+diff --git a/systemd-units/plymouth-poweroff.service.in b/systemd-units/plymouth-poweroff.service.in
+index 3e2a83c..305ece6 100644
+--- a/systemd-units/plymouth-poweroff.service.in
++++ b/systemd-units/plymouth-poweroff.service.in
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Show Plymouth Power Off Screen
+-After=getty@tty1.service prefdm.service plymouth-start.service
+-Before=poweroff.service
++After=getty@tty1.service display-manager.service plymouth-start.service
++Before=systemd-poweroff.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+ 
+@@ -9,3 +9,5 @@ ConditionKernelCommandLine=!plymouth.enable=0
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
++[Install]
++WantedBy=poweroff.target
+diff --git a/systemd-units/plymouth-quit-wait.service.in b/systemd-units/plymouth-quit-wait.service.in
+index 9fc20e7..0293224 100644
+--- a/systemd-units/plymouth-quit-wait.service.in
++++ b/systemd-units/plymouth-quit-wait.service.in
+@@ -6,3 +6,5 @@ After=rc-local.service plymouth-start.service systemd-user-sessions.service
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth --wait
+ Type=oneshot
+ TimeoutSec=20
++[Install]
++WantedBy=multi-user.target
+diff --git a/systemd-units/plymouth-quit.service.in b/systemd-units/plymouth-quit.service.in
+index cf9901e..24c11bb 100644
+--- a/systemd-units/plymouth-quit.service.in
++++ b/systemd-units/plymouth-quit.service.in
+@@ -6,3 +6,5 @@ After=rc-local.service plymouth-start.service systemd-user-sessions.service
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
+ Type=oneshot
+ TimeoutSec=20
++[Install]
++WantedBy=multi-user.target
+diff --git a/systemd-units/plymouth-read-write.service.in b/systemd-units/plymouth-read-write.service.in
+index 55b975e..5abfc49 100644
+--- a/systemd-units/plymouth-read-write.service.in
++++ b/systemd-units/plymouth-read-write.service.in
+@@ -8,3 +8,5 @@ ConditionPathExists=!/etc/initrd-release
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth update-root-fs --read-write
+ Type=oneshot
++[Install]
++WantedBy=sysinit.target
+diff --git a/systemd-units/plymouth-reboot.service.in b/systemd-units/plymouth-reboot.service.in
+index a6e86e4..ce56855 100644
+--- a/systemd-units/plymouth-reboot.service.in
++++ b/systemd-units/plymouth-reboot.service.in
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Show Plymouth Reboot Screen
+-After=getty@tty1.service prefdm.service plymouth-start.service
+-Before=reboot.service
++After=getty@tty1.service display-manager.service plymouth-start.service
++Before=systemd-reboot.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+ 
+@@ -9,3 +9,5 @@ ConditionKernelCommandLine=!plymouth.enable=0
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
++[Install]
++WantedBy=reboot.target
+diff --git a/systemd-units/plymouth-start.service.in b/systemd-units/plymouth-start.service.in
+index bbff9f5..446fb32 100644
+--- a/systemd-units/plymouth-start.service.in
++++ b/systemd-units/plymouth-start.service.in
+@@ -1,14 +1,16 @@
+ [Unit]
+ Description=Show Plymouth Boot Screen
+ DefaultDependencies=no
+-Wants=systemd-ask-password-plymouth.path
++Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
+ After=systemd-vconsole-setup.service systemd-udev-trigger.service
+ Before=systemd-ask-password-plymouth.service
+ ConditionKernelCommandLine=!plymouth.enable=0
+ 
+ [Service]
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
+-ExecStartPost=-/bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; /bin/udevadm settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; @PLYMOUTH_CLIENT_DIR@/plymouth show-splash
++ExecStartPost=-@UDEVADM@ settle --timeout=30 --exit-if-exists=/sys/class/drm/card0/dev ; -@UDEVADM@ settle --timeout=30 --exit-if-exists=/sys/class/graphics/fb0/dev ; -@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+ KillMode=none
+ SendSIGKILL=no
++[Install]
++WantedBy=sysinit.target
+diff --git a/systemd-units/systemd-ask-password-plymouth.service.in b/systemd-units/systemd-ask-password-plymouth.service.in
+index aa9ffc2..0c3acde 100644
+--- a/systemd-units/systemd-ask-password-plymouth.service.in
++++ b/systemd-units/systemd-ask-password-plymouth.service.in
+@@ -9,4 +9,4 @@ ConditionKernelCommandLine=!plymouth.enable=0
+ ConditionPathExists=/run/plymouth/pid
+ 
+ [Service]
+-ExecStart=/bin/systemd-tty-ask-password-agent --watch --plymouth
++ExecStart=@SYSTEMD_ASK_PASSWORD_AGENT@ --watch --plymouth
+diff --git a/themes/Makefile.am b/themes/Makefile.am
+index cfd149e..72e642b 100644
+--- a/themes/Makefile.am
++++ b/themes/Makefile.am
+@@ -1,2 +1,2 @@
+-SUBDIRS = spinfinity fade-in text details solar glow script spinner
++SUBDIRS = spinfinity fade-in text details solar glow script spinner tribar
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/themes/text/text.plymouth b/themes/text/text.plymouth
+index a2db9e6..126eb09 100644
+--- a/themes/text/text.plymouth
++++ b/themes/text/text.plymouth
+@@ -1,4 +1,4 @@
+ [Plymouth Theme]
+ Name=Text
+-Description=Text mode theme with tricolor progress bar
++Description=Text mode theme with a 3 box countdown
+ ModuleName=text
+diff --git a/themes/tribar/Makefile.am b/themes/tribar/Makefile.am
+new file mode 100644
+index 0000000..3066d2f
+--- /dev/null
++++ b/themes/tribar/Makefile.am
+@@ -0,0 +1,4 @@
++themedir = $(datadir)/plymouth/themes/tribar
++dist_theme_DATA = tribar.plymouth
++
++MAINTAINERCLEANFILES = Makefile.in
+diff --git a/themes/tribar/tribar.plymouth b/themes/tribar/tribar.plymouth
+new file mode 100644
+index 0000000..6db7b4e
+--- /dev/null
++++ b/themes/tribar/tribar.plymouth
+@@ -0,0 +1,4 @@
++[Plymouth Theme]
++Name=Tribar
++Description=Text mode theme with tricolor progress bar
++ModuleName=tribar
