@@ -15,7 +15,7 @@
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.8
-Release:	10
+Release:	11
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -293,8 +293,6 @@ pushd uclibc
 	--with-system-root-install \
 	--enable-systemd-integration \
 	--enable-drm-renderer \
-	--with-boot-tty=/dev/tty7 \
-	--with-shutdown-tty=/dev/tty1 \
 	--enable-pango \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
@@ -326,8 +324,6 @@ pushd system
 	--with-system-root-install \
 	--enable-systemd-integration \
 	--enable-drm-renderer \
-	--with-boot-tty=/dev/tty7 \
-	--with-shutdown-tty=/dev/tty1 \
 	--enable-pango \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
