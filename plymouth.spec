@@ -6,6 +6,10 @@
 
 %define major 2
 %define libname %mklibname %{name} %{major}
+%define libply %mklibname ply %{major}
+%define libply_boot_client %mklibname ply-boot-client %{major}
+%define libply_splash_graphics %mklibname ply-splash-graphics %{major}
+%define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
 %define snapshot 0
@@ -61,13 +65,37 @@ Requires:	plymouth = %{version}-%{release}
 %description system-theme
 This metapackage tracks the current distribution default theme.
 
-%package -n %{libname}
+%package -n %{libply}
 Summary:	Plymouth libraries
 Group:		System/Libraries
+Obsoletes:	%{_lib}plymouth2 < 0.8.8-12
 
-%description -n %{libname}
-This package contains the libply and libplybootsplash libraries
-used by Plymouth.
+%description -n %{libply}
+This package contains the libply library used by Plymouth.
+
+%package -n %{libply_boot_client}
+Summary:	Plymouth libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}plymouth2 < 0.8.8-12
+
+%description -n %{libply_boot_client}
+This package contains the libply-boot-client library used by Plymouth.
+
+%package -n %{libply_splash_graphics}
+Summary:	Plymouth libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}plymouth2 < 0.8.8-12
+
+%description -n %{libply_splash_graphics}
+This package contains the libply-splash-graphic library used by Plymouth.
+
+%package -n %{libply_splash_core}
+Summary:	Plymouth libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}plymouth2 < 0.8.8-12
+
+%description -n %{libply_splash_core}
+This package contains the libply-splash-core library used by Plymouth.
 
 %package -n uclibc-%{libname}
 Summary:	Plymouth libraries
@@ -83,7 +111,10 @@ Group:		System/Kernel and hardware
 Summary:	Libraries and headers for writing Plymouth splash plugins
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Requires:	%{libply} = %{version}-%{release}
+Requires:	%{libply_boot_client} = %{version}-%{release}
+Requires:	%{libply_splash_graphics} = %{version}-%{release}
+Requires:	%{libply_splash_core} = %{version}-%{release}
 Requires:	uclibc-%{libname} = %{version}-%{release}
 
 %description -n %{devname}
@@ -434,19 +465,16 @@ fi \
 %{uclibc_root}%{_libdir}/plymouth/text.so
 %endif
 
-%files -n %{devname}
-%{plymouth_libdir}/libply.so
-%{_libdir}/libply-boot-client.so
-%{_libdir}/libply-splash-graphics.so
-%{_libdir}/plymouth/renderers/x11*
-/%{_lib}/libply-splash-core.so
-%{_libdir}/pkgconfig/*.pc
-%{_includedir}/plymouth-1
-
-%files -n %{libname}
+%files -n %{libply}
 %{plymouth_libdir}/libply.so.%{major}*
+
+%files -n %{libply_boot_client}
 %{_libdir}/libply-boot-client.so.%{major}*
+
+%files -n %{libply_splash_graphics}
 %{_libdir}/libply-splash-graphics.so.%{major}*
+
+%files -n %{libply_splash_core}
 /%{_lib}/libply-splash-core.so.%{major}*
 
 %if %{with uclibc}
@@ -456,6 +484,15 @@ fi \
 %{uclibc_root}%{_libdir}/libply-boot-client.so*
 %{uclibc_root}%{_libdir}/libply-splash-graphics.so*
 %endif
+
+%files -n %{devname}
+%{plymouth_libdir}/libply.so
+%{_libdir}/libply-boot-client.so
+%{_libdir}/libply-splash-graphics.so
+%{_libdir}/plymouth/renderers/x11*
+/%{_lib}/libply-splash-core.so
+%{_libdir}/pkgconfig/*.pc
+%{_includedir}/plymouth-1
 
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
