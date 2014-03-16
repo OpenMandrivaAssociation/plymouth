@@ -43,7 +43,7 @@ BuildRequires:	pkgconfig(libudev)
 BuildRequires:	xsltproc docbook-style-xsl docbook-dtd45-xml
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
-BuildRequires:	libpng-static-devel
+BuildRequires:	%{_lib}png-static-devel
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
@@ -118,7 +118,9 @@ Requires:	%{libply} = %{version}-%{release}
 Requires:	%{libply_boot_client} = %{version}-%{release}
 Requires:	%{libply_splash_graphics} = %{version}-%{release}
 Requires:	%{libply_splash_core} = %{version}-%{release}
+%if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}-%{release}
+%endif
 
 %description -n %{devname}
 This package contains the libply and libplybootsplash libraries
@@ -373,6 +375,9 @@ popd
 %if %{with uclibc}
 %makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
 rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
+# What the.....
+mv %{buildroot}/uclibc/usr/%{_lib}/* %{buildroot}%{uclibc_root}%{_libdir}/
+rm -rf %{buildroot}/uclibc
 %endif
 %makeinstall_std -C system
 
@@ -486,7 +491,9 @@ fi \
 %dir %{uclibc_root}%{_libdir}/plymouth
 %{uclibc_root}%{plymouth_libdir}/libply.so*
 %{uclibc_root}%{_libdir}/libply-boot-client.so*
+%{uclibc_root}%{_libdir}/libply-splash-core.so*
 %{uclibc_root}%{_libdir}/libply-splash-graphics.so*
+%{uclibc_root}%{_libdir}/plymouth/renderers
 %endif
 
 %files -n %{devname}
