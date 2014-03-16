@@ -12,32 +12,35 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 0
+%define snapshot 20140316
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.8.8
-Release:	16
+Version:	0.8.9
+%if %snapshot
+Release:	0.%snapshot.1
+Source0:	%{name}-%{snapshot}.tar.xz
+%else
+Release:	1
+Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
+%endif
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
-Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1:	boot-duration
 Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
-# PATCH-OPENSUSE -- Add line numbers to tracing output
-Patch8:		plymouth-0.8.6.1.mkinitrd-to-dracut.patch
-# (tpg) sync with current git
-Patch10:	0001-tag-0.8.8-5277809e5a95e9fec8a80f2072673b383bcc80cc.patch
 
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(systemd)
+BuildRequires:	pkgconfig(libudev)
+BuildRequires:	xsltproc docbook-style-xsl docbook-dtd45-xml
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 BuildRequires:	libpng-static-devel
@@ -443,6 +446,7 @@ fi \
 %{_bindir}/plymouth
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
+%{_mandir}/man1/plymouth.1*
 /lib/systemd/system/*plymouth*.service
 /lib/systemd/system/systemd-*.path
 /lib/systemd/system/*.wants/plymouth-*.service
@@ -497,6 +501,7 @@ fi \
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
 %{_libexecdir}/plymouth
+%{_mandir}/man1/plymouth-set-default-theme.1*
 
 %files utils
 %{_bindir}/plymouth-log-viewer
