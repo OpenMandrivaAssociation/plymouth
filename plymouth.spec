@@ -20,7 +20,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.9
 %if %snapshot
-Release:	0.%snapshot.1
+Release:	0.%snapshot.3
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
@@ -33,6 +33,8 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch0:		plymouth-restore-suspend.patch
+# Fix complaints about ply_logger_is_tracing_enabled being undefined
+Patch1:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
 

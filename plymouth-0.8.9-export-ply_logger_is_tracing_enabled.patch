@@ -1,0 +1,46 @@
+--- plymouth-0.8.9/src/libply/ply-logger.c.omv~	2014-03-17 16:49:24.108647054 +0100
++++ plymouth-0.8.9/src/libply/ply-logger.c	2014-03-17 16:49:58.088645663 +0100
+@@ -596,6 +596,16 @@ ply_logger_is_tracing_enabled (ply_logge
+ 
+   return logger->tracing_is_enabled != false;
+ }
++#else
++void
++ply_logger_toggle_tracing (ply_logger_t *logger)
++{
++}
++bool
++ply_logger_is_tracing_enabled (ply_logger_t *logger)
++{
++    return false;
++}
+ #endif /* PLY_ENABLE_TRACING */
+ 
+ /* vim: set ts=4 sw=4 expandtab autoindent cindent cino={.5s,(0: */
+--- plymouth-0.8.9/src/libply/ply-logger.h.omv~	2014-03-17 16:47:51.716650837 +0100
++++ plymouth-0.8.9/src/libply/ply-logger.h	2014-03-17 16:49:22.400647124 +0100
+@@ -76,11 +76,13 @@ ply_logger_t *ply_logger_get_error_defau
+ 
+ /* tracing is a debugging facility that incurs a hefty performance hit on the
+  * program, so we conditionally compile support for it
++ * We unconditionally need to define the symbols though (can't just define them
++ * to nop and false), because code linking to the library shouldn't have ABIs
++ * pulled out from under it...
+  */
+-#ifdef PLY_ENABLE_TRACING
+ void ply_logger_toggle_tracing (ply_logger_t *logger);
+ bool ply_logger_is_tracing_enabled (ply_logger_t *logger);
+-
++#ifdef PLY_ENABLE_TRACING
+ #define ply_logger_trace(logger, format, args...)                              \
+ do                                                                             \
+   {                                                                            \
+@@ -100,8 +102,6 @@ do
+ while (0)
+ #else
+ #define ply_logger_trace(logger, format, args...)
+-#define ply_logger_toggle_tracing(logger)
+-#define ply_logger_is_tracing_enabled(logger) (false)
+ #endif /* PLY_ENABLE_TRACING */
+ 
+ /* convenience macros
