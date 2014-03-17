@@ -20,7 +20,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.9
 %if %snapshot
-Release:	0.%snapshot.1
+Release:	0.%snapshot.2
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
@@ -329,6 +329,7 @@ pushd uclibc
 	--enable-systemd-integration \
 	--enable-drm-renderer \
 	--enable-pango \
+    --disable-tracing \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
@@ -360,6 +361,7 @@ pushd system
 	--enable-systemd-integration \
 	--enable-drm-renderer \
 	--enable-pango \
+    --disable-tracing \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
