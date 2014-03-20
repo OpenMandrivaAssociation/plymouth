@@ -12,7 +12,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20140316
+%define snapshot 20140320
 
 %bcond_with uclibc
 
@@ -20,7 +20,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.9
 %if %snapshot
-Release:	0.%snapshot.4
+Release:	0.%snapshot.5
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
@@ -37,6 +37,8 @@ Patch0:		plymouth-restore-suspend.patch
 Patch1:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
+
+Patch5:		plymouth-0.8.9-set-delay-to-0.patch
 
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)

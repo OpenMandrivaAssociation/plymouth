@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   plymouth-20140316.tar.xz: fa3eb740a15c8385a62fcfe600c40e6db31acb94
+sources:
+  plymouth-20140320.tar.xz: 1098ecd85fbdf8c5fa2c483c2ade6de2efca4424
