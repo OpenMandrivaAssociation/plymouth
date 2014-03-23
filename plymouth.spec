@@ -20,7 +20,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.9
 %if %snapshot
-Release:	0.%snapshot.5
+Release:	0.%snapshot.6
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
