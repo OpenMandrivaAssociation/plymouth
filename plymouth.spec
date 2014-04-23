@@ -404,7 +404,7 @@ find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
 if [ "x$DURING_INSTALL" = "x" ]; then
   if [ $1 -eq 1 ]; then
-   %{_libexecdir}/plymouth/plymouth-update-initrd
+   /usr/libexec/plymouth/plymouth-update-initrd
   fi
 fi
 
@@ -511,7 +511,7 @@ fi \
 
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
-#%{_libexecdir}/plymouth
+%{_libexecdir}/plymouth
 %{_mandir}/man1/plymouth-set-default-theme.1*
 
 %files utils
