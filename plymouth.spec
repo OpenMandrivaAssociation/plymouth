@@ -20,7 +20,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.8.9
 %if %snapshot
-Release:	0.%snapshot.7
+Release:	0.%snapshot.8
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
@@ -404,7 +404,7 @@ find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
 if [ "x$DURING_INSTALL" = "x" ]; then
   if [ $1 -eq 1 ]; then
-   %{_libexecdir}/plymouth/plymouth-update-initrd
+   /usr/libexec/plymouth/plymouth-update-initrd
   fi
 fi
 
