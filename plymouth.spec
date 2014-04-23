@@ -511,7 +511,7 @@ fi \
 
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
-%{_libexecdir}/plymouth
+#%{_libexecdir}/plymouth
 %{_mandir}/man1/plymouth-set-default-theme.1*
 
 %files utils
