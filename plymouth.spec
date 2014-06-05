@@ -1,9 +1,7 @@
 %define plymouthdaemon_execdir /sbin
 %define plymouthclient_execdir /bin
 %define plymouth_libdir /%{_lib}
-
 %define _libexecdir %{_prefix}/libexec
-
 %define major 2
 %define libname %mklibname %{name} %{major}
 %define libply %mklibname ply %{major}
@@ -12,15 +10,15 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20140327
+%define snapshot %nil
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.8.9
+Version:	0.9.0
 %if %snapshot
-Release:	0.%snapshot.8
+Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
 Release:	1
@@ -44,7 +42,9 @@ BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(libudev)
-BuildRequires:	xsltproc docbook-style-xsl docbook-dtd45-xml
+BuildRequires:	xsltproc
+BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-dtd45-xml
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 BuildRequires:	%{_lib}png-static-devel
@@ -302,10 +302,11 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 
 %if %{snapshot}
 sh ./autogen.sh
-make distclean
-%endif
 libtoolize --copy --force
 autoreconf -fi
+make distclean
+%endif
+
 
 %build
 export CONFIGURE_TOP=`pwd`
@@ -350,7 +351,7 @@ popd
 
 mkdir -p system
 pushd system
-%configure2_5x \
+%configure \
 	--disable-static \
 	--disable-tests \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
