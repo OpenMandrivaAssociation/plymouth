@@ -351,7 +351,7 @@ popd
 
 mkdir -p system
 pushd system
-%configure \
+%configure2_5x \
 	--disable-static \
 	--disable-tests \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
@@ -370,7 +370,8 @@ pushd system
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--with-log-viewer
+	--with-log-viewer \
+    --enable-tracing
 
 
 %make
