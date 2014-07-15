@@ -35,8 +35,8 @@ Patch0:		plymouth-restore-suspend.patch
 Patch1:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
-
 Patch5:		plymouth-0.8.9-set-delay-to-0.patch
+Patch6:		plymouth-0.9.0-84eb4381db.patch
 
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)
@@ -350,7 +350,7 @@ popd
 
 mkdir -p system
 pushd system
-%configure \
+%configure2_5x \
 	--disable-static \
 	--disable-tests \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
@@ -369,7 +369,8 @@ pushd system
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--with-log-viewer
+	--with-log-viewer \
+    --enable-tracing
 
 
 %make
