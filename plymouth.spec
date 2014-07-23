@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	5
+Release:	6
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -51,9 +51,9 @@ BuildRequires:	%{_lib}png-static-devel
 %endif
 BuildRequires:	systemd-units
 %rename		splashy
-Requires(post):	plymouth-scripts = %{EVRD}
+Requires(posttrans):	plymouth-scripts = %{EVRD}
 Requires:	initscripts >= 8.83
-Requires(post):	dracut
+Requires(posttrans):	dracut
 Conflicts:	systemd-units < 186
 
 %description
@@ -399,7 +399,7 @@ cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{bu
 
 find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
-%post
+%posttrans
 [ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
 if [ "x$DURING_INSTALL" = "x" ]; then
   if [ $1 -eq 1 ]; then
