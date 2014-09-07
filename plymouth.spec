@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	9
+Release:	10
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -39,7 +39,6 @@ Patch5:		plymouth-0.8.9-set-delay-to-0.patch
 Patch6:		plymouth-0.9.0-84eb4381db.patch
 Patch7:		0007-udev-seat-tag.patch
 
-BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(libudev)
@@ -129,15 +128,6 @@ Requires:	uclibc-%{libname} = %{EVRD}
 %description -n %{devname}
 This package contains the libply and libplybootsplash libraries
 and headers needed to develop 3rd party splash plugins for Plymouth.
-
-%package utils
-Group:		System/Kernel and hardware
-Summary:	Plymouth related utilities
-Requires:	%{name} = %{EVRD}
-
-%description utils
-This package contains utilities that integrate with Plymouth
-including a boot log viewing application.
 
 %package scripts
 Group:		System/Kernel and hardware
@@ -334,12 +324,13 @@ pushd uclibc
 	--enable-systemd-integration \
 	--enable-drm-renderer \
 	--enable-pango \
+	--enable-gtk=no \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--with-log-viewer
+	--without-log-viewer
 
 # We don't build these for uclibc since they link against a lot of libraries
 # that we don't provide any uclibc linked version of
@@ -365,12 +356,13 @@ pushd system
 	--enable-systemd-integration \
 	--enable-drm-renderer \
 	--enable-pango \
+	--enable-gtk=no \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--with-log-viewer
+	--without-log-viewer
 
 %make
 popd
@@ -513,9 +505,6 @@ fi \
 %{_sbindir}/plymouth-set-default-theme
 %{_libexecdir}/plymouth
 %{_mandir}/man1/plymouth-set-default-theme.1*
-
-%files utils
-%{_bindir}/plymouth-log-viewer
 
 %files plugin-label
 %{_libdir}/plymouth/label.so
