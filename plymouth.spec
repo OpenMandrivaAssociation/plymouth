@@ -39,6 +39,7 @@ Patch5:		plymouth-0.8.9-set-delay-to-0.patch
 Patch6:		plymouth-0.9.0-84eb4381db.patch
 Patch7:		0007-udev-seat-tag.patch
 BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(libudev)
