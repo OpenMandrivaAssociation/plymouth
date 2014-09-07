@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	8
+Release:	9
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -36,7 +36,7 @@ Patch1:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch4:		plymouth-fix-window-size
 Patch5:		plymouth-0.8.9-set-delay-to-0.patch
-#Patch6:		plymouth-0.9.0-84eb4381db.patch
+Patch6:		plymouth-0.9.0-84eb4381db.patch
 Patch7:		0007-udev-seat-tag.patch
 
 BuildRequires:	pkgconfig(gtk+-2.0)
