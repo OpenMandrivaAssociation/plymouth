@@ -301,7 +301,6 @@ make distclean
 
 %build
 export CONFIGURE_TOP=`pwd`
-%global optflags %{optflags} -Os
 
 %if %{with uclibc}
 mkdir -p uclibc
@@ -323,7 +322,6 @@ pushd uclibc
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--enable-drm-renderer \
 	--enable-pango \
 	--enable-gtk=no \
 %if %mdvver >= 201200
@@ -355,7 +353,6 @@ pushd system
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--enable-drm-renderer \
 	--enable-pango \
 	--enable-gtk=no \
 %if %mdvver >= 201200
@@ -379,7 +376,6 @@ rm -rf %{buildroot}/uclibc
 %makeinstall_std -C system
 
 # Temporary symlink until rc.sysinit is fixed
-(cd %{buildroot}%{_bindir}; ln -s ../../bin/plymouth)
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
 
 mkdir -p %{buildroot}%{_localstatedir}/lib/plymouth
