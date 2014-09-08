@@ -441,7 +441,6 @@ fi \
 %dir %{_localstatedir}/lib/plymouth
 %{plymouthdaemon_execdir}/plymouthd
 %{plymouthclient_execdir}/plymouth
-%{_bindir}/plymouth
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_mandir}/man1/plymouth.1*
@@ -493,7 +492,6 @@ fi \
 %{plymouth_libdir}/libply.so
 %{_libdir}/libply-boot-client.so
 %{_libdir}/libply-splash-graphics.so
-%{_libdir}/plymouth/renderers/x11*
 /%{_lib}/libply-splash-core.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
