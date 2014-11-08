@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	10
+Release:	11
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -78,6 +78,7 @@ Requires(posttrans):	plymouth-scripts = %{EVRD}
 Requires:	initscripts >= 8.83
 Requires(posttrans):	dracut
 Conflicts:	systemd-units < 186
+%rename plymouth-utils
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -97,7 +98,11 @@ This metapackage tracks the current distribution default theme.
 %package -n %{libply}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Obsoletes:	%{_lib}plymouth2 < 0.8.8-17
+Obsoletes:	%{_lib}plymouth2 < 0.9.0-11
+Requires:	%{libply_boot_client}
+Requires:	%{libply_boot_client} = %{EVRD}
+Requires:	%{libply_splash_graphics} = %{EVRD}
+Requires:	%{libply_splash_core} = %{EVRD}
 
 %description -n %{libply}
 This package contains the libply library used by Plymouth.
@@ -106,6 +111,7 @@ This package contains the libply library used by Plymouth.
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
+Obsoletes:	%{_lib}ply-boot-client2 < 0.9.0-11
 
 %description -n %{libply_boot_client}
 This package contains the libply-boot-client library used by Plymouth.
@@ -114,6 +120,7 @@ This package contains the libply-boot-client library used by Plymouth.
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
+Obsoletes:	%{_lib}ply-splash-graphics2 < 0.9.0-11
 
 %description -n %{libply_splash_graphics}
 This package contains the libply-splash-graphic library used by Plymouth.
@@ -122,6 +129,7 @@ This package contains the libply-splash-graphic library used by Plymouth.
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
+Obsoletes:	%{_lib}ply-splash-core2 < 0.9.0-11
 
 %description -n %{libply_splash_core}
 This package contains the libply-splash-core library used by Plymouth.
@@ -129,7 +137,7 @@ This package contains the libply-splash-core library used by Plymouth.
 %package -n uclibc-%{libname}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}plymouth2 < 0.8.8-12
+Conflicts:	%{_lib}plymouth2 < 0.9.0-11
 
 %description -n uclibc-%{libname}
 This package contains the libply and libplybootsplash libraries
