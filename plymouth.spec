@@ -312,7 +312,6 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 %prep
 %setup -q
 %apply_patches
-exit 1
 
 %if %{snapshot}
 sh ./autogen.sh
