@@ -1,0 +1,75 @@
+From 530612fb796a159bbbfefe1568522b7b5809c1e8 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Fri, 10 Oct 2014 13:30:56 -0400
+Subject: [PATCH 114/119] main: show splash even when user has init=/bin/sh
+
+At the moment, we don't bother showing the splash
+screen if init=/bin/sh since we assume the user
+wants to be see the shell prompt.
+
+The problem is, since we don't show a splash screen
+we don't handle LUKS in the initrd.
+
+This commit makes us show the splash for the duration
+of the initrd but quit on switch root.
+---
+ src/main.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/src/main.c b/src/main.c
+index bc15d65..dce2f9f 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -163,6 +163,10 @@ static void on_keyboard_input (state_t    *state,
+                                const char *keyboard_input,
+                                size_t      character_size);
+ static void on_backspace (state_t *state);
++static void on_quit (state_t       *state,
++                     bool           retain_splash,
++                     ply_trigger_t *quit_trigger);
++static bool sh_is_init (state_t *state);
+ 
+ static void
+ on_session_output (state_t    *state,
+@@ -623,6 +627,12 @@ static void
+ on_newroot (state_t    *state,
+             const char *root_dir)
+ {
++        if (sh_is_init (state)) {
++                ply_trace ("new root mounted at \"%s\", exiting since init= a shell", root_dir);
++                on_quit (state, false, ply_trigger_new (NULL));
++                return;
++        }
++
+         ply_trace ("new root mounted at \"%s\", switching to it", root_dir);
+         chdir (root_dir);
+         chroot (".");
+@@ -779,9 +789,6 @@ on_error (state_t *state)
+ static bool
+ plymouth_should_ignore_show_splash_calls (state_t *state)
+ {
+-        const char *init_string;
+-        size_t length;
+-
+         ply_trace ("checking if plymouth should be running");
+         if (state->mode != PLY_MODE_BOOT || command_line_has_argument (state->kernel_command_line, "plymouth.force-splash"))
+                 return false;
+@@ -789,6 +796,15 @@ plymouth_should_ignore_show_splash_calls (state_t *state)
+         if (command_line_has_argument (state->kernel_command_line, "plymouth.ignore-show-splash"))
+                 return true;
+ 
++        return false;
++}
++
++static bool
++sh_is_init (state_t *state)
++{
++        const char *init_string;
++        size_t length;
++
+         init_string = command_line_get_string_after_prefix (state->kernel_command_line, "init=");
+ 
+         if (init_string) {
+-- 
+1.9.0
+

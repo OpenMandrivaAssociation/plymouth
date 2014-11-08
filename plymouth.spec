@@ -29,15 +29,37 @@ Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source1:	boot-duration
 Source2:	charge.plymouth
+
+
+# UPSTREAM GIT PATCHES
+Patch100:	0100-scripts-change-out-uncrustify-config.patch
+Patch101:	0101-Reindent.patch
+Patch102:	0102-device-manager-only-call-ply_terminal_free.patch
+Patch103:	0103-main-fix-typo-in-debug-message.patch
+Patch104:	0104-systemd-give-plymouth-quit-wait-a-better-description.patch
+Patch105:	0105-splash-remove-pixel_display-in-sprite-lib-when-notif.patch
+Patch106:	0106-libply-splash-core-fix-typo-in-logs.patch
+Patch107:	0107-splash-do-not-process-display-lists-if-it-is-empty-o.patch
+Patch109:	0109-libply-splash-core-also-monitor-for-file-removal-in-.patch
+Patch110:	0110-configure-bump-point-release-and-ABI-versions-of-lib.patch
+Patch111:	0111-seat-be-a-little-more-forgiving-in-the-case-there-s-.patch
+Patch112:	0112-text-step-bar-use-correct-utf-8-multibyte-sequence-f.patch
+Patch113:	0113-Revert-systemd-add-WantedBy-snippets.patch
+Patch114:	0114-main-show-splash-even-when-user-has-init-bin-sh.patch
+Patch115:	0115-main-fix-incorrectly-sized-buffer-for-proc-cmdline.patch
+Patch116:	0116-client-fix-incorrectly-sized-buffer-for-proc-cmdline.patch
+Patch117:	0117-script-support-system-update-events.patch
+Patch118:	0118-main-fix-up-mode-confusion.patch
+Patch119:	0119-main-fix-up-spacing-in-previous-commit-to-match-codi.patch
+
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
-Patch0:		plymouth-restore-suspend.patch
+Patch500:		plymouth-restore-suspend.patch
 # Fix complaints about ply_logger_is_tracing_enabled being undefined
-Patch1:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
+Patch501:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
-Patch4:		plymouth-fix-window-size
-Patch5:		plymouth-0.8.9-set-delay-to-0.patch
-Patch6:		plymouth-0.9.0-84eb4381db.patch
-Patch7:		0007-udev-seat-tag.patch
+Patch502:		plymouth-fix-window-size.patch
+Patch503:		plymouth-0.8.9-set-delay-to-0.patch
+
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
@@ -290,6 +312,7 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 %prep
 %setup -q
 %apply_patches
+exit 1
 
 %if %{snapshot}
 sh ./autogen.sh
@@ -341,13 +364,15 @@ popd
 
 mkdir -p system
 pushd system
-%configure2_5x \
+%configure \
 	--disable-static \
 	--disable-tests \
+	--disable-tracing \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
+	--enable-drm-renderer \
 	--disable-gdm-transition \
 	--without-gdm-autostart-file \
 	--without-rhgb-compat-link \

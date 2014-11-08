@@ -1,0 +1,42 @@
+From 6525ae6017e707728cd4fd0e625da9c6a8e00ab3 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Fri, 10 Oct 2014 16:11:01 -0400
+Subject: [PATCH 116/119] client: fix incorrectly sized buffer for
+ /proc/cmdline
+
+We assume /proc/cmdline will be no more than 512 bytes (including NUL).
+It can actually be 4096 bytes (excluding NUL).
+
+This commit makes sure we allocate enough space for it and its NUL.
+
+This is just like the previous fix for the daemon, but for the client,
+now.
+---
+ src/client/plymouth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/client/plymouth.c b/src/client/plymouth.c
+index bf02bce..97caf65 100644
+--- a/src/client/plymouth.c
++++ b/src/client/plymouth.c
+@@ -39,7 +39,7 @@
+ #include "ply-utils.h"
+ 
+ #ifndef PLY_MAX_COMMAND_LINE_SIZE
+-#define PLY_MAX_COMMAND_LINE_SIZE 512
++#define PLY_MAX_COMMAND_LINE_SIZE 4097
+ #endif
+ 
+ #define KEY_CTRL_C ('\100' ^ 'C')
+@@ -718,7 +718,7 @@ get_kernel_command_line (state_t *state)
+         }
+ 
+         ply_trace ("reading kernel command line");
+-        if (read (fd, state->kernel_command_line, sizeof(state->kernel_command_line)) < 0) {
++        if (read (fd, state->kernel_command_line, sizeof(state->kernel_command_line) - 1) < 0) {
+                 ply_trace ("couldn't read it: %m");
+                 close (fd);
+                 return false;
+-- 
+1.9.0
+

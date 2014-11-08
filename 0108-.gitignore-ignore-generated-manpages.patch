@@ -1,0 +1,22 @@
+From 05cbf14855f87c13f7c1f448a2c1070cc421f4df Mon Sep 17 00:00:00 2001
+From: Frederic Crozat <fcrozat@suse.com>
+Date: Thu, 26 Jun 2014 10:42:45 +0200
+Subject: [PATCH 108/119] .gitignore: ignore generated manpages
+
+---
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index 2a468c2..d6eb39d 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -41,3 +41,5 @@ tags
+ *.script.h
+ *.service
+ *.path
++docs/*.8
++docs/*.1
+-- 
+1.9.0
+
