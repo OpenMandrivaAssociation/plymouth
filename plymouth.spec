@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	13
+Release:	14
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -53,6 +53,7 @@ Patch118:	0118-main-fix-up-mode-confusion.patch
 Patch119:	0119-main-fix-up-spacing-in-previous-commit-to-match-codi.patch
 Patch120:	0120-script-Add-SetRefreshRate-function.patch
 Patch121:	0121-utils-Don-t-create-unix-sockets-non-blocking.patch
+Patch122:	0122-device-manager-try-fb-device-if-drm-device-failed.patch
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch500:		plymouth-restore-suspend.patch
