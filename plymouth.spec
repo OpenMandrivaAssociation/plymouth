@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	14
+Release:	15
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -78,7 +78,6 @@ BuildRequires:	%{_lib}png-static-devel
 BuildRequires:	systemd-units
 %rename		splashy
 Requires(posttrans):	plymouth-scripts = %{EVRD}
-Requires:	initscripts >= 8.83
 Requires(posttrans):	dracut
 Conflicts:	systemd-units < 186
 %rename plymouth-utils
