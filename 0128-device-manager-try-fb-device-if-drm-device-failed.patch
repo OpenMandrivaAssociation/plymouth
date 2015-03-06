@@ -1,13 +1,16 @@
 From d8278c93ad78a5cbeb89b6b825fc37454798164a Mon Sep 17 00:00:00 2001
 From: Ray Strode <rstrode@redhat.com>
 Date: Wed, 7 Jan 2015 16:24:57 -0500
-Subject: device-manager: try fb device if drm device failed
+Subject: [PATCH 128/133] device-manager: try fb device if drm device failed
 
 If the drm device failed to work, then fall back to the fb device.
 
 Right now, we ignore fb devices that have associated drm devices.
 
 This may fix vmwgfx.
+---
+ src/libply-splash-core/ply-device-manager.c | 35 ++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
 diff --git a/src/libply-splash-core/ply-device-manager.c b/src/libply-splash-core/ply-device-manager.c
 index 75f41c8..67eba32 100644
@@ -63,5 +66,5 @@ index 75f41c8..67eba32 100644
                  else
                          ply_trace ("no card node!");
 -- 
-cgit v0.10.2
+1.9.0
 

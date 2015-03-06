@@ -1,0 +1,31 @@
+From 741b545868aa5bd42a64d5316c121fe9bae4bc2f Mon Sep 17 00:00:00 2001
+From: Cosimo Cecchi <cosimo@endlessm.com>
+Date: Fri, 7 Nov 2014 10:30:33 -0800
+Subject: [PATCH 126/133] throbber: don't report success when no frames were
+ added
+
+Currently, the throbber will report success when assets are *found* in
+the directory. When loading those assets, code will apply more checks to
+determine if the assets are meant for the throbber.
+In case none of them are, we'll end up not adding any frames, so we
+should not report a successful load.
+---
+ src/libply-splash-graphics/ply-throbber.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libply-splash-graphics/ply-throbber.c b/src/libply-splash-graphics/ply-throbber.c
+index ed671e5..c9c5bbd 100644
+--- a/src/libply-splash-graphics/ply-throbber.c
++++ b/src/libply-splash-graphics/ply-throbber.c
+@@ -272,7 +272,7 @@ out:
+         }
+         free (entries);
+ 
+-        return load_finished;
++        return (ply_array_get_size (throbber->frames) > 0);
+ }
+ 
+ bool
+-- 
+1.9.0
+

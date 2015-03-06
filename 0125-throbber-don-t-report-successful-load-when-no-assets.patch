@@ -1,0 +1,31 @@
+From f2d378fe1b9b74ba535344e0de1022e8decc55b1 Mon Sep 17 00:00:00 2001
+From: Cosimo Cecchi <cosimo@endlessm.com>
+Date: Fri, 7 Nov 2014 10:12:52 -0800
+Subject: [PATCH 125/133] throbber: don't report successful load when no assets
+
+Currently, the throbber will report a successful load when zero assets
+are loaded. Change it so that zero assets do not result in a
+successfully loaded throbber.
+
+This is similar to commit 3d7f4fe44148ca94dceabb631850971c582bff3f but
+for throbber objects instead of animation objects.
+---
+ src/libply-splash-graphics/ply-throbber.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libply-splash-graphics/ply-throbber.c b/src/libply-splash-graphics/ply-throbber.c
+index 64537fb..ed671e5 100644
+--- a/src/libply-splash-graphics/ply-throbber.c
++++ b/src/libply-splash-graphics/ply-throbber.c
+@@ -235,7 +235,7 @@ ply_throbber_add_frames (ply_throbber_t *throbber)
+ 
+         number_of_entries = scandir (throbber->image_dir, &entries, NULL, versionsort);
+ 
+-        if (number_of_entries < 0)
++        if (number_of_entries <= 0)
+                 return false;
+ 
+         load_finished = false;
+-- 
+1.9.0
+

@@ -1,0 +1,34 @@
+From 2ef12342b9ee2686be238b747dd58406fc1dede6 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Fri, 7 Nov 2014 10:30:33 -0800
+Subject: [PATCH 127/133] animation: don't report success when no frames were
+ added
+
+Currently, the animation object will report success when assets are *found* in
+the directory. When loading those assets, code will apply more checks to
+determine if the assets are meant for the animation.
+In case none of them are, we'll end up not adding any frames, so we
+should not report a successful load.
+
+This is like commit 741b545868aa5bd42a64d5316c121fe9bae4bc2f but for
+animation objects instead of throbber objects.
+---
+ src/libply-splash-graphics/ply-animation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libply-splash-graphics/ply-animation.c b/src/libply-splash-graphics/ply-animation.c
+index 0d9561e..5c360a9 100644
+--- a/src/libply-splash-graphics/ply-animation.c
++++ b/src/libply-splash-graphics/ply-animation.c
+@@ -287,7 +287,7 @@ out:
+         }
+         free (entries);
+ 
+-        return load_finished;
++        return (ply_array_get_size (animation->frames) > 0);
+ }
+ 
+ bool
+-- 
+1.9.0
+

@@ -21,7 +21,7 @@ Version:	0.9.0
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	15
+Release:	16
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -53,7 +53,19 @@ Patch118:	0118-main-fix-up-mode-confusion.patch
 Patch119:	0119-main-fix-up-spacing-in-previous-commit-to-match-codi.patch
 Patch120:	0120-script-Add-SetRefreshRate-function.patch
 Patch121:	0121-utils-Don-t-create-unix-sockets-non-blocking.patch
-Patch122:	0122-device-manager-try-fb-device-if-drm-device-failed.patch
+Patch122:	0122-main-Don-t-redirect-output-to-dev-null-if-we-re-trac.patch
+Patch123:	0123-Remove-the-old-log-viewer-tool.patch
+Patch124:	0124-x11-Port-to-GTK-3.0.patch
+Patch125:	0125-throbber-don-t-report-successful-load-when-no-assets.patch
+Patch126:	0126-throbber-don-t-report-success-when-no-frames-were-ad.patch
+Patch127:	0127-animation-don-t-report-success-when-no-frames-were-a.patch
+Patch128:	0128-device-manager-try-fb-device-if-drm-device-failed.patch
+Patch129:	0129-spinner-Add-noise-texture.patch
+Patch130:	0130-text-Change-default-text-splash-s-colors.patch
+Patch131:	0131-ply-animation-Fix-drawing-if-it-happens-before-the-t.patch
+Patch132:	0132-two-step-Add-separate-startup-shutdown-animations.patch
+Patch133:	0133-main-don-t-handle-udev-events-when-deactivated.patch
+
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch500:		plymouth-restore-suspend.patch
@@ -63,22 +75,20 @@ Patch501:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 Patch502:		plymouth-fix-window-size.patch
 Patch503:		plymouth-0.8.9-set-delay-to-0.patch
 
-BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(pangocairo)
-BuildRequires:	pkgconfig(libdrm)
-BuildRequires:	pkgconfig(systemd)
-BuildRequires:	pkgconfig(libudev)
-BuildRequires:	xsltproc
-BuildRequires:	docbook-style-xsl
-BuildRequires:	docbook-dtd45-xml
+#BuildRequires:	pkgconfig(libpng)
+#BuildRequires:	pkgconfig(pangocairo)
+#BuildRequires:	pkgconfig(libdrm)
+#BuildRequires:	pkgconfig(systemd)
+#BuildRequires:	pkgconfig(libudev)
+#BuildRequires:	xsltproc
+#BuildRequires:	docbook-style-xsl
+#BuildRequires:	docbook-dtd45-xml
 %if %{with uclibc}
-BuildRequires:	uClibc-devel
-BuildRequires:	%{_lib}png-static-devel
+#BuildRequires:	uClibc-devel
+#BuildRequires:	%{_lib}png-static-devel
 %endif
-BuildRequires:	systemd-units
+#BuildRequires:	systemd-units
 %rename		splashy
-Requires(posttrans):	plymouth-scripts = %{EVRD}
-Requires(posttrans):	dracut
 Conflicts:	systemd-units < 186
 %rename plymouth-utils
 
@@ -422,14 +432,6 @@ cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
 
 find %{buildroot} -name \*.a -delete -o -name \*.la -delete
-
-%posttrans
-[ -f %{_localstatedir}/lib/plymouth/boot-duration ] || cp -f %{_datadir}/plymouth/default-boot-duration %{_localstatedir}/lib/plymouth/boot-duration
-if [ "x$DURING_INSTALL" = "x" ]; then
-  if [ $1 -eq 1 ]; then
-   /usr/libexec/plymouth/plymouth-update-initrd
-  fi
-fi
 
 %postun
 if [ $1 -eq 0 ]; then
