@@ -60,7 +60,7 @@ Patch125:	0125-throbber-don-t-report-successful-load-when-no-assets.patch
 Patch126:	0126-throbber-don-t-report-success-when-no-frames-were-ad.patch
 Patch127:	0127-animation-don-t-report-success-when-no-frames-were-a.patch
 Patch128:	0128-device-manager-try-fb-device-if-drm-device-failed.patch
-Patch129:	0129-spinner-Add-noise-texture.patch
+#Patch129:	0129-spinner-Add-noise-texture.patch
 Patch130:	0130-text-Change-default-text-splash-s-colors.patch
 Patch131:	0131-ply-animation-Fix-drawing-if-it-happens-before-the-t.patch
 Patch132:	0132-two-step-Add-separate-startup-shutdown-animations.patch
@@ -75,19 +75,19 @@ Patch501:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 Patch502:		plymouth-fix-window-size.patch
 Patch503:		plymouth-0.8.9-set-delay-to-0.patch
 
-#BuildRequires:	pkgconfig(libpng)
-#BuildRequires:	pkgconfig(pangocairo)
-#BuildRequires:	pkgconfig(libdrm)
-#BuildRequires:	pkgconfig(systemd)
-#BuildRequires:	pkgconfig(libudev)
-#BuildRequires:	xsltproc
-#BuildRequires:	docbook-style-xsl
-#BuildRequires:	docbook-dtd45-xml
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(pangocairo)
+BuildRequires:	pkgconfig(libdrm)
+BuildRequires:	pkgconfig(systemd)
+BuildRequires:	pkgconfig(libudev)
+BuildRequires:	xsltproc
+BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-dtd45-xml
 %if %{with uclibc}
-#BuildRequires:	uClibc-devel
-#BuildRequires:	%{_lib}png-static-devel
+BuildRequires:	uClibc-devel
+BuildRequires:	%{_lib}png-static-devel
 %endif
-#BuildRequires:	systemd-units
+BuildRequires:	systemd-units
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename plymouth-utils
