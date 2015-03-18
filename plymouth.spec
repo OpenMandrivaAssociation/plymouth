@@ -16,12 +16,12 @@
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.0
+Version:	0.9.2
 %if %snapshot
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	16
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -32,40 +32,6 @@ Source2:	charge.plymouth
 
 
 # UPSTREAM GIT PATCHES
-Patch100:	0100-scripts-change-out-uncrustify-config.patch
-Patch101:	0101-Reindent.patch
-Patch102:	0102-device-manager-only-call-ply_terminal_free.patch
-Patch103:	0103-main-fix-typo-in-debug-message.patch
-Patch104:	0104-systemd-give-plymouth-quit-wait-a-better-description.patch
-Patch105:	0105-splash-remove-pixel_display-in-sprite-lib-when-notif.patch
-Patch106:	0106-libply-splash-core-fix-typo-in-logs.patch
-Patch107:	0107-splash-do-not-process-display-lists-if-it-is-empty-o.patch
-Patch109:	0109-libply-splash-core-also-monitor-for-file-removal-in-.patch
-Patch110:	0110-configure-bump-point-release-and-ABI-versions-of-lib.patch
-Patch111:	0111-seat-be-a-little-more-forgiving-in-the-case-there-s-.patch
-Patch112:	0112-text-step-bar-use-correct-utf-8-multibyte-sequence-f.patch
-Patch113:	0113-Revert-systemd-add-WantedBy-snippets.patch
-Patch114:	0114-main-show-splash-even-when-user-has-init-bin-sh.patch
-Patch115:	0115-main-fix-incorrectly-sized-buffer-for-proc-cmdline.patch
-Patch116:	0116-client-fix-incorrectly-sized-buffer-for-proc-cmdline.patch
-Patch117:	0117-script-support-system-update-events.patch
-Patch118:	0118-main-fix-up-mode-confusion.patch
-Patch119:	0119-main-fix-up-spacing-in-previous-commit-to-match-codi.patch
-Patch120:	0120-script-Add-SetRefreshRate-function.patch
-Patch121:	0121-utils-Don-t-create-unix-sockets-non-blocking.patch
-Patch122:	0122-main-Don-t-redirect-output-to-dev-null-if-we-re-trac.patch
-Patch123:	0123-Remove-the-old-log-viewer-tool.patch
-Patch124:	0124-x11-Port-to-GTK-3.0.patch
-Patch125:	0125-throbber-don-t-report-successful-load-when-no-assets.patch
-Patch126:	0126-throbber-don-t-report-success-when-no-frames-were-ad.patch
-Patch127:	0127-animation-don-t-report-success-when-no-frames-were-a.patch
-Patch128:	0128-device-manager-try-fb-device-if-drm-device-failed.patch
-#Patch129:	0129-spinner-Add-noise-texture.patch
-Patch130:	0130-text-Change-default-text-splash-s-colors.patch
-Patch131:	0131-ply-animation-Fix-drawing-if-it-happens-before-the-t.patch
-Patch132:	0132-two-step-Add-separate-startup-shutdown-animations.patch
-Patch133:	0133-main-don-t-handle-udev-events-when-deactivated.patch
-
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch500:		plymouth-restore-suspend.patch
