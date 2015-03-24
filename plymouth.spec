@@ -21,7 +21,7 @@ Version:	0.9.2
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	1
+Release:	2
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -34,12 +34,13 @@ Source2:	charge.plymouth
 # UPSTREAM GIT PATCHES
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
-Patch500:		plymouth-restore-suspend.patch
+Patch500:	plymouth-restore-suspend.patch
 # Fix complaints about ply_logger_is_tracing_enabled being undefined
-Patch501:		plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
+Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
-Patch502:		plymouth-fix-window-size.patch
-Patch503:		plymouth-0.8.9-set-delay-to-0.patch
+Patch502:	plymouth-fix-window-size.patch
+Patch503:	plymouth-0.8.9-set-delay-to-0.patch
+Patch504:	plymouth-0.9.2-retain-splash-on-quit.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
@@ -305,7 +306,6 @@ libtoolize --copy --force
 autoreconf -fi
 make distclean
 %endif
-
 
 %build
 export CONFIGURE_TOP=`pwd`
