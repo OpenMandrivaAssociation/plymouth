@@ -1,0 +1,26 @@
+From 54583fdf1b55f72ec93edcca5ac43f2718087bf1 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Wed, 25 Mar 2015 20:39:30 -0400
+Subject: [PATCH 05/10] drm: free drm mode resources object
+
+This fixes a small memory leak.
+---
+ src/plugins/renderers/drm/plugin.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/plugins/renderers/drm/plugin.c b/src/plugins/renderers/drm/plugin.c
+index 1da7aa0..9cb28c5 100644
+--- a/src/plugins/renderers/drm/plugin.c
++++ b/src/plugins/renderers/drm/plugin.c
+@@ -624,6 +624,8 @@ destroy_backend (ply_renderer_backend_t *backend)
+         free (backend->device_name);
+         ply_hashtable_free (backend->buffers);
+ 
++        drmModeFreeResources (backend->resources);
++
+         free (backend);
+ }
+ 
+-- 
+1.9.0
+

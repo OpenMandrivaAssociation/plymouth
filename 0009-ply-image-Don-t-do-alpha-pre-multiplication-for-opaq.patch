@@ -1,0 +1,40 @@
+From c052d9fccdc790e7bcd9a37c0efa99855ad55653 Mon Sep 17 00:00:00 2001
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date: Mon, 8 Dec 2014 11:47:12 +0100
+Subject: [PATCH 09/10] ply-image: Don't do alpha pre-multiplication for opaque
+ pixels
+
+When transforming the output of libpng to ARG32 with pre-multiplied
+alpha, only do the multiplications if the pixel isn't opaque. Otherwise
+plymouth is just applying a very complicated identity function.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=87105
+---
+ src/libply-splash-graphics/ply-image.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/libply-splash-graphics/ply-image.c b/src/libply-splash-graphics/ply-image.c
+index f838601..8b46978 100644
+--- a/src/libply-splash-graphics/ply-image.c
++++ b/src/libply-splash-graphics/ply-image.c
+@@ -99,10 +99,13 @@ transform_to_argb32 (png_struct   *png,
+                 blue = data[i + 2];
+                 alpha = data[i + 3];
+ 
+-                red = (uint8_t) CLAMP (((red / 255.0) * (alpha / 255.0)) * 255.0, 0, 255.0);
+-                green = (uint8_t) CLAMP (((green / 255.0) * (alpha / 255.0)) * 255.0,
+-                                         0, 255.0);
+-                blue = (uint8_t) CLAMP (((blue / 255.0) * (alpha / 255.0)) * 255.0, 0, 255.0);
++                /* pre-multiply the alpha if there's translucency */
++                if (alpha != 0xff) {
++                        red = (uint8_t) CLAMP (((red / 255.0) * (alpha / 255.0)) * 255.0, 0, 255.0);
++                        green = (uint8_t) CLAMP (((green / 255.0) * (alpha / 255.0)) * 255.0,
++                                                 0, 255.0);
++                        blue = (uint8_t) CLAMP (((blue / 255.0) * (alpha / 255.0)) * 255.0, 0, 255.0);
++                }
+ 
+                 pixel_value = (alpha << 24) | (red << 16) | (green << 8) | (blue << 0);
+                 memcpy (data + i, &pixel_value, sizeof(uint32_t));
+-- 
+1.9.0
+
