@@ -21,7 +21,7 @@ Version:	0.9.2
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	3
+Release:	4
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -43,7 +43,7 @@ Patch7:		0008-pixel-buffer-Optimize-filling-with-opaque-buffers.patch
 Patch8:		0009-ply-image-Don-t-do-alpha-pre-multiplication-for-opaq.patch
 Patch9:		0010-script-Don-t-draw-backgrounds-if-they-re-obscured.patch
 Patch10:	0011-seat-drop-set_splash-function.patch
-Patch11:	0012-device-manager-drop-seat-abstraction-in-public-interface.patch
+#Patch11:	0012-device-manager-drop-seat-abstraction-in-public-interface.patch
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch500:	plymouth-restore-suspend.patch
