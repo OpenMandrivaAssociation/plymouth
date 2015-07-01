@@ -21,7 +21,7 @@ Version:	0.9.2
 Release:	0.%snapshot.1
 Source0:	%{name}-%{snapshot}.tar.xz
 %else
-Release:	4
+Release:	5
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -89,7 +89,8 @@ This metapackage tracks the current distribution default theme.
 %package -n %{libply}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Obsoletes:	%{_lib}plymouth2 < 0.9.0-11
+Obsoletes:	%{_lib}ply2 < 0.9.0-11
+Provides:	%{_lib}ply2 = 0.9.0-11
 Requires:	%{libply_boot_client}
 Requires:	%{libply_boot_client} = %{EVRD}
 Requires:	%{libply_splash_graphics} = %{EVRD}
@@ -103,6 +104,7 @@ Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-boot-client2 < 0.9.0-11
+Provides:	%{_lib}ply-boot-client2 = 0.9.0-11
 
 %description -n %{libply_boot_client}
 This package contains the libply-boot-client library used by Plymouth.
@@ -112,6 +114,7 @@ Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-splash-graphics2 < 0.9.0-11
+Provides:	%{_lib}ply-splash-graphics2 = 0.9.0-11
 
 %description -n %{libply_splash_graphics}
 This package contains the libply-splash-graphic library used by Plymouth.
@@ -121,6 +124,7 @@ Summary:	Plymouth libraries
 Group:		System/Libraries
 Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-splash-core2 < 0.9.0-11
+Provides:	%{_lib}ply-splash-core2 = 0.9.0-11
 
 %description -n %{libply_splash_core}
 This package contains the libply-splash-core library used by Plymouth.
@@ -129,6 +133,8 @@ This package contains the libply-splash-core library used by Plymouth.
 Summary:	Plymouth libraries
 Group:		System/Libraries
 Conflicts:	%{_lib}plymouth2 < 0.9.0-11
+Obsoletes:	%{_lib}plymouth2 < 0.9.0-11
+Provides:	%{_lib}plymouth2 = 0.9.0-11
 
 %description -n uclibc-%{libname}
 This package contains the libply and libplybootsplash libraries
