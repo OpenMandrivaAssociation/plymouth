@@ -48,6 +48,7 @@ BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(libudev)
+BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	xsltproc
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
