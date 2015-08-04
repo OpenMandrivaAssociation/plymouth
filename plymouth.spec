@@ -10,18 +10,19 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 0
+%define snapshot 20150804
 
 %bcond_with uclibc
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.2
+Version:	0.9.3
 %if %snapshot
 Release:	0.%snapshot.1
-Source0:	%{name}-%{snapshot}.tar.xz
+# git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
+Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	7
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 %endif
 License:	GPLv2+
@@ -32,18 +33,6 @@ Source2:	charge.plymouth
 
 
 # UPSTREAM GIT PATCHES
-Patch0:		0001-systemd-Allow-specifying-unit-dir-to-configure.patch
-Patch1:		0002-drm-assume-driver-doesn-t-support-mapping-console.patch
-Patch2:		0003-drm-merge-ply-renderer-generic-driver.c-to-plugin.c.patch
-Patch3:		0004-drm-don-t-try-to-draw-to-fbcon-on-unmap.patch
-Patch4:		0005-drm-free-drm-mode-resources-object.patch
-Patch5:		0006-drm-rename-buffer-to-output_buffer.patch
-Patch6:		0007-pixel-buffer-add-ability-track-opaqueness.patch
-Patch7:		0008-pixel-buffer-Optimize-filling-with-opaque-buffers.patch
-Patch8:		0009-ply-image-Don-t-do-alpha-pre-multiplication-for-opaq.patch
-Patch9:		0010-script-Don-t-draw-backgrounds-if-they-re-obscured.patch
-Patch10:	0011-seat-drop-set_splash-function.patch
-#Patch11:	0012-device-manager-drop-seat-abstraction-in-public-interface.patch
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
 Patch500:	plymouth-restore-suspend.patch
@@ -66,7 +55,7 @@ BuildRequires:	docbook-dtd45-xml
 BuildRequires:	uClibc-devel
 BuildRequires:	%{_lib}png-static-devel
 %endif
-BuildRequires:	systemd-units
+BuildRequires:	pkgconfig(libsystemd)
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename plymouth-utils
@@ -315,7 +304,11 @@ Requires:	plymouth-plugin-tribar = %{EVRD}
 This package contains the "Tribar" boot splash theme for Plymouth.
 
 %prep
+%if %{snapshot}
+%setup -q -n %{name}-%{version}-%{snapshot}
+%else
 %setup -q
+%endif
 %apply_patches
 
 %if %{snapshot}
