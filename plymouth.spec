@@ -363,7 +363,6 @@ mkdir -p system
 pushd system
 %configure \
 	--disable-static \
-	--disable-tests \
 	--disable-tracing \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
@@ -371,18 +370,17 @@ pushd system
 	--with-background-color=0x3391cd \
 	--enable-drm-renderer \
 	--disable-gdm-transition \
-	--without-gdm-autostart-file \
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--enable-pango \
-	--enable-gtk=no \
+	--with-systemdunitdir=%{_unitdir} \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
 	--with-release-file=/etc/mandriva-release \
 %endif
-	--without-log-viewer
+	--enable-pango \
+	--enable-gtk=no
 
 %make
 popd
@@ -460,7 +458,6 @@ fi \
 %{_mandir}/man1/plymouth.1*
 /lib/systemd/system/*plymouth*.service
 /lib/systemd/system/systemd-*.path
-/lib/systemd/system/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
