@@ -10,7 +10,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20150804
+%define snapshot 20150907
 
 %bcond_with uclibc
 
