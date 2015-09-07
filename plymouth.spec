@@ -31,7 +31,6 @@ Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source1:	boot-duration
 Source2:	charge.plymouth
 
-
 # UPSTREAM GIT PATCHES
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
@@ -46,7 +45,6 @@ Patch504:	plymouth-0.9.2-retain-splash-on-quit.patch
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
-BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(libudev)
 BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	xsltproc
@@ -59,7 +57,7 @@ BuildRequires:	%{_lib}png-static-devel
 BuildRequires:	pkgconfig(libsystemd)
 %rename		splashy
 Conflicts:	systemd-units < 186
-%rename plymouth-utils
+%rename	plymouth-utils
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -373,7 +371,7 @@ pushd system
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--with-systemdunitdir=%{_unitdir} \
+	--with-systemdunitdir="/lib/systemd/system/" \
 %if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
 %else
@@ -458,6 +456,7 @@ fi \
 %{_mandir}/man1/plymouth.1*
 /lib/systemd/system/*plymouth*.service
 /lib/systemd/system/systemd-*.path
+/lib/systemd/system/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
