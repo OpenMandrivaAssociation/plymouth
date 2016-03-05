@@ -10,15 +10,13 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20160106
-
-%bcond_with uclibc
+%define snapshot 20160305
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.3
 %if %snapshot
-Release:	0.%snapshot.3
+Release:	0.%snapshot.4
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
@@ -49,10 +47,6 @@ BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	xsltproc
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
-%if %{with uclibc}
-BuildRequires:	uClibc-devel
-BuildRequires:	%{_lib}png-static-devel
-%endif
 BuildRequires:	pkgconfig(libsystemd)
 %rename		splashy
 Conflicts:	systemd-units < 186
@@ -116,17 +110,6 @@ Provides:	%{_lib}ply-splash-core2 = 0.9.0-11
 %description -n %{libply_splash_core}
 This package contains the libply-splash-core library used by Plymouth.
 
-%package -n uclibc-%{libname}
-Summary:	Plymouth libraries
-Group:		System/Libraries
-Conflicts:	%{_lib}plymouth2 < 0.9.0-11
-Obsoletes:	%{_lib}plymouth2 < 0.9.0-11
-Provides:	%{_lib}plymouth2 = 0.9.0-11
-
-%description -n uclibc-%{libname}
-This package contains the libply and libplybootsplash libraries
-used by Plymouth.
-
 %package -n %{devname}
 Group:		System/Kernel and hardware
 Summary:	Libraries and headers for writing Plymouth splash plugins
@@ -136,9 +119,6 @@ Requires:	%{libply} = %{EVRD}
 Requires:	%{libply_boot_client} = %{EVRD}
 Requires:	%{libply_splash_graphics} = %{EVRD}
 Requires:	%{libply_splash_core} = %{EVRD}
-%if %{with uclibc}
-Requires:	uclibc-%{libname} = %{EVRD}
-%endif
 
 %description -n %{devname}
 This package contains the libply and libplybootsplash libraries
@@ -317,47 +297,6 @@ make distclean
 %endif
 
 %build
-export CONFIGURE_TOP=`pwd`
-
-%if %{with uclibc}
-mkdir -p uclibc
-pushd uclibc
-%configure CC="%{uclibc_cc}" \
-	CFLAGS="%{uclibc_cflags}" \
-	LDFLAGS="%{ldflags} -lz" \
-	--prefix=%{uclibc_root}%{_prefix} \
-	--libdir="%{uclibc_root}%{_libdir}" \
-	--bindir="%{uclibc_root}%{plymouthclient_execdir}" \
-	--sbindir="%{uclibc_root}%{plymouthdaemon_execdir}" \
-	--disable-tests \
-	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
-	--with-background-start-color-stop=0x0073B3 \
-	--with-background-end-color-stop=0x00457E \
-	--with-background-color=0x3391cd \
-	--disable-gdm-transition \
-	--without-gdm-autostart-file \
-	--without-rhgb-compat-link \
-	--with-system-root-install \
-	--enable-systemd-integration \
-	--enable-pango \
-	--enable-gtk=no \
-%if %mdvver >= 201200
-	--with-release-file=/etc/os-release \
-%else
-	--with-release-file=/etc/mandriva-release \
-%endif
-	--without-log-viewer
-
-# We don't build these for uclibc since they link against a lot of libraries
-# that we don't provide any uclibc linked version of
-sed -e 's#viewer##g' -i src/Makefile
-sed -e 's#label##g' -i src/plugins/controls/Makefile
-%make
-popd
-%endif
-
-mkdir -p system
-pushd system
 %configure \
 	--disable-static \
 	--disable-tracing \
@@ -371,26 +310,14 @@ pushd system
 	--with-system-root-install \
 	--enable-systemd-integration \
 	--with-systemdunitdir="/lib/systemd/system/" \
-%if %mdvver >= 201200
 	--with-release-file=/etc/os-release \
-%else
-	--with-release-file=/etc/mandriva-release \
-%endif
 	--enable-pango \
 	--enable-gtk=no
 
 %make
-popd
 
 %install
-%if %{with uclibc}
-%makeinstall_std -C uclibc plymouthdaemondir=%{uclibc_root}%{plymouthdaemon_execdir} plymouthclientdir=%{uclibc_root}%{plymouthclient_execdir}
-rm -rf %{buildroot}%{uclibc_root}{%{_includedir},%{_datadir},%{_libdir}/pkgconfig,%{_libexecdir},%{plymouthdaemon_execdir}/plymouth-set-default-theme}
-# What the.....
-mv %{buildroot}/uclibc/usr/%{_lib}/* %{buildroot}%{uclibc_root}%{_libdir}/
-rm -rf %{buildroot}/uclibc
-%endif
-%makeinstall_std -C system
+%makeinstall_std
 
 # Temporary symlink until rc.sysinit is fixed
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
@@ -468,12 +395,6 @@ fi \
 %ghost %{_localstatedir}/lib/plymouth/shutdown-duration
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
 %{_mandir}/man8/*
-%if %{with uclibc}
-%{uclibc_root}%{plymouthdaemon_execdir}/plymouthd
-%{uclibc_root}%{plymouthclient_execdir}/plymouth
-%{uclibc_root}%{_libdir}/plymouth/details.so
-%{uclibc_root}%{_libdir}/plymouth/text.so
-%endif
 
 %files -n %{libply}
 %{plymouth_libdir}/libply.so.%{major}*
@@ -486,16 +407,6 @@ fi \
 
 %files -n %{libply_splash_core}
 /%{_lib}/libply-splash-core.so.%{major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libname}
-%dir %{uclibc_root}%{_libdir}/plymouth
-%{uclibc_root}%{plymouth_libdir}/libply.so*
-%{uclibc_root}%{_libdir}/libply-boot-client.so*
-%{uclibc_root}%{_libdir}/libply-splash-core.so*
-%{uclibc_root}%{_libdir}/libply-splash-graphics.so*
-%{uclibc_root}%{_libdir}/plymouth/renderers
-%endif
 
 %files -n %{devname}
 %{plymouth_libdir}/libply.so
@@ -515,24 +426,15 @@ fi \
 
 %files plugin-fade-throbber
 %{_libdir}/plymouth/fade-throbber.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/fade-throbber.so
-%endif
 
 %files theme-fade-in
 %{_datadir}/plymouth/themes/fade-in
 
 %files plugin-throbgress
 %{_libdir}/plymouth/throbgress.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/throbgress.so
-%endif
 
 %files plugin-script
 %{_libdir}/plymouth/script.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/script.so
-%endif
 
 %files theme-script
 %{_datadir}/plymouth/themes/script
@@ -545,24 +447,15 @@ fi \
 
 %files plugin-space-flares
 %{_libdir}/plymouth/space-flares.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/space-flares.so
-%endif
 
 %files theme-solar
 %{_datadir}/plymouth/themes/solar
 
 %files plugin-two-step
 %{_libdir}/plymouth/two-step.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/two-step.so
-%endif
 
 %files plugin-tribar
 %{_libdir}/plymouth/tribar.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/plymouth/tribar.so
-%endif
 
 %files theme-tribar
 %{_datadir}/plymouth/themes/tribar
@@ -574,4 +467,3 @@ fi \
 %{_datadir}/plymouth/themes/glow
 
 %files system-theme
-
