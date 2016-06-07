@@ -16,7 +16,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.3
 %if %snapshot
-Release:	0.%snapshot.8
+Release:	0.%snapshot.9
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
@@ -37,7 +37,6 @@ Patch500:	plymouth-restore-suspend.patch
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch502:	plymouth-fix-window-size.patch
-Patch503:	plymouth-0.8.9-set-delay-to-0.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
@@ -309,7 +308,7 @@ make distclean
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--with-systemdunitdir="/lib/systemd/system/" \
+	--with-systemdunitdir=%{_unitdir} \
 	--with-release-file=/etc/os-release \
 	--enable-pango \
 	--enable-gtk=no
