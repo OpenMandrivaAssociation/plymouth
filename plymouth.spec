@@ -10,7 +10,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20160615
+%define snapshot 20160617
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
