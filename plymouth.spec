@@ -10,7 +10,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20170512
+%define snapshot %nil
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
@@ -38,6 +38,10 @@ Patch500:	plymouth-restore-suspend.patch
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 # PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
 Patch502:	plymouth-fix-window-size.patch
+
+# Local patches
+Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
+Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
