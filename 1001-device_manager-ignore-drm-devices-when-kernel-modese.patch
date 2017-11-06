@@ -1,0 +1,92 @@
+From c2f0a21e21005ecf376779d26badd421c726780a Mon Sep 17 00:00:00 2001
+From: Martin Whitaker <freedesktop@martin-whitaker.me.uk>
+Date: Sun, 19 Mar 2017 19:11:42 +0000
+Subject: [PATCH 1/2] device_manager: ignore drm devices when kernel
+ modesetting is disabled.
+
+Some video drivers, such as the older nvidia proprietary drivers, create
+drm devices that don't support kernel modesetting. The drm renderer won't
+work with such devices. In this case we need to ignore the drm devices
+and use the frame buffer devices instead.
+
+This patch uses the presence of 'nokmsboot' or 'nomodeset' on the kernel
+command line as an indication that such a driver is being used.
+
+diff --git a/src/libply-splash-core/ply-device-manager.c b/src/libply-splash-core/ply-device-manager.c
+index b4c33d4..8b8af8d 100644
+--- a/src/libply-splash-core/ply-device-manager.c
++++ b/src/libply-splash-core/ply-device-manager.c
+@@ -173,6 +173,9 @@ fb_device_has_drm_device (ply_device_manager_t *manager,
+         const char *id_path;
+         bool has_drm_device = false;
+ 
++        if (manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED)
++                return false;
++
+         /* We want to see if the framebuffer is associated with a DRM-capable
+          * graphics card, if it is, we'll use the DRM device */
+         card_matches = udev_enumerate_new (manager->udev_context);
+@@ -229,7 +232,11 @@ create_devices_for_udev_device (ply_device_manager_t *manager,
+ 
+                 if (subsystem != NULL && strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
+                         ply_trace ("found DRM device %s", device_path);
+-                        renderer_type = PLY_RENDERER_TYPE_DRM;
++                        if (!(manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED))
++                                renderer_type = PLY_RENDERER_TYPE_DRM;
++                        else
++                                ply_trace ("ignoring, since kernel modesetting is disabled");
++
+                 } else if (strcmp (subsystem, SUBSYSTEM_FRAME_BUFFER) == 0) {
+                         ply_trace ("found frame buffer device %s", device_path);
+                         if (!fb_device_has_drm_device (manager, device))
+@@ -346,11 +353,17 @@ on_udev_event (ply_device_manager_t *manager)
+                 return;
+ 
+         if (strcmp (action, "add") == 0) {
++                const char *preferred_subsystem;
+                 const char *subsystem;
+ 
++                if (manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED)
++                        preferred_subsystem = SUBSYSTEM_FRAME_BUFFER;
++                else
++                        preferred_subsystem = SUBSYSTEM_DRM;
++
+                 subsystem = udev_device_get_subsystem (device);
+ 
+-                if (strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
++                if (strcmp (subsystem, preferred_subsystem) == 0) {
+                         if (manager->local_console_managed && manager->local_console_is_text)
+                                 ply_trace ("ignoring since we're already using text splash for local console");
+                         else
+diff --git a/src/libply-splash-core/ply-device-manager.h b/src/libply-splash-core/ply-device-manager.h
+index 058f6e8..5412777 100644
+--- a/src/libply-splash-core/ply-device-manager.h
++++ b/src/libply-splash-core/ply-device-manager.h
+@@ -31,7 +31,8 @@ typedef enum
+ {
+         PLY_DEVICE_MANAGER_FLAGS_NONE = 0,
+         PLY_DEVICE_MANAGER_FLAGS_IGNORE_SERIAL_CONSOLES = 1 << 0,
+-                PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1
++                PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1,
++        PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED = 1 << 2
+ } ply_device_manager_flags_t;
+ 
+ typedef struct _ply_device_manager ply_device_manager_t;
+diff --git a/src/main.c b/src/main.c
+index 0864e5e..4c4f3f8 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -2336,6 +2336,10 @@ main (int    argc,
+             (getenv ("DISPLAY") != NULL))
+                 device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
+ 
++        if (command_line_has_argument (state.kernel_command_line, "nokmsboot") ||
++            command_line_has_argument (state.kernel_command_line, "nomodeset"))
++                device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED;
++
+         if (!plymouth_should_show_default_splash (&state)) {
+                 /* don't bother listening for udev events if we're forcing details */
+                 device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
+-- 
+2.10.2
+
