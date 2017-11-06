@@ -21,7 +21,7 @@ Release:	0.%snapshot.14
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
 Release:	1
-Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
+Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
 Group:		System/Kernel and hardware
