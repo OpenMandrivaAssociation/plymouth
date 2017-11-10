@@ -20,7 +20,7 @@ Release:	0.%snapshot.14
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	1
+Release:	2
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -303,7 +303,7 @@ make distclean
 %build
 %configure \
 	--disable-static \
-	--disable-tracing \
+	--enable-tracing \
 	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
