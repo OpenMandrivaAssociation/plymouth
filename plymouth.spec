@@ -30,6 +30,9 @@ Source1:	boot-duration
 Source2:	charge.plymouth
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
 
+# OpenMandriva theme
+Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
+
 # UPSTREAM GIT PATCHES
 
 # PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
