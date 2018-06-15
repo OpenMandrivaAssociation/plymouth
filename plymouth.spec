@@ -20,7 +20,7 @@ Release:	0.%snapshot.14
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	3
+Release:	4
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -55,6 +55,7 @@ BuildRequires:	xsltproc
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	pkgconfig(libsystemd)
+BuildRequires:	systemd
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
@@ -316,7 +317,7 @@ make distclean
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--with-systemdunitdir=%{_unitdir} \
+	--with-systemdunitdir=%{_systemunitdir} \
 	--with-release-file=/etc/os-release \
 	--enable-pango \
 	--enable-gtk=no
@@ -387,9 +388,9 @@ fi \
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_mandir}/man1/plymouth.1*
-/lib/systemd/system/*plymouth*.service
-/lib/systemd/system/systemd-*.path
-/lib/systemd/system/*.wants/plymouth-*.service
+%{_systemunitdir}/*plymouth*.service
+%{_systemunitdir}/systemd-*.path
+%{_systemunitdir}/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
