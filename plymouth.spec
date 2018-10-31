@@ -20,7 +20,7 @@ Release:	0.%snapshot.14
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	4
+Release:	5
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
