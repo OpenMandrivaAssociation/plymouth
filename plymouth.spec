@@ -20,7 +20,7 @@ Release:	0.%snapshot.1
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	1
+Release:	2
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -290,7 +290,7 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 %else
 %setup -q
 %endif
-%apply_patches
+%autopatch -p1
 
 %if %{snapshot}
 sh ./autogen.sh
@@ -325,9 +325,6 @@ make distclean
 # Temporary symlink until rc.sysinit is fixed
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
 
-mkdir -p %{buildroot}%{_localstatedir}/lib/plymouth
-cp %{SOURCE1} %{buildroot}%{_datadir}/plymouth/default-boot-duration
-touch %{buildroot}%{_localstatedir}/lib/plymouth/{boot,shutdown}-duration
 
 # Add charge
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
@@ -376,7 +373,6 @@ fi \
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
 %dir %{_libdir}/plymouth
-%{_datadir}/plymouth/default-boot-duration
 %dir %{_localstatedir}/lib/plymouth
 %{plymouthdaemon_execdir}/plymouthd
 %{plymouthclient_execdir}/plymouth
@@ -395,8 +391,6 @@ fi \
 %{_datadir}/plymouth/themes/text
 %{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
-%ghost %{_localstatedir}/lib/plymouth/shutdown-duration
-%ghost %{_localstatedir}/lib/plymouth/boot-duration
 %{_mandir}/man8/*
 
 %files -n %{libply}
