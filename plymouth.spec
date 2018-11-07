@@ -10,17 +10,17 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 0
+%define snapshot %nil
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.3
+Version:	0.9.4
 %if %snapshot
-Release:	0.%snapshot.14
+Release:	0.%snapshot.1
 # git archive --format=tar --prefix plymouth-0.9.3-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.3-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	5
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -34,13 +34,8 @@ Patch0:		plymouth-0.9.3-use-kernel-install.patch
 Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
 
 # UPSTREAM GIT PATCHES
-
-# PATCH-OPENSUSE -- Restore suspend / resume state (needed for suspend package)
-Patch500:	plymouth-restore-suspend.patch
 # Fix complaints about ply_logger_is_tracing_enabled being undefined
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
-# PATCH-OPENSUSE -- Handle correctly multiple displays with different sizes
-Patch502:	plymouth-fix-window-size.patch
 
 # Local patches
 Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
@@ -55,7 +50,7 @@ BuildRequires:	xsltproc
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	pkgconfig(libsystemd)
-BuildRequires:	systemd
+BuildRequires:	systemd-macros
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
@@ -322,10 +317,10 @@ make distclean
 	--enable-pango \
 	--enable-gtk=no
 
-%make
+%make_build
 
 %install
-%makeinstall_std
+%make_install
 
 # Temporary symlink until rc.sysinit is fixed
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
