@@ -312,7 +312,7 @@ make distclean
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--with-systemdunitdir=%{_systemunitdir} \
+	--with-systemdunitdir=%{_unitdir} \
 	--with-release-file=/etc/os-release \
 	--enable-pango \
 	--enable-gtk=no
@@ -383,9 +383,9 @@ fi \
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_mandir}/man1/plymouth.1*
-%{_systemunitdir}/*plymouth*.service
-%{_systemunitdir}/systemd-*.path
-%{_systemunitdir}/*.wants/plymouth-*.service
+%{_unitdir}/*plymouth*.service
+%{_unitdir}/systemd-*.path
+%{_unitdir}/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
