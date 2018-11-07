@@ -38,8 +38,8 @@ Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 
 # Local patches
-Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
-Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
+#Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
+#Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
