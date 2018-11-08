@@ -77,8 +77,8 @@ diff -Naur plymouth-0.9.4/src/main.c plymouth-0.9.4.tpg/src/main.c
              (getenv ("DISPLAY") != NULL))
                  device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
  
-+        if (command_line_has_argument (state.kernel_command_line, "nokmsboot") ||
-+            command_line_has_argument (state.kernel_command_line, "nomodeset"))
++        if (ply_kernel_command_line_has_argument("nokmsboot") ||
++            ply_kernel_command_line_has_argument("nomodeset"))
 +                device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED;
 +
          if (!plymouth_should_show_default_splash (&state)) {
