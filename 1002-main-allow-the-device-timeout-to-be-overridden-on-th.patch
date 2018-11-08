@@ -14,7 +14,7 @@ diff -Naur plymouth-0.9.4/src/main.c plymouth-0.9.4.tpg/src/main.c
 +        if (isnan (state->device_timeout)) {
 +                const char *delay_string;
 +
-+                delay_string = command_line_get_string_after_prefix (state->kernel_command_line, "plymouth.device-timeout=");
++                delay_string = ply_kernel_command_line_get_string_after_prefix ("plymouth.device-timeout=");
 +
 +                if (delay_string != NULL)
 +                        state->device_timeout = atof (delay_string);
