@@ -4,12 +4,10 @@ Date: Sun, 19 Mar 2017 19:12:53 +0000
 Subject: [PATCH 2/2] main: allow the device timeout to be overridden on the
  kernel command line.
 
-
-diff --git a/src/main.c b/src/main.c
-index 4c4f3f8..de381e0 100644
---- a/src/main.c
-+++ b/src/main.c
-@@ -438,6 +438,14 @@ find_override_splash (state_t *state)
+diff -Naur plymouth-0.9.4/src/main.c plymouth-0.9.4.tpg/src/main.c
+--- plymouth-0.9.4/src/main.c	2018-11-08 00:01:36.146118000 +0000
++++ plymouth-0.9.4.tpg/src/main.c	2018-11-08 00:03:12.826932444 +0000
+@@ -419,6 +419,14 @@
                  if (delay_string != NULL)
                          state->splash_delay = atof (delay_string);
          }
@@ -24,6 +22,6 @@ index 4c4f3f8..de381e0 100644
  }
  
  static void
--- 
-2.10.2
 
+--
+2.10.2

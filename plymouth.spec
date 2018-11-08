@@ -26,7 +26,6 @@ Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
-Source1:	boot-duration
 Source2:	charge.plymouth
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
 
@@ -37,9 +36,9 @@ Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
 # Fix complaints about ply_logger_is_tracing_enabled being undefined
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 
-# Local patches
-#Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
-#Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
+# (tpg) patches from Mageia
+Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
+Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
@@ -51,6 +50,8 @@ BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
+# (tpg) needed for udevadm and systemd-tty-ask-password-agent
+BuildRequires:	systemd
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils

@@ -12,11 +12,10 @@ and use the frame buffer devices instead.
 This patch uses the presence of 'nokmsboot' or 'nomodeset' on the kernel
 command line as an indication that such a driver is being used.
 
-diff --git a/src/libply-splash-core/ply-device-manager.c b/src/libply-splash-core/ply-device-manager.c
-index b4c33d4..8b8af8d 100644
---- a/src/libply-splash-core/ply-device-manager.c
-+++ b/src/libply-splash-core/ply-device-manager.c
-@@ -173,6 +173,9 @@ fb_device_has_drm_device (ply_device_manager_t *manager,
+diff -Naur plymouth-0.9.4/src/libply-splash-core/ply-device-manager.c plymouth-0.9.4.tpg/src/libply-splash-core/ply-device-manager.c
+--- plymouth-0.9.4/src/libply-splash-core/ply-device-manager.c	2018-11-05 20:11:19.000000000 +0000
++++ plymouth-0.9.4.tpg/src/libply-splash-core/ply-device-manager.c	2018-11-07 23:57:26.200850667 +0000
+@@ -177,6 +177,9 @@
          const char *id_path;
          bool has_drm_device = false;
  
@@ -26,7 +25,7 @@ index b4c33d4..8b8af8d 100644
          /* We want to see if the framebuffer is associated with a DRM-capable
           * graphics card, if it is, we'll use the DRM device */
          card_matches = udev_enumerate_new (manager->udev_context);
-@@ -229,7 +232,11 @@ create_devices_for_udev_device (ply_device_manager_t *manager,
+@@ -234,7 +237,11 @@
  
                  if (subsystem != NULL && strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
                          ply_trace ("found DRM device %s", device_path);
@@ -39,7 +38,7 @@ index b4c33d4..8b8af8d 100644
                  } else if (strcmp (subsystem, SUBSYSTEM_FRAME_BUFFER) == 0) {
                          ply_trace ("found frame buffer device %s", device_path);
                          if (!fb_device_has_drm_device (manager, device))
-@@ -346,11 +353,17 @@ on_udev_event (ply_device_manager_t *manager)
+@@ -352,11 +359,17 @@
                  return;
  
          if (strcmp (action, "add") == 0) {
@@ -58,25 +57,23 @@ index b4c33d4..8b8af8d 100644
                          if (manager->local_console_managed && manager->local_console_is_text)
                                  ply_trace ("ignoring since we're already using text splash for local console");
                          else
-diff --git a/src/libply-splash-core/ply-device-manager.h b/src/libply-splash-core/ply-device-manager.h
-index 058f6e8..5412777 100644
---- a/src/libply-splash-core/ply-device-manager.h
-+++ b/src/libply-splash-core/ply-device-manager.h
-@@ -31,7 +31,8 @@ typedef enum
- {
+diff -Naur plymouth-0.9.4/src/libply-splash-core/ply-device-manager.h plymouth-0.9.4.tpg/src/libply-splash-core/ply-device-manager.h
+--- plymouth-0.9.4/src/libply-splash-core/ply-device-manager.h	2018-11-05 20:11:19.000000000 +0000
++++ plymouth-0.9.4.tpg/src/libply-splash-core/ply-device-manager.h	2018-11-07 23:58:35.952217568 +0000
+@@ -32,7 +32,8 @@
          PLY_DEVICE_MANAGER_FLAGS_NONE = 0,
          PLY_DEVICE_MANAGER_FLAGS_IGNORE_SERIAL_CONSOLES = 1 << 0,
--                PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1
-+                PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1,
-+        PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED = 1 << 2
+         PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1,
+-        PLY_DEVICE_MANAGER_FLAGS_SKIP_RENDERERS = 1 << 2
++        PLY_DEVICE_MANAGER_FLAGS_SKIP_RENDERERS = 1 << 2,
++        PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED = 1 << 3
  } ply_device_manager_flags_t;
  
  typedef struct _ply_device_manager ply_device_manager_t;
-diff --git a/src/main.c b/src/main.c
-index 0864e5e..4c4f3f8 100644
---- a/src/main.c
-+++ b/src/main.c
-@@ -2336,6 +2336,10 @@ main (int    argc,
+diff -Naur plymouth-0.9.4/src/main.c plymouth-0.9.4.tpg/src/main.c
+--- plymouth-0.9.4/src/main.c	2018-11-05 20:11:26.000000000 +0000
++++ plymouth-0.9.4.tpg/src/main.c	2018-11-07 23:59:26.151634906 +0000
+@@ -2293,6 +2293,10 @@
              (getenv ("DISPLAY") != NULL))
                  device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
  
@@ -85,8 +82,8 @@ index 0864e5e..4c4f3f8 100644
 +                device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED;
 +
          if (!plymouth_should_show_default_splash (&state)) {
-                 /* don't bother listening for udev events if we're forcing details */
-                 device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
--- 
-2.10.2
+                 /* don't bother listening for udev events or setting up a graphical renderer
+                  * if we're forcing details */
 
+--
+2.10.2
