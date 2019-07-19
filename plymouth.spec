@@ -36,9 +36,9 @@ Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
 # Fix complaints about ply_logger_is_tracing_enabled being undefined
 Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 
-# (tpg) patches from Mageia
-Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
-Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
+# (tpg) patches from Mageia REDIFF
+#Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
+#Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
@@ -269,7 +269,7 @@ This package contains the "Glow" boot splash theme for Plymouth.
 
 %package plugin-tribar
 Group:		System/Kernel and hardware
-Summary:	Plymouth "tribar" plugin
+Summary:	Plymouth "Tribar" plugin
 Requires:	plymouth-plugin-label = %{EVRD}
 
 %description plugin-tribar
@@ -284,6 +284,16 @@ Requires:	plymouth-plugin-tribar = %{EVRD}
 
 %description theme-tribar
 This package contains the "Tribar" boot splash theme for Plymouth.
+
+%package theme-bgrt
+Group:		System/Kernel and hardware
+Summary:	Plymouth "BGRT" plugin
+Requires(post):	plymouth-scripts  = %{EVRD}
+Requires:	%{name}-plugin-two-step = %{EVRD}
+Requires:	%{name}-theme-spinner = %{EVRD}
+
+%description theme-bgrt
+This package contains the "bgrt" boot splash theme for Plymouth.
 
 %prep
 %if %{snapshot}
@@ -463,5 +473,8 @@ fi \
 
 %files theme-glow
 %{_datadir}/plymouth/themes/glow
+
+%files theme-bgrt
+%{_datadir}/plymouth/themes/bgrt
 
 %files system-theme
