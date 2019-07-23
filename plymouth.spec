@@ -52,6 +52,9 @@ BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
 # (tpg) needed for udevadm and systemd-tty-ask-password-agent
 BuildRequires:	systemd
+%if %{snapshot}
+BuildRequires:	gettext-devel
+%endif
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
