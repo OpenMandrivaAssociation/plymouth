@@ -54,6 +54,7 @@ BuildRequires:	systemd-macros
 BuildRequires:	systemd
 %if %{snapshot}
 BuildRequires:	gettext-devel
+BuildRequires:	intltool
 %endif
 %rename		splashy
 Conflicts:	systemd-units < 186
