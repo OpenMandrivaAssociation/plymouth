@@ -119,7 +119,6 @@ Provides:	%{_lib}ply-splash-core2 = 0.9.0-11
 This package contains the libply-splash-core library used by Plymouth.
 
 %package -n %{devname}
-Group:		System/Kernel and hardware
 Summary:	Libraries and headers for writing Plymouth splash plugins
 Group:		Development/C
 Provides:	%{name}-devel = %{EVRD}
@@ -340,13 +339,14 @@ make distclean
 # Temporary symlink until rc.sysinit is fixed
 touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
 
-
 # Add charge
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
 
 find %{buildroot} -name \*.a -delete -o -name \*.la -delete
+
+%find_lang %{name}
 
 %postun
 if [ $1 -eq 0 ]; then
@@ -382,7 +382,7 @@ fi \
 %theme_scripts glow
 %theme_scripts script
 
-%files
+%files -f %{name}.lang
 %doc AUTHORS NEWS README
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
