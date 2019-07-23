@@ -2,7 +2,7 @@
 %define plymouthclient_execdir /bin
 %define plymouth_libdir /%{_lib}
 %define _libexecdir %{_prefix}/libexec
-%define major 4
+%define major 5
 %define libname %mklibname %{name} %{major}
 %define libply %mklibname ply %{major}
 %define libply_boot_client %mklibname ply-boot-client %{major}
