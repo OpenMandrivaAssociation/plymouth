@@ -334,6 +334,7 @@ make distclean
 	--with-release-file=/etc/os-release \
 %if %{without x11_renderer}
 	--disable-gtk \
+	--enable-gtk=no \
 %endif
 	--enable-pango \
 	--disable-upstart-monitoring
