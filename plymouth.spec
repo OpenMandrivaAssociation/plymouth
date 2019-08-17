@@ -10,17 +10,19 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20190719
+%define snapshot 20190817
+
+%bcond_with x11_renderer
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.4
 %if %snapshot
-Release:	3.%snapshot.1
+Release:	3.%snapshot.2
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	2
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -44,7 +46,9 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(libudev)
+%if %{with x11_renderer}
 BuildRequires:	pkgconfig(gtk+-3.0)
+%endif
 BuildRequires:	xsltproc
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
@@ -326,10 +330,13 @@ make distclean
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
-	--with-systemdunitdir=%{_unitdir} \
+	--with-systemdunitdir="%{_unitdir}"\
 	--with-release-file=/etc/os-release \
+%if %{without x11_renderer}
+	--disable-gtk \
+%endif
 	--enable-pango \
-	--enable-gtk=no
+	--disable-upstart-monitoring
 
 %make_build
 
@@ -400,6 +407,9 @@ fi \
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
+%if %{with x11_renderer}
+%{_libdir}/plymouth/renderers/x11*
+%endif
 %ghost %{_datadir}/plymouth/themes/default.plymouth
 %{_datadir}/plymouth/plymouthd.defaults
 %{_datadir}/plymouth/themes/details
