@@ -315,7 +315,6 @@ export NOCONFIGURE=1
 sh ./autogen.sh
 libtoolize --copy --force
 autoreconf -fi
-make distclean
 %endif
 
 %build
