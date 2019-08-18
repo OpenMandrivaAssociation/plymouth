@@ -311,6 +311,7 @@ This package contains the "bgrt" boot splash theme for Plymouth.
 %autopatch -p1
 
 %if %{snapshot}
+export NOCONFIGURE=1
 sh ./autogen.sh
 libtoolize --copy --force
 autoreconf -fi
