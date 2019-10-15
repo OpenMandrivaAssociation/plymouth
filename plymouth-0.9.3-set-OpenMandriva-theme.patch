@@ -1,6 +1,6 @@
-diff -Naur plymouth-0.9.4-20190719/src/plymouthd.defaults plymouth-0.9.4-20190719.tpg/src/plymouthd.defaults
---- plymouth-0.9.4-20190719/src/plymouthd.defaults	2019-07-16 13:50:51.000000000 +0000
-+++ plymouth-0.9.4-20190719.tpg/src/plymouthd.defaults	2019-07-19 13:57:59.186004882 +0000
+diff -Naur plymouth-0.9.4-20191015/src/plymouthd.defaults plymouth-0.9.4-20191015.tpg/src/plymouthd.defaults
+--- plymouth-0.9.4-20191015/src/plymouthd.defaults	2019-10-15 07:07:39.000000000 +0000
++++ plymouth-0.9.4-20191015.tpg/src/plymouthd.defaults	2019-10-15 20:26:54.561729554 +0000
 @@ -1,6 +1,6 @@
  # Distribution defaults. Changes to this file will get overwritten during
  # upgrades.
@@ -8,4 +8,4 @@ diff -Naur plymouth-0.9.4-20190719/src/plymouthd.defaults plymouth-0.9.4-2019071
 -Theme=spinner
 +Theme=OpenMandriva
  ShowDelay=0
- DeviceTimeout=5
+ DeviceTimeout=8
