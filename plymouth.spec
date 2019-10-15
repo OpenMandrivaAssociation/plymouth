@@ -10,7 +10,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20190817
+%define snapshot 20191015
 
 %bcond_with x11_renderer
 
@@ -19,6 +19,7 @@ Name:		plymouth
 Version:	0.9.4
 %if %snapshot
 Release:	3.%snapshot.2
+# git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
