@@ -326,13 +326,14 @@ autoreconf -fi
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
-	--enable-drm-renderer \
 	--disable-gdm-transition \
 	--without-rhgb-compat-link \
 	--with-system-root-install \
 	--enable-systemd-integration \
 	--with-systemdunitdir="%{_unitdir}"\
 	--with-release-file=/etc/os-release \
+	--with-udev \
+	--enable-drm \
 %if %{without x11_renderer}
 	--disable-gtk \
 	--enable-gtk=no \
