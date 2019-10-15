@@ -400,6 +400,7 @@ fi \
 %dir %{_localstatedir}/lib/plymouth
 %{plymouthdaemon_execdir}/plymouthd
 %{plymouthclient_execdir}/plymouth
+%{_sysconfdir}/logrotate.d/bootlog
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_mandir}/man1/plymouth.1*
