@@ -193,21 +193,10 @@ This package contains the "Fade-In" boot splash theme for
 Plymouth. It features a centered logo that fades in and out
 while stars twinkle around the logo during system boot up.
 
-%package plugin-throbgress
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Throbgress" plugin
-Requires:	plymouth-plugin-label = %{EVRD}
-
-%description plugin-throbgress
-This package contains the "throbgress" boot splash plugin for
-Plymouth. It features a centered logo and animated spinner that
-spins repeatedly while a progress bar advances at the bottom of
-the screen.
-
 %package theme-spinfinity
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Spinfinity" theme
-Requires:	%{name}-plugin-throbgress = %{EVRD}
+Requires:	%{name}-plugin-two-step = %{EVRD}
 Requires(post):	plymouth-scripts = %{EVRD}
 
 %description theme-spinfinity
@@ -229,6 +218,7 @@ Plymouth.
 Group:		System/Kernel and hardware
 Summary:	Plymouth "two-step" plugin
 Requires:	plymouth-plugin-label = %{EVRD}
+%rename %{name}-plugin-throbgress
 
 %description plugin-two-step
 This package contains the "two-step" boot splash plugin for
@@ -455,9 +445,6 @@ fi \
 
 %files theme-fade-in
 %{_datadir}/plymouth/themes/fade-in
-
-%files plugin-throbgress
-%{_libdir}/plymouth/throbgress.so
 
 %files plugin-script
 %{_libdir}/plymouth/script.so
