@@ -387,7 +387,6 @@ fi \
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_unitdir}/*plymouth*.service
-%{_unitdir}/*plymouth-start*.path
 %{_unitdir}/systemd-*.path
 %{_unitdir}/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
