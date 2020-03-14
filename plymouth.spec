@@ -390,7 +390,6 @@ fi \
 %{_unitdir}/*plymouth-start*.path
 %{_unitdir}/systemd-*.path
 %{_unitdir}/*.wants/plymouth-*.service
-%{_unitdir}/*.wants/plymouth-*.path
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
