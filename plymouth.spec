@@ -28,6 +28,7 @@ Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
 # OpenMandriva theme
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
+# this patch is important as it implements smooth transistion between plymouth and display managers
 Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
 Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 
@@ -306,13 +307,12 @@ autoreconf -fi
 %configure \
 	--disable-static \
 	--disable-tracing \
-	--with-logo=%{_datadir}/pixmaps/system-logo-white.png \
+	--with-logo="%{_datadir}/pixmaps/system-logo-white.png" \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
-	--disable-gdm-transition \
 	--without-rhgb-compat-link \
-	--without-system-root-install
+	--without-system-root-install \
 	--enable-systemd-integration \
 	--with-systemdunitdir="%{_unitdir}" \
 	--with-runtimedir="%{_rundir}" \
