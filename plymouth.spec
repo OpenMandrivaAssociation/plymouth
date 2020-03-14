@@ -1,7 +1,3 @@
-%define plymouthdaemon_execdir /sbin
-%define plymouthclient_execdir /bin
-%define plymouth_libdir /%{_lib}
-%define _libexecdir %{_prefix}/libexec
 %define major 5
 %define libname %mklibname %{name} %{major}
 %define libply %mklibname ply %{major}
@@ -10,7 +6,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20200311
+%define snapshot 20200314
 
 %bcond_with x11_renderer
 
@@ -18,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.4
 %if %snapshot
-Release:	5.%snapshot.2
+Release:	6.%snapshot.2
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -30,18 +26,16 @@ License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
-Patch0:		plymouth-0.9.3-use-kernel-install.patch
-
 # OpenMandriva theme
-Patch100:	%{name}-0.9.3-set-OpenMandriva-theme.patch
+Patch0:		plymouth-0.9.3-use-kernel-install.patch
+Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
+Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 
 # UPSTREAM GIT PATCHES
-# Fix complaints about ply_logger_is_tracing_enabled being undefined
-Patch501:	plymouth-0.8.9-export-ply_logger_is_tracing_enabled.patch
 
-# (tpg) patches from Mageia REDIFF
-#Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
-#Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
+# (tpg) patches from Mageia
+Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
+Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
@@ -312,15 +306,16 @@ autoreconf -fi
 %configure \
 	--disable-static \
 	--disable-tracing \
-	--with-logo=%{_datadir}/plymouth/themes/OpenMandriva/openmandriva-logo.png \
+	--with-logo=%{_datadir}/pixmaps/system-logo-white.png \
 	--with-background-start-color-stop=0x0073B3 \
 	--with-background-end-color-stop=0x00457E \
 	--with-background-color=0x3391cd \
 	--disable-gdm-transition \
 	--without-rhgb-compat-link \
-	--with-system-root-install \
+	--without-system-root-install
 	--enable-systemd-integration \
-	--with-systemdunitdir="%{_unitdir}"\
+	--with-systemdunitdir="%{_unitdir}" \
+	--with-runtimedir="%{_rundir}" \
 	--with-release-file=/etc/os-release \
 	--with-udev \
 	--enable-drm \
@@ -350,7 +345,7 @@ find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
 %postun
 if [ $1 -eq 0 ]; then
-    rm -f %{_libdir}/plymouth/default.so
+    rm -f %{_libdir}/plymouth/default.so ||:
 fi
 
 %define theme_scripts() \
@@ -389,13 +384,14 @@ fi \
 %dir %{_datadir}/plymouth/themes
 %dir %{_libdir}/plymouth
 %dir %{_localstatedir}/lib/plymouth
-%{plymouthdaemon_execdir}/plymouthd
-%{plymouthclient_execdir}/plymouth
+%{_sbindir}/plymouthd
+%{_bindir}/plymouth
 %{_sysconfdir}/logrotate.d/bootlog
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_mandir}/man1/plymouth.1*
 %{_unitdir}/*plymouth*.service
+%{_unitdir}/*plymouth*.path
 %{_unitdir}/systemd-*.path
 %{_unitdir}/*.wants/plymouth-*.service
 %dir %{_libdir}/plymouth/renderers
@@ -413,7 +409,7 @@ fi \
 %{_mandir}/man8/*
 
 %files -n %{libply}
-%{plymouth_libdir}/libply.so.%{major}*
+%{_libdir}/libply.so.%{major}*
 
 %files -n %{libply_boot_client}
 %{_libdir}/libply-boot-client.so.%{major}*
@@ -422,13 +418,13 @@ fi \
 %{_libdir}/libply-splash-graphics.so.%{major}*
 
 %files -n %{libply_splash_core}
-/%{_lib}/libply-splash-core.so.%{major}*
+%{_libdir}/libply-splash-core.so.%{major}*
 
 %files -n %{devname}
-%{plymouth_libdir}/libply.so
+%{_libdir}/libply.so
 %{_libdir}/libply-boot-client.so
 %{_libdir}/libply-splash-graphics.so
-/%{_lib}/libply-splash-core.so
+%{_libdir}/libply-splash-core.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/plymouth-1
 

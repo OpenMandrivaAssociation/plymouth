@@ -1,0 +1,101 @@
+diff -Naur plymouth-0.9.4-20200314/systemd-units/Makefile.am plymouth-0.9.4-20200314.tpg/systemd-units/Makefile.am
+--- plymouth-0.9.4-20200314/systemd-units/Makefile.am	2020-03-11 19:23:44.000000000 +0000
++++ plymouth-0.9.4-20200314.tpg/systemd-units/Makefile.am	2020-03-14 13:29:50.233931599 +0000
+@@ -1,6 +1,8 @@
+ systemd_unit_templates =                                                     \
++        plymouth-deactivate.service.in                                       \
+         plymouth-switch-root.service.in                                      \
+         plymouth-start.service.in                                            \
++        plymouth-start.path.in                                               \
+         plymouth-read-write.service.in                                       \
+         plymouth-quit.service.in                                             \
+         plymouth-quit-wait.service.in                                        \
+@@ -27,13 +29,18 @@
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/initrd-switch-root.target.wants && \
+ 		rm -f plymouth-start.service plymouth-switch-root.service && \
+ 		$(LN_S) ../plymouth-start.service &&                         \
++		$(LN_S) ../plymouth-start.path &&                            \
+ 		$(LN_S) ../plymouth-switch-root.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/sysinit.target.wants &&            \
+ 		rm -f plymouth-start.service plymouth-read-write.service &&  \
++		&& plymouth-start.path                                       \
+ 		$(LN_S) ../plymouth-start.service &&                         \
++		$(LN_S) ../plymouth-start.path &&                            \
+ 		$(LN_S) ../plymouth-read-write.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/multi-user.target.wants &&         \
+-		rm -f plymouth-quit.service plymouth-quit-wait.service &&    \
++		rm -f plymouth-deactivate.service plymouth-quit.service      \
++		plymouth-quit-wait.service &&                                \
++		$(LN_S) ../plymouth-deactivate.service &&                    \
+ 		$(LN_S) ../plymouth-quit.service &&                          \
+ 		$(LN_S) ../plymouth-quit-wait.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/reboot.target.wants &&             \
+@@ -51,11 +58,13 @@
+ 
+ uninstall-hook:
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/initrd-switch-root.target.wants && \
+-		rm -f plymouth-start.service plymouth-switch-root.service)
++		rm -f plymouth-start.service plymouth-start.path             \
++		plymouth-switch-root.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/sysinit.target.wants &&            \
+ 		rm -f plymouth-start.service plymouth-read-write.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/multi-user.target.wants &&         \
+-		rm -f plymouth-quit.service plymouth-quit-wait.service)
++		rm -f plymouth-deactivate.service plymouth-quit.service      \
++		plymouth-quit-wait.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/reboot.target.wants &&             \
+ 		rm -f plymouth-reboot.service)
+ 	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/kexec.target.wants &&              \
+diff -Naur plymouth-0.9.4-20200314/systemd-units/plymouth-deactivate.service.in plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-deactivate.service.in
+--- plymouth-0.9.4-20200314/systemd-units/plymouth-deactivate.service.in	1970-01-01 00:00:00.000000000 +0000
++++ plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-deactivate.service.in	2020-03-14 13:25:55.473996279 +0000
+@@ -0,0 +1,9 @@
++[Unit]
++Description=Deactivate Plymouth Boot Screen
++After=rc-local.service plymouth-start.service systemd-user-sessions.service
++Before=getty@tty1.service
++
++[Service]
++ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth deactivate
++Type=oneshot
++TimeoutSec=20
+diff -Naur plymouth-0.9.4-20200314/systemd-units/plymouth-quit.service.in plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-quit.service.in
+--- plymouth-0.9.4-20200314/systemd-units/plymouth-quit.service.in	2020-03-11 19:23:44.000000000 +0000
++++ plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-quit.service.in	2020-03-14 13:21:47.006974173 +0000
+@@ -1,8 +1,9 @@
+ [Unit]
+ Description=Terminate Plymouth Boot Screen
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++Before=getty@tty1.service
+ 
+ [Service]
+-ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
++ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit --retain-splash
+ Type=oneshot
+ TimeoutSec=20
+diff -Naur plymouth-0.9.4-20200314/systemd-units/plymouth-start.path.in plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-start.path.in
+--- plymouth-0.9.4-20200314/systemd-units/plymouth-start.path.in	1970-01-01 00:00:00.000000000 +0000
++++ plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-start.path.in	2020-03-14 13:27:27.705366527 +0000
+@@ -0,0 +1,9 @@
++[Unit]
++Description=Automatically Start Plymouth Boot Screen
++
++[Path]
++PathExistsGlob=/sys/class/graphics/fb*/device/drm/
++Unit=plymouth-start.service
++
++[Install]
++WantedBy=sysinit.target
+diff -Naur plymouth-0.9.4-20200314/systemd-units/plymouth-start.service.in plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-start.service.in
+--- plymouth-0.9.4-20200314/systemd-units/plymouth-start.service.in	2020-03-11 19:23:44.000000000 +0000
++++ plymouth-0.9.4-20200314.tpg/systemd-units/plymouth-start.service.in	2020-03-14 13:21:18.811855295 +0000
+@@ -11,5 +11,9 @@
+ ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
++RuntimeDirectory=plymouth
+ KillMode=none
+ SendSIGKILL=no
++
++[Install]
++WantedBy=sysinit.target
