@@ -45,15 +45,11 @@ BuildRequires:	pkgconfig(libudev)
 %if %{with x11_renderer}
 BuildRequires:	pkgconfig(gtk+-3.0)
 %endif
-BuildRequires:	xsltproc
-BuildRequires:	docbook-style-xsl
-BuildRequires:	docbook-dtd45-xml
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
 # (tpg) needed for udevadm and systemd-tty-ask-password-agent
 BuildRequires:	systemd
 %if %{snapshot}
-BuildRequires:	gettext-devel
 BuildRequires:	intltool
 %endif
 %rename		splashy
@@ -324,6 +320,7 @@ autoreconf -fi
 	--enable-gtk=no \
 %endif
 	--enable-pango \
+	--disable-documentation \
 	--disable-upstart-monitoring
 
 %make_build
@@ -389,11 +386,11 @@ fi \
 %{_sysconfdir}/logrotate.d/bootlog
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
-%{_mandir}/man1/plymouth.1*
 %{_unitdir}/*plymouth*.service
-%{_unitdir}/*plymouth*.path
+%{_unitdir}/*plymouth-start*.path
 %{_unitdir}/systemd-*.path
 %{_unitdir}/*.wants/plymouth-*.service
+%{_unitdir}/*.wants/plymouth-*.path
 %dir %{_libdir}/plymouth/renderers
 %{_libdir}/plymouth/renderers/drm*
 %{_libdir}/plymouth/renderers/frame-buffer*
@@ -406,7 +403,6 @@ fi \
 %{_datadir}/plymouth/themes/text
 %{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
-%{_mandir}/man8/*
 
 %files -n %{libply}
 %{_libdir}/libply.so.%{major}*
@@ -431,7 +427,6 @@ fi \
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
 %{_libexecdir}/plymouth
-%{_mandir}/man1/plymouth-set-default-theme.1*
 
 %files plugin-label
 %{_libdir}/plymouth/label.so
