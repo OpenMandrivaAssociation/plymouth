@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.4
 %if %snapshot
-Release:	6.%snapshot.2
+Release:	6.%snapshot.3
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -328,8 +328,9 @@ autoreconf -fi
 %install
 %make_install
 
-# Temporary symlink until rc.sysinit is fixed
-touch %{buildroot}%{_datadir}/plymouth/themes/default.plymouth
+# (tpg) add symlink for systemd
+mkdir -p %{buildroot}/bin
+ln -sf %{_bindir}/plymouth %{buildroot}/bin/plymouth
 
 # Add charge
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
@@ -382,6 +383,7 @@ fi \
 %dir %{_libdir}/plymouth
 %dir %{_localstatedir}/lib/plymouth
 %{_sbindir}/plymouthd
+/bin/plymouth
 %{_bindir}/plymouth
 %{_sysconfdir}/logrotate.d/bootlog
 %{_libdir}/plymouth/details.so
@@ -395,7 +397,6 @@ fi \
 %if %{with x11_renderer}
 %{_libdir}/plymouth/renderers/x11*
 %endif
-%ghost %{_datadir}/plymouth/themes/default.plymouth
 %{_datadir}/plymouth/plymouthd.defaults
 %{_datadir}/plymouth/themes/details
 %{_datadir}/plymouth/themes/text
