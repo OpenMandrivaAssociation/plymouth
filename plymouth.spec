@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.4
 %if %snapshot
-Release:	6.%snapshot.3
+Release:	6.%snapshot.4
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -338,6 +338,11 @@ cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{buildroot}%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png %{buildroot}%{_datadir}/plymouth/themes/charge
 
 find %{buildroot} -name \*.a -delete -o -name \*.la -delete
+
+# (tpg) add watermark to all the themes that relies on two-step plugin
+for i in bgrt charge glow spinfinity spinner; do
+    ln -s /usr/share/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/watermark.png
+done
 
 %find_lang %{name}
 
