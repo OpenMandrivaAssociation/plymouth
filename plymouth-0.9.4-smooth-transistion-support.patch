@@ -23,7 +23,7 @@ diff -Naur plymouth-0.9.4-20200314/systemd-units/Makefile.am plymouth-0.9.4-2020
  		rm -f plymouth-start.service plymouth-read-write.service)
  	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/multi-user.target.wants &&         \
 -		rm -f plymouth-quit.service plymouth-quit-wait.service)
-+		rm -f plymouth-quit.service plymouth-quit-wait.service &&    \
++		rm -f plymouth-quit.service plymouth-quit-wait.service       \
 +		plymouth-deactivate.service)
  	(cd $(DESTDIR)$(SYSTEMD_UNIT_DIR)/reboot.target.wants &&             \
  		rm -f plymouth-reboot.service)
