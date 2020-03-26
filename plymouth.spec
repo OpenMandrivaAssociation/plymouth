@@ -34,10 +34,6 @@ Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 
 # UPSTREAM GIT PATCHES
 
-# (tpg) patches from Mageia
-Patch1000:	1001-device_manager-ignore-drm-devices-when-kernel-modese.patch
-Patch1001:	1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch
-
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
