@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.4
 %if %snapshot
-Release:	6.%snapshot.5
+Release:	6.%snapshot.6
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -31,7 +31,8 @@ Patch0:		plymouth-0.9.3-use-kernel-install.patch
 # this patch is important as it implements smooth transistion between plymouth and display managers
 Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
 Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
-
+#(tpg) these days nobody even does not know what is /var/log/boot.log
+Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
 # UPSTREAM GIT PATCHES
 
 BuildRequires:	pkgconfig(libpng)

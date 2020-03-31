@@ -1,0 +1,12 @@
+diff -Naur plymouth-0.9.4-20200326/src/main.c plymouth-0.9.4-20200326.tpg/src/main.c
+--- plymouth-0.9.4-20200326/src/main.c	2020-03-25 19:27:11.000000000 +0000
++++ plymouth-0.9.4-20200326.tpg/src/main.c	2020-03-31 21:43:03.580800945 +0000
+@@ -2068,7 +2068,7 @@
+         state_t state = { 0 };
+         int exit_code;
+         bool should_help = false;
+-        bool no_boot_log = false;
++        bool no_boot_log = true;
+         bool no_daemon = false;
+         bool debug = false;
+         bool attach_to_session;
