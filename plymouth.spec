@@ -6,7 +6,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20200408
+%define snapshot 20200424
 
 %bcond_with x11_renderer
 
