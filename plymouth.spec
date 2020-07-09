@@ -6,13 +6,13 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20200424
+%define snapshot 0
 
 %bcond_with x11_renderer
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.4
+Version:	0.9.5
 %if %snapshot
 Release:	6.%snapshot.6
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
