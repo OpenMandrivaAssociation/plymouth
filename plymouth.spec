@@ -19,7 +19,7 @@ Release:	6.%snapshot.6
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	3
+Release:	4
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -131,6 +131,7 @@ Conflicts:	mkinitrd < 6.0.92-6mdv
 Requires(pre):	%{name} = %{EVRD}
 Provides:	bootsplash = 3.4.3
 Obsoletes:	bootsplash < 3.4.3
+Conflicts:	bootsplash < 3.4.3
 
 %description scripts
 This package contains scripts that help integrate Plymouth with
