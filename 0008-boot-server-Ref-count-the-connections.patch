@@ -1,0 +1,72 @@
+From 104d83d5f5fd32ab29219a54527071394441ca27 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Wed, 2 Sep 2020 13:34:51 -0400
+Subject: [PATCH 08/18] boot-server: Ref count the connections
+
+This commit adds reference counting to ply_boot_connection_t.
+
+This will be needed by a subsequent commit to fix a crasher bug.
+---
+ src/ply-boot-server.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/src/ply-boot-server.c b/src/ply-boot-server.c
+index 5519550..0e85e74 100644
+--- a/src/ply-boot-server.c
++++ b/src/ply-boot-server.c
+@@ -47,6 +47,8 @@ typedef struct
+         uid_t              uid;
+         pid_t              pid;
+ 
++        int                reference_count;
++
+         uint32_t           credentials_read : 1;
+ } ply_boot_connection_t;
+ 
+@@ -165,6 +167,7 @@ ply_boot_connection_new (ply_boot_server_t *server,
+         connection->fd = fd;
+         connection->server = server;
+         connection->watch = NULL;
++        connection->reference_count = 1;
+ 
+         return connection;
+ }
+@@ -179,6 +182,26 @@ ply_boot_connection_free (ply_boot_connection_t *connection)
+         free (connection);
+ }
+ 
++static void
++ply_boot_connection_take_reference (ply_boot_connection_t *connection)
++{
++        connection->reference_count++;
++}
++
++static void
++ply_boot_connection_drop_reference (ply_boot_connection_t *connection)
++{
++        if (connection == NULL)
++                return;
++
++        connection->reference_count--;
++
++        assert (connection->reference_count >= 0);
++
++        if (connection->reference_count == 0)
++                ply_boot_connection_free (connection);
++}
++
+ bool
+ ply_boot_server_listen (ply_boot_server_t *server)
+ {
+@@ -713,7 +736,7 @@ ply_boot_connection_on_hangup (ply_boot_connection_t *connection)
+ 
+         assert (node != NULL);
+ 
+-        ply_boot_connection_free (connection);
++        ply_boot_connection_drop_reference (connection);
+         ply_list_remove_node (server->connections, node);
+ }
+ 
+-- 
+2.29.2
+

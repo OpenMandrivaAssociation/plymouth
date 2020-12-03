@@ -1,0 +1,41 @@
+From ab986a95824e2a701a77dd9405d411a5c022c613 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Thu, 9 Jul 2020 09:34:36 -0400
+Subject: [PATCH 01/18] autogoo: use /proc/self/fd/0 instead of /dev/stdin
+
+The symlink isn't available in some sandboxes:
+
+https://gitlab.gnome.org/GNOME/gnome-build-meta/-/commit/99bf64efdc5a2d5c5fdedb627967b931d02be3d0#note_860312
+---
+ themes/bgrt/Makefile.am    | 2 +-
+ themes/spinner/Makefile.am | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/themes/bgrt/Makefile.am b/themes/bgrt/Makefile.am
+index 770c36f..862f79d 100644
+--- a/themes/bgrt/Makefile.am
++++ b/themes/bgrt/Makefile.am
+@@ -8,6 +8,6 @@ bgrt.plymouth: $(srcdir)/bgrt.plymouth.desktop
+ 	$(AM_V_GEN) \
+ 	sed -e 's,[@]PLYMOUTH_THEME_PATH[@],$(PLYMOUTH_THEME_PATH),g' \
+ 	$(srcdir)/bgrt.plymouth.desktop | \
+-	    $(MSGFMT) --desktop --template /dev/stdin -d $(top_srcdir)/po -o $@
++	    $(MSGFMT) --desktop --template /proc/self/fd/0 -d $(top_srcdir)/po -o $@
+ 
+ EXTRA_DIST = bgrt.plymouth.desktop
+diff --git a/themes/spinner/Makefile.am b/themes/spinner/Makefile.am
+index bb0e991..d01f4d8 100644
+--- a/themes/spinner/Makefile.am
++++ b/themes/spinner/Makefile.am
+@@ -82,7 +82,7 @@ spinner.plymouth: $(srcdir)/spinner.plymouth.desktop
+ 	$(AM_V_GEN) \
+ 	sed -e 's,[@]PLYMOUTH_THEME_PATH[@],$(PLYMOUTH_THEME_PATH),g' \
+ 	$(srcdir)/spinner.plymouth.desktop | \
+-	    $(MSGFMT) --desktop --template /dev/stdin -d $(top_srcdir)/po -o $@
++	    $(MSGFMT) --desktop --template /proc/self/fd/0 -d $(top_srcdir)/po -o $@
+ 
+ 
+ EXTRA_DIST = spinner.plymouth.desktop
+-- 
+2.29.2
+

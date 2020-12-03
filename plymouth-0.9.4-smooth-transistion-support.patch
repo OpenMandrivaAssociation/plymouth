@@ -47,13 +47,3 @@ diff -Naur plymouth-0.9.4-20200326/systemd-units/plymouth-quit.service.in plymou
  Type=oneshot
  RemainAfterExit=yes
  TimeoutSec=20
-diff -Naur plymouth-0.9.4-20200326/systemd-units/plymouth-start.service.in plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-start.service.in
---- plymouth-0.9.4-20200326/systemd-units/plymouth-start.service.in	2020-03-25 19:27:11.000000000 +0000
-+++ plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-start.service.in	2020-03-26 10:33:23.998010128 +0000
-@@ -14,3 +14,6 @@
- RemainAfterExit=yes
- KillMode=none
- SendSIGKILL=no
-+
-+[Install]
-+WantedBy=sysinit.target

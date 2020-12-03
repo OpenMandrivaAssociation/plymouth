@@ -1,0 +1,1038 @@
+From 85b72d61e57d15353a27a3087f6d043976d2a4ec Mon Sep 17 00:00:00 2001
+From: Rafael Fontenelle <rafaelff@gnome.org>
+Date: Sat, 30 Nov 2019 08:20:25 -0300
+Subject: [PATCH 07/18] Update translations from Zanata
+
+Download latest translations from Fedora Zanata
+---
+ po/LINGUAS  | 15 +++++++++++++--
+ po/be.po    | 12 ++++--------
+ po/cs.po    | 11 ++++-------
+ po/da.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/de.po    | 11 ++++-------
+ po/eo.po    | 37 +++++++++++++++++++++++++++++++++++++
+ po/es.po    | 11 ++++-------
+ po/eu.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/fr.po    | 11 ++++-------
+ po/fur.po   | 11 ++++-------
+ po/hu.po    | 11 ++++-------
+ po/id.po    | 14 ++++++--------
+ po/it.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/lt.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/nl.po    | 11 ++++++-----
+ po/pa.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/pl.po    | 12 ++++--------
+ po/pt.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/pt_BR.po | 36 ++++++++++++++++++++++++++++++++++++
+ po/ru.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/sk.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/sr.po    | 12 ++++--------
+ po/sv.po    | 36 ++++++++++++++++++++++++++++++++++++
+ po/tr.po    | 21 ++++++++-------------
+ po/uk.po    | 12 ++++--------
+ po/zh_CN.po | 11 ++++-------
+ 26 files changed, 474 insertions(+), 109 deletions(-)
+ create mode 100644 po/da.po
+ create mode 100644 po/eo.po
+ create mode 100644 po/eu.po
+ create mode 100644 po/it.po
+ create mode 100644 po/lt.po
+ create mode 100644 po/pa.po
+ create mode 100644 po/pt.po
+ create mode 100644 po/pt_BR.po
+ create mode 100644 po/ru.po
+ create mode 100644 po/sk.po
+ create mode 100644 po/sv.po
+
+diff --git a/po/LINGUAS b/po/LINGUAS
+index 7b242ff..5ac0202 100644
+--- a/po/LINGUAS
++++ b/po/LINGUAS
+@@ -1,16 +1,27 @@
+ be
+ cs
++da
+ de
++eo
+ es
++eu
+ fr
+ fur
+ hu
+ id
++it
++lt
+ nl
++pa
+ pl
+-uk
+-tr
++pt_BR
++pt
++ru
++sk
+ sr
++sv
++tr
++uk
+ zh_CN
+ zh_HK
+ zh_TW
+diff --git a/po/be.po b/po/be.po
+index 828e92f..8fe8db5 100644
+--- a/po/be.po
++++ b/po/be.po
+@@ -2,19 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-03-01 08:51+0000\n"
++"PO-Revision-Date: 2019-08-02 03:12-0400\n"
+ "Last-Translator: Viktar Siarheichyk <veq@fedoraproject.org>\n"
+ "Language-Team: Belarusian\n"
+ "Language: be\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -34,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Сістэма абнаўляецца..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Сістэма абнаўляецца..."
++msgstr "Праграмы абсталявання абнаўляюцца..."
+diff --git a/po/cs.po b/po/cs.po
+index f2715c2..c4a6c93 100644
+--- a/po/cs.po
++++ b/po/cs.po
+@@ -3,18 +3,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-26 06:08+0000\n"
++"PO-Revision-Date: 2019-06-13 11:58-0400\n"
+ "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
+ "Language-Team: Czech\n"
+ "Language: cs\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -34,7 +33,5 @@ msgid "Upgrading System..."
+ msgstr "Aktualizace systému..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Aktualizace systému..."
++msgstr "Aktualizace firmwaru..."
+diff --git a/po/da.po b/po/da.po
+new file mode 100644
+index 0000000..b0a5bfe
+--- /dev/null
++++ b/po/da.po
+@@ -0,0 +1,36 @@
++# scootergrisen <scootergrisen@gmail.com>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-07-23 04:06-0400\n"
++"Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
++"Language-Team: Danish\n"
++"Language: da\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% færdig"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Installerer opdateringer ..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Sluk ikke for din computer"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Opgraderer system ..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Opgraderer firmware ..."
+diff --git a/po/de.po b/po/de.po
+index 39e10b4..a870409 100644
+--- a/po/de.po
++++ b/po/de.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-03-02 08:34+0000\n"
++"PO-Revision-Date: 2019-03-02 08:34-0500\n"
+ "Last-Translator: Thomas Eichhorn <tomislav@posteo.de>\n"
+ "Language-Team: German\n"
+ "Language: de\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Systemupgrade wird durchgeführt..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Systemupgrade wird durchgeführt..."
++msgstr ""
+diff --git a/po/eo.po b/po/eo.po
+new file mode 100644
+index 0000000..e00986c
+--- /dev/null
++++ b/po/eo.po
+@@ -0,0 +1,37 @@
++# Carmen Bianca Bakker <carmen@carmenbianca.eu>, 2019. #zanata
++# Carmen Bianca Bakker <carmen@carmenbianca.eu>, 2020. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2020-01-11 12:14-0500\n"
++"Last-Translator: Carmen Bianca Bakker <carmen@carmenbianca.eu>\n"
++"Language-Team: Esperanto\n"
++"Language: eo\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% plenumita"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Instalante ĝisdatigojn..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Ne malŝaltu vian komputilon"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Altgradigante sistemon..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Altgradigante mikroprogramaron..."
+diff --git a/po/es.po b/po/es.po
+index cffce74..4440dd7 100644
+--- a/po/es.po
++++ b/po/es.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-26 08:21+0000\n"
++"PO-Revision-Date: 2019-02-26 08:21-0500\n"
+ "Last-Translator: Máximo Castañeda Riloba <mcrcctm@gmail.com>\n"
+ "Language-Team: Spanish\n"
+ "Language: es\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Actualizando el sistema..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Actualizando el sistema..."
++msgstr ""
+diff --git a/po/eu.po b/po/eu.po
+new file mode 100644
+index 0000000..f6f9a90
+--- /dev/null
++++ b/po/eu.po
+@@ -0,0 +1,36 @@
++# Mikel Olasagasti Uranga <mikel@olasagasti.info>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-08-12 10:06-0400\n"
++"Last-Translator: Mikel Olasagasti Uranga <mikel@olasagasti.info>\n"
++"Language-Team: Basque\n"
++"Language: eu\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% eginda"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Eguneraketak instalatzen..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Ez itzali zure ordenagailua"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Sistema bertsio-berritzen..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Firmwarea bertsio-berritzen..."
+diff --git a/po/fr.po b/po/fr.po
+index b851fa2..d2f1c46 100644
+--- a/po/fr.po
++++ b/po/fr.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-27 09:41+0000\n"
++"PO-Revision-Date: 2019-06-17 06:57-0400\n"
+ "Last-Translator: Jean-Baptiste Holcroft <jean-baptiste@holcroft.fr>\n"
+ "Language-Team: French\n"
+ "Language: fr\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=2; plural=(n > 1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Mise à jour du système…"
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Mise à jour du système…"
++msgstr "Mise à jour du Firmware…"
+diff --git a/po/fur.po b/po/fur.po
+index 4ac47ae..5b1bb0e 100644
+--- a/po/fur.po
++++ b/po/fur.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-03-19 08:14+0000\n"
++"PO-Revision-Date: 2019-08-17 09:26-0400\n"
+ "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
+ "Language-Team: Friulian\n"
+ "Language: fur\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Inzornament dal sisteme..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Inzornament dal sisteme..."
++msgstr "Inzornament dal firmware..."
+diff --git a/po/hu.po b/po/hu.po
+index 71c379b..51b1617 100644
+--- a/po/hu.po
++++ b/po/hu.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-28 03:07+0000\n"
++"PO-Revision-Date: 2019-06-22 02:31-0400\n"
+ "Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
+ "Language-Team: Hungarian\n"
+ "Language: hu\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Rendszer frissítése…"
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Rendszer frissítése…"
++msgstr "Firmware frissítése…"
+diff --git a/po/id.po b/po/id.po
+index 72c864c..fc9ac2d 100644
+--- a/po/id.po
++++ b/po/id.po
+@@ -3,18 +3,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=UTF-8\n"
+-"Content-Transfer-Encoding: 8bit\n"
+-"PO-Revision-Date: 2020-03-31 11:27+0000\n"
++"PO-Revision-Date: 2020-03-31 11:27-0400\n"
+ "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+ "Language-Team: Indonesian\n"
+ "Language: id\n"
+-"X-Generator: Zanata 4.6.2\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
+ "Plural-Forms: nplurals=1; plural=0\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -36,4 +35,3 @@ msgstr "Meningkatkan Sistem..."
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+ msgid "Upgrading Firmware..."
+ msgstr "Meningkatkan Firmware..."
+-
+diff --git a/po/it.po b/po/it.po
+new file mode 100644
+index 0000000..086b62e
+--- /dev/null
++++ b/po/it.po
+@@ -0,0 +1,36 @@
++# Milo Casagrande <milo@milo.name>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-09-23 08:47-0400\n"
++"Last-Translator: Milo Casagrande <milo@milo.name>\n"
++"Language-Team: Italian\n"
++"Language: it\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% completato"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Installazione aggiornamenti..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Non spegnere il computer"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Aggiornamento del sistema..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Aggiornamento del firmware..."
+diff --git a/po/lt.po b/po/lt.po
+new file mode 100644
+index 0000000..e4d2717
+--- /dev/null
++++ b/po/lt.po
+@@ -0,0 +1,36 @@
++# Moo <hazap@hotmail.com>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-04-03 08:52-0400\n"
++"Last-Translator: Moo <hazap@hotmail.com>\n"
++"Language-Team: Lithuanian\n"
++"Language: lt\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% užbaigta"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Diegiami atnaujinimai..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Neišjunkite kompiuterio"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Naujinama sistema..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr ""
+diff --git a/po/nl.po b/po/nl.po
+index b4f1f0e..d21a57a 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -3,21 +3,22 @@
+ # Copyright (C) 2019 Plymouth contributors
+ # This file is distributed under the same license as the plymouth package.
+ # Hans de Goede <hdegoede@redhat.com>, 2019.
+-#
++# Geert Warrink <geert.warrink@onsnet.nu>, 2019. #zanata
++# Hans de Goede <hdegoede@redhat.com>, 2019. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-26 11:19+0100\n"
+-"Last-Translator: Hans de Goede <hdegoede@redhat.com>\n"
++"PO-Revision-Date: 2019-06-13 12:07-0400\n"
++"Last-Translator: Geert Warrink <geert.warrink@onsnet.nu>\n"
+ "Language-Team: Dutch\n"
+ "Language: nl\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+diff --git a/po/pa.po b/po/pa.po
+new file mode 100644
+index 0000000..7f24921
+--- /dev/null
++++ b/po/pa.po
+@@ -0,0 +1,36 @@
++# A S Alam <aalam@fedoraproject.org>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-05-23 03:56-0400\n"
++"Last-Translator: A S Alam <aalam@fedoraproject.org>\n"
++"Language-Team: Punjabi\n"
++"Language: pa\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% ਪੂਰਾ"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "...ਅੱਪਡੇਟ ਇੰਸਟਾਲ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ"
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "ਆਪਣੇ ਕੰਪਿਊਟਰ ਨੂੰ ਬੰਦ ਨਾ ਕਰੋ"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "...ਸਿਸਟਮ ਅੱਪਗਰੇਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ"
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr ""
+diff --git a/po/pl.po b/po/pl.po
+index c9e817a..5139b34 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -2,19 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-26 04:45+0000\n"
++"PO-Revision-Date: 2019-06-12 05:31-0400\n"
+ "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+ "Language-Team: Polish\n"
+ "Language: pl\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+-"|| n%100>=20) ? 1 : 2)\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -34,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Aktualizowanie systemu…"
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Aktualizowanie systemu…"
++msgstr "Aktualizowanie oprogramowania sprzętowego…"
+diff --git a/po/pt.po b/po/pt.po
+new file mode 100644
+index 0000000..9a43522
+--- /dev/null
++++ b/po/pt.po
+@@ -0,0 +1,36 @@
++# Manuela Silva <mmsrs@sky.com>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-09-12 10:53-0400\n"
++"Last-Translator: Manuela Silva <mmsrs@sky.com>\n"
++"Language-Team: Portuguese\n"
++"Language: pt\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% concluído"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "A instalar as atualizações..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Não desligue o computador"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "A atualizar o sistema..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "A atualizar o \"firmware\""
+diff --git a/po/pt_BR.po b/po/pt_BR.po
+new file mode 100644
+index 0000000..18b486e
+--- /dev/null
++++ b/po/pt_BR.po
+@@ -0,0 +1,36 @@
++# Itamar Reis Peixoto <itamar@ispbrasil.com.br>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-08-12 04:12-0400\n"
++"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
++"Language-Team: Portuguese (Brazil)\n"
++"Language: pt_BR\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d%% concluído"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Instalando as atualizações..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Não desligue seu computador"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Atualizando o sistema..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Atualizando o firmware..."
+diff --git a/po/ru.po b/po/ru.po
+new file mode 100644
+index 0000000..7b4ee8a
+--- /dev/null
++++ b/po/ru.po
+@@ -0,0 +1,36 @@
++# Igor Gorbounov <igor.gorbounov@gmail.com>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-04-19 07:38-0400\n"
++"Last-Translator: Igor Gorbounov <igor.gorbounov@gmail.com>\n"
++"Language-Team: Russian\n"
++"Language: ru\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "завершено %d%%"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Установка обновлений..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Не выключайте компьютер"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Обновление системы..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr ""
+diff --git a/po/sk.po b/po/sk.po
+new file mode 100644
+index 0000000..be6caf1
+--- /dev/null
++++ b/po/sk.po
+@@ -0,0 +1,36 @@
++# Dusan Kazik <prescott66@gmail.com>, 2020. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2020-04-07 11:25-0400\n"
++"Last-Translator: Dusan Kazik <prescott66@gmail.com>\n"
++"Language-Team: Slovak\n"
++"Language: sk\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "Dokončené na %d%%"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Inštalujú sa aktualizácie..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Nevypínajte váš počítač"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Aktualizuje sa systém..."
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Aktualizuje sa firmvér..."
+diff --git a/po/sr.po b/po/sr.po
+index 154e97c..f896561 100644
+--- a/po/sr.po
++++ b/po/sr.po
+@@ -2,19 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-03-11 09:03+0000\n"
++"PO-Revision-Date: 2019-03-11 09:03-0400\n"
+ "Last-Translator: Marko Kostic <marko.m.kostic@gmail.com>\n"
+ "Language-Team: Serbian\n"
+ "Language: sr\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -34,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Надограђујем систем..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Надограђујем систем..."
++msgstr ""
+diff --git a/po/sv.po b/po/sv.po
+new file mode 100644
+index 0000000..c474467
+--- /dev/null
++++ b/po/sv.po
+@@ -0,0 +1,36 @@
++# Göran Uddeborg <goeran@uddeborg.se>, 2019. #zanata
++msgid ""
++msgstr ""
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
++"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"PO-Revision-Date: 2019-06-13 08:04-0400\n"
++"Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
++"Language-Team: Swedish\n"
++"Language: sv\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=2; plural=(n != 1)\n"
++"X-Generator: Zanata 4.6.2\n"
++
++#: src/plugins/splash/two-step/plugin.c:1885
++#, c-format
++msgid "%d%% complete"
++msgstr "%d %% färdig"
++
++#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++msgid "Installing Updates..."
++msgstr "Installerar uppdateringar …"
++
++#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++msgid "Do not turn off your computer"
++msgstr "Stäng inte av datorn"
++
++#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++msgid "Upgrading System..."
++msgstr "Uppgraderar systemet …"
++
++#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++msgid "Upgrading Firmware..."
++msgstr "Uppgraderar fast programvara …"
+diff --git a/po/tr.po b/po/tr.po
+index abc59df..820c53f 100644
+--- a/po/tr.po
++++ b/po/tr.po
+@@ -1,24 +1,19 @@
+-# Turkish translation for plymouth.
+-# Copyright (C) 2019 plymouth's COPYRIGHT HOLDER
+-# This file is distributed under the same license as the plymouth package.
+-#
+-# Sabri Ünal <libreajans@gmail.com>, 2019.
+-#
++# Sabri Ünal <libreajans@gmail.com>, 2019. #zanata
++# Serdar Sağlam <teknomobil@msn.com>, 2019. #zanata
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: plymouth master\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Project-Id-Version: plymouth 0.9.5\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-09-07 23:16+0300\n"
++"PO-Revision-Date: 2019-09-07 08:09-0400\n"
+ "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+-"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
++"Language-Team: Turkish\n"
+ "Language: tr\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=1; plural=0;\n"
+-"X-Generator: Poedit 2.0.6\n"
++"Plural-Forms: nplurals=2; plural=(n>1)\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+diff --git a/po/uk.po b/po/uk.po
+index 915671e..b3be880 100644
+--- a/po/uk.po
++++ b/po/uk.po
+@@ -2,19 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-26 04:44+0000\n"
++"PO-Revision-Date: 2019-06-13 02:09-0400\n"
+ "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+ "Language-Team: Ukrainian\n"
+ "Language: uk\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -34,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "Оновлюємо систему…"
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Оновлюємо систему…"
++msgstr "Оновлюємо мікропрограму…"
+diff --git a/po/zh_CN.po b/po/zh_CN.po
+index 41c98e5..7906010 100644
+--- a/po/zh_CN.po
++++ b/po/zh_CN.po
+@@ -2,18 +2,17 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+-"issues\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+ "POT-Creation-Date: 2019-06-12 11:54+0200\n"
+-"PO-Revision-Date: 2019-02-27 08:56+0000\n"
++"PO-Revision-Date: 2019-02-27 08:56-0500\n"
+ "Last-Translator: Pany <pany@fedoraproject.org>\n"
+ "Language-Team: Chinese (China)\n"
+ "Language: zh_CN\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: Zanata 4.6.2\n"
+ "Plural-Forms: nplurals=1; plural=0\n"
++"X-Generator: Zanata 4.6.2\n"
+ 
+ #: src/plugins/splash/two-step/plugin.c:1885
+ #, c-format
+@@ -33,7 +32,5 @@ msgid "Upgrading System..."
+ msgstr "正在升级系统……"
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "正在升级系统……"
++msgstr ""
+-- 
+2.29.2
+

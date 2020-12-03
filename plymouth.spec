@@ -19,7 +19,7 @@ Release:	6.%snapshot.6
 # git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	4
+Release:	5
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -34,6 +34,26 @@ Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
 # UPSTREAM GIT PATCHES
+
+Patch100:	0000-systemd-switch-to-KillMode-mixed.patch
+Patch101:	0001-autogoo-use-proc-self-fd-0-instead-of-dev-stdin.patch
+Patch102:	0002-Use-the-correct-key-name-for-title-and-subtitle.patch
+Patch103:	0003-Initialize-the-translations-on-start-if-they-are-ava.patch
+Patch104:	0004-use-resolution-of-higher-res-monitor-for-window-size.patch
+Patch105:	0005-drm-Honor-modes-selected-by-the-user-through-video-k.patch
+Patch106:	0006-NL-translation-update.patch
+Patch107:	0007-Update-translations-from-Zanata.patch
+Patch108:	0008-boot-server-Ref-count-the-connections.patch
+Patch109:	0009-boot-server-Handle-client-disconnecting-while-trigge.patch
+Patch110:	0010-Update-translation-files.patch
+Patch111:	0011-Translated-using-Weblate-Turkish.patch
+Patch112:	0012-Translated-using-Weblate-Polish.patch
+Patch113:	0013-Translated-using-Weblate-Ukrainian.patch
+Patch114:	0014-Translated-using-Weblate-Chinese-Simplified.patch
+Patch115:	0015-Translated-using-Weblate-Portuguese-Brazil.patch
+Patch116:	0016-Don-t-wait-forever-for-a-ping-reply.patch
+Patch117:	0017-Revert-Don-t-wait-forever-for-a-ping-reply.patch
+Patch118:	0018-client-Don-t-wait-forever-for-a-ping-reply.patch
 
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)

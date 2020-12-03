@@ -1,0 +1,25 @@
+From 8dba434b2d9631d67cf3ef6d7c00e4c25b4b9e7a Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 6 Aug 2020 19:51:06 +0200
+Subject: [PATCH 06/18] NL translation update
+
+---
+ po/nl.po | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/po/nl.po b/po/nl.po
+index 7a3999f..b4f1f0e 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -37,7 +37,5 @@ msgid "Upgrading System..."
+ msgstr "Besturingssysteem upgrade wordt uitgevoerd..."
+ 
+ #: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
+-#, fuzzy
+-#| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+-msgstr "Besturingssysteem upgrade wordt uitgevoerd..."
++msgstr "Firmware upgrade wordt uitgevoerd..."
+-- 
+2.29.2
+

@@ -6,7 +6,7 @@ diff -Naur plymouth-0.9.3-20160608/scripts/plymouth-update-initrd plymouth-0.9.3
 -dracut -f
 +kver=$(uname -r)
 +
-+if [ -d /lib/modules/${kver} -a -x /usr/bin/kernel-install ]; then
++if [ -d /lib/modules/${kver} ] && [ -x /usr/bin/kernel-install ]; then
 +    /usr/bin/kernel-install remove ${kver} ||:
 +    /usr/bin/kernel-install add ${kver} /boot/vmlinuz-${kver} ||:
 +else

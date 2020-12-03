@@ -1,0 +1,1691 @@
+From bec341ae2d70d2539d36cd4e68e94e4cb2d7a799 Mon Sep 17 00:00:00 2001
+From: Weblate <noreply@weblate.org>
+Date: Sun, 20 Sep 2020 14:53:12 +0200
+Subject: [PATCH 10/18] Update translation files
+
+Updated by "Update PO files to match POT (msgmerge)" hook in Weblate.
+
+Co-authored-by: Weblate <noreply@weblate.org>
+Translate-URL: https://translate.fedoraproject.org/projects/plymouth/master/
+Translation: plymouth/master
+---
+ po/be.po    | 33 +++++++++++++++++++++++++--------
+ po/cs.po    | 30 +++++++++++++++++++++++-------
+ po/da.po    | 30 +++++++++++++++++++++++-------
+ po/de.po    | 30 +++++++++++++++++++++++-------
+ po/eo.po    | 30 +++++++++++++++++++++++-------
+ po/es.po    | 30 +++++++++++++++++++++++-------
+ po/eu.po    | 30 +++++++++++++++++++++++-------
+ po/fr.po    | 30 +++++++++++++++++++++++-------
+ po/fur.po   | 30 +++++++++++++++++++++++-------
+ po/hu.po    | 30 +++++++++++++++++++++++-------
+ po/id.po    | 30 +++++++++++++++++++++++-------
+ po/it.po    | 30 +++++++++++++++++++++++-------
+ po/lt.po    | 33 +++++++++++++++++++++++++--------
+ po/nl.po    | 30 +++++++++++++++++++++++-------
+ po/pa.po    | 30 +++++++++++++++++++++++-------
+ po/pl.po    | 33 +++++++++++++++++++++++++--------
+ po/pt.po    | 30 +++++++++++++++++++++++-------
+ po/pt_BR.po | 30 +++++++++++++++++++++++-------
+ po/ru.po    | 33 +++++++++++++++++++++++++--------
+ po/sk.po    | 30 +++++++++++++++++++++++-------
+ po/sr.po    | 33 +++++++++++++++++++++++++--------
+ po/sv.po    | 30 +++++++++++++++++++++++-------
+ po/tr.po    | 30 +++++++++++++++++++++++-------
+ po/uk.po    | 33 +++++++++++++++++++++++++--------
+ po/zh_CN.po | 30 +++++++++++++++++++++++-------
+ po/zh_HK.po | 27 +++++++++++++++++++++------
+ po/zh_TW.po | 27 +++++++++++++++++++++------
+ 27 files changed, 629 insertions(+), 193 deletions(-)
+
+diff --git a/po/be.po b/po/be.po
+index 8fe8db5..8ae92c0 100644
+--- a/po/be.po
++++ b/po/be.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-08-02 03:12-0400\n"
+ "Last-Translator: Viktar Siarheichyk <veq@fedoraproject.org>\n"
+ "Language-Team: Belarusian\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
++"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "Зроблена %d%% "
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Інсталяцыя абнаўленняў..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Не выключайце кампутар"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Сістэма абнаўляецца..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Праграмы абсталявання абнаўляюцца..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/cs.po b/po/cs.po
+index c4a6c93..4f2de0e 100644
+--- a/po/cs.po
++++ b/po/cs.po
+@@ -3,8 +3,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-13 11:58-0400\n"
+ "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
+ "Language-Team: Czech\n"
+@@ -15,23 +16,38 @@ msgstr ""
+ "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% dokončeno"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Instalace aktualizací..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Nevypínejte počítač"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Aktualizace systému..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Aktualizace firmwaru..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/da.po b/po/da.po
+index b0a5bfe..180eece 100644
+--- a/po/da.po
++++ b/po/da.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-07-23 04:06-0400\n"
+ "Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
+ "Language-Team: Danish\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% færdig"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Installerer opdateringer ..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Sluk ikke for din computer"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Opgraderer system ..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Opgraderer firmware ..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/de.po b/po/de.po
+index a870409..c59c162 100644
+--- a/po/de.po
++++ b/po/de.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-03-02 08:34-0500\n"
+ "Last-Translator: Thomas Eichhorn <tomislav@posteo.de>\n"
+ "Language-Team: German\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% abgeschlossen"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Updates werden installiert..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Schalten Sie den Computer nicht aus"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Systemupgrade wird durchgeführt..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/eo.po b/po/eo.po
+index e00986c..6cf4ea3 100644
+--- a/po/eo.po
++++ b/po/eo.po
+@@ -3,8 +3,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2020-01-11 12:14-0500\n"
+ "Last-Translator: Carmen Bianca Bakker <carmen@carmenbianca.eu>\n"
+ "Language-Team: Esperanto\n"
+@@ -15,23 +16,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% plenumita"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Instalante ĝisdatigojn..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Ne malŝaltu vian komputilon"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Altgradigante sistemon..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Altgradigante mikroprogramaron..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/es.po b/po/es.po
+index 4440dd7..23e47b9 100644
+--- a/po/es.po
++++ b/po/es.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-02-26 08:21-0500\n"
+ "Last-Translator: Máximo Castañeda Riloba <mcrcctm@gmail.com>\n"
+ "Language-Team: Spanish\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% completado"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Instalando actualizaciones..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "No apague su equipo"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Actualizando el sistema..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/eu.po b/po/eu.po
+index f6f9a90..4d7ad1b 100644
+--- a/po/eu.po
++++ b/po/eu.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-08-12 10:06-0400\n"
+ "Last-Translator: Mikel Olasagasti Uranga <mikel@olasagasti.info>\n"
+ "Language-Team: Basque\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% eginda"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Eguneraketak instalatzen..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Ez itzali zure ordenagailua"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Sistema bertsio-berritzen..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Firmwarea bertsio-berritzen..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/fr.po b/po/fr.po
+index d2f1c46..875a66f 100644
+--- a/po/fr.po
++++ b/po/fr.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-17 06:57-0400\n"
+ "Last-Translator: Jean-Baptiste Holcroft <jean-baptiste@holcroft.fr>\n"
+ "Language-Team: French\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n > 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Installation des mises à jour…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "N’éteignez pas votre ordinateur"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Mise à jour du système…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Mise à jour du Firmware…"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/fur.po b/po/fur.po
+index 5b1bb0e..6d99269 100644
+--- a/po/fur.po
++++ b/po/fur.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-08-17 09:26-0400\n"
+ "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
+ "Language-Team: Friulian\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% completât"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Daûr a instalâ i inzornaments..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "No sta distudâ il computer"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Inzornament dal sisteme..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Inzornament dal firmware..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/hu.po b/po/hu.po
+index 51b1617..345fd28 100644
+--- a/po/hu.po
++++ b/po/hu.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-22 02:31-0400\n"
+ "Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
+ "Language-Team: Hungarian\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% kész"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Frissítések telepítése…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Ne kapcsolja ki a számítógépet"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Rendszer frissítése…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Firmware frissítése…"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/id.po b/po/id.po
+index fc9ac2d..50267b5 100644
+--- a/po/id.po
++++ b/po/id.po
+@@ -3,8 +3,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2020-03-31 11:27-0400\n"
+ "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+ "Language-Team: Indonesian\n"
+@@ -15,23 +16,38 @@ msgstr ""
+ "Plural-Forms: nplurals=1; plural=0\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% selesai"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Memasang Pemutakhiran..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Jangan matikan komputer Anda"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Meningkatkan Sistem..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Meningkatkan Firmware..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/it.po b/po/it.po
+index 086b62e..dbe4ee9 100644
+--- a/po/it.po
++++ b/po/it.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-09-23 08:47-0400\n"
+ "Last-Translator: Milo Casagrande <milo@milo.name>\n"
+ "Language-Team: Italian\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% completato"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Installazione aggiornamenti..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Non spegnere il computer"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Aggiornamento del sistema..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Aggiornamento del firmware..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/lt.po b/po/lt.po
+index e4d2717..4e3a372 100644
+--- a/po/lt.po
++++ b/po/lt.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-04-03 08:52-0400\n"
+ "Last-Translator: Moo <hazap@hotmail.com>\n"
+ "Language-Team: Lithuanian\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
++"%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% užbaigta"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Diegiami atnaujinimai..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Neišjunkite kompiuterio"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Naujinama sistema..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/nl.po b/po/nl.po
+index d21a57a..372cdc1 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -8,8 +8,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-13 12:07-0400\n"
+ "Last-Translator: Geert Warrink <geert.warrink@onsnet.nu>\n"
+ "Language-Team: Dutch\n"
+@@ -20,23 +21,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% voltooid"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Updates worden uitgevoerd..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Schakel de computer niet uit"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Besturingssysteem upgrade wordt uitgevoerd..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Firmware upgrade wordt uitgevoerd..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/pa.po b/po/pa.po
+index 7f24921..c633628 100644
+--- a/po/pa.po
++++ b/po/pa.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-05-23 03:56-0400\n"
+ "Last-Translator: A S Alam <aalam@fedoraproject.org>\n"
+ "Language-Team: Punjabi\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% ਪੂਰਾ"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "...ਅੱਪਡੇਟ ਇੰਸਟਾਲ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "ਆਪਣੇ ਕੰਪਿਊਟਰ ਨੂੰ ਬੰਦ ਨਾ ਕਰੋ"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "...ਸਿਸਟਮ ਅੱਪਗਰੇਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/pl.po b/po/pl.po
+index 5139b34..fc4af80 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-12 05:31-0400\n"
+ "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+ "Language-Team: Polish\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
++"|| n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "Ukończono %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Instalowanie aktualizacji…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Nie należy wyłączać komputera"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Aktualizowanie systemu…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Aktualizowanie oprogramowania sprzętowego…"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/pt.po b/po/pt.po
+index 9a43522..305b6ff 100644
+--- a/po/pt.po
++++ b/po/pt.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-09-12 10:53-0400\n"
+ "Last-Translator: Manuela Silva <mmsrs@sky.com>\n"
+ "Language-Team: Portuguese\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% concluído"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "A instalar as atualizações..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Não desligue o computador"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "A atualizar o sistema..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "A atualizar o \"firmware\""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/pt_BR.po b/po/pt_BR.po
+index 18b486e..eed0679 100644
+--- a/po/pt_BR.po
++++ b/po/pt_BR.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-08-12 04:12-0400\n"
+ "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
+ "Language-Team: Portuguese (Brazil)\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% concluído"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Instalando as atualizações..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Não desligue seu computador"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Atualizando o sistema..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Atualizando o firmware..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/ru.po b/po/ru.po
+index 7b4ee8a..7ee08fc 100644
+--- a/po/ru.po
++++ b/po/ru.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-04-19 07:38-0400\n"
+ "Last-Translator: Igor Gorbounov <igor.gorbounov@gmail.com>\n"
+ "Language-Team: Russian\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
++"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "завершено %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Установка обновлений..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Не выключайте компьютер"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Обновление системы..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/sk.po b/po/sk.po
+index be6caf1..d19ad61 100644
+--- a/po/sk.po
++++ b/po/sk.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2020-04-07 11:25-0400\n"
+ "Last-Translator: Dusan Kazik <prescott66@gmail.com>\n"
+ "Language-Team: Slovak\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "Dokončené na %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Inštalujú sa aktualizácie..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Nevypínajte váš počítač"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Aktualizuje sa systém..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Aktualizuje sa firmvér..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/sr.po b/po/sr.po
+index f896561..6e1c362 100644
+--- a/po/sr.po
++++ b/po/sr.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-03-11 09:03-0400\n"
+ "Last-Translator: Marko Kostic <marko.m.kostic@gmail.com>\n"
+ "Language-Team: Serbian\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
++"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% завршено"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Инсталирам ажурирања..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Не искључујте ваш рачунар"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Надограђујем систем..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/sv.po b/po/sv.po
+index c474467..81e96ec 100644
+--- a/po/sv.po
++++ b/po/sv.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-13 08:04-0400\n"
+ "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
+ "Language-Team: Swedish\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d %% färdig"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Installerar uppdateringar …"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Stäng inte av datorn"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Uppgraderar systemet …"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Uppgraderar fast programvara …"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/tr.po b/po/tr.po
+index 820c53f..a4c716f 100644
+--- a/po/tr.po
++++ b/po/tr.po
+@@ -3,8 +3,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-09-07 08:09-0400\n"
+ "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+ "Language-Team: Turkish\n"
+@@ -15,23 +16,38 @@ msgstr ""
+ "Plural-Forms: nplurals=2; plural=(n>1)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "%d%% tamamlandı"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Güncellemeler Kuruluyor..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Bilgisayarınızı kapatmayın"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Sistem Güncelleniyor..."
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Aygıt Yazılımı Güncelleniyor..."
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/uk.po b/po/uk.po
+index b3be880..75fb9b7 100644
+--- a/po/uk.po
++++ b/po/uk.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-06-13 02:09-0400\n"
+ "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+ "Language-Team: Ukrainian\n"
+@@ -11,26 +12,42 @@ msgstr ""
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
++"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "Виконано на %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "Встановлюємо оновлення…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "Не вимикайте комп'ютер"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "Оновлюємо систему…"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr "Оновлюємо мікропрограму…"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/zh_CN.po b/po/zh_CN.po
+index 7906010..dc9d71a 100644
+--- a/po/zh_CN.po
++++ b/po/zh_CN.po
+@@ -2,8 +2,9 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+-"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
++"issues\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-02-27 08:56-0500\n"
+ "Last-Translator: Pany <pany@fedoraproject.org>\n"
+ "Language-Team: Chinese (China)\n"
+@@ -14,23 +15,38 @@ msgstr ""
+ "Plural-Forms: nplurals=1; plural=0\n"
+ "X-Generator: Zanata 4.6.2\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "当前进度 %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "正在安装更新……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "请不要关机"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "正在升级系统……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ msgid "Upgrading Firmware..."
+ msgstr ""
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/zh_HK.po b/po/zh_HK.po
+index 3fbb067..1dd334b 100644
+--- a/po/zh_HK.po
++++ b/po/zh_HK.po
+@@ -3,7 +3,7 @@ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+ "Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+ "issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-07-12 10:35+0800\n"
+ "Last-Translator: zhaoqiang <zhaoqiang@gnome.org>\n"
+ "Language-Team: Chinese (Hong Kong) <community@linuxhall.org>\n"
+@@ -14,25 +14,40 @@ msgstr ""
+ "X-Generator: Gtranslator 3.30.1\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "目前的進度 %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "正在安裝更新……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "請不要關機"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "正在升級系統……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ #, fuzzy
+ #| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+ msgstr "正在升級系統……"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+diff --git a/po/zh_TW.po b/po/zh_TW.po
+index 8e6ae69..1fe4cb0 100644
+--- a/po/zh_TW.po
++++ b/po/zh_TW.po
+@@ -3,7 +3,7 @@ msgstr ""
+ "Project-Id-Version: plymouth 0.9.5\n"
+ "Report-Msgid-Bugs-To: https://gitlab.freedesktop.org/plymouth/plymouth/"
+ "issues\n"
+-"POT-Creation-Date: 2019-06-12 11:54+0200\n"
++"POT-Creation-Date: 2020-07-08 14:59-0400\n"
+ "PO-Revision-Date: 2019-07-12 10:35+0800\n"
+ "Last-Translator: zhaoqiang <zhaoqiang@gnome.org>\n"
+ "Language-Team: Chinese(Taiwan) <zh-l10n@lists.linux.org.tw>\n"
+@@ -14,25 +14,40 @@ msgstr ""
+ "X-Generator: Gtranslator 3.30.1\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ 
+-#: src/plugins/splash/two-step/plugin.c:1885
++#: src/plugins/splash/two-step/plugin.c:1727
+ #, c-format
+ msgid "%d%% complete"
+ msgstr "目前的進度 %d%%"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:1 themes/spinner/spinner.plymouth.in.h:1
++#: themes/bgrt/bgrt.plymouth.desktop:3
++msgid "BGRT"
++msgstr ""
++
++#: themes/bgrt/bgrt.plymouth.desktop:44
++#: themes/spinner/spinner.plymouth.desktop:40
+ msgid "Installing Updates..."
+ msgstr "正在安裝更新……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:2 themes/spinner/spinner.plymouth.in.h:2
++#: themes/bgrt/bgrt.plymouth.desktop:45 themes/bgrt/bgrt.plymouth.desktop:52
++#: themes/bgrt/bgrt.plymouth.desktop:59
++#: themes/spinner/spinner.plymouth.desktop:41
++#: themes/spinner/spinner.plymouth.desktop:48
++#: themes/spinner/spinner.plymouth.desktop:55
+ msgid "Do not turn off your computer"
+ msgstr "請不要關機"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:3 themes/spinner/spinner.plymouth.in.h:3
++#: themes/bgrt/bgrt.plymouth.desktop:51
++#: themes/spinner/spinner.plymouth.desktop:47
+ msgid "Upgrading System..."
+ msgstr "正在升級系統……"
+ 
+-#: themes/bgrt/bgrt.plymouth.in.h:4 themes/spinner/spinner.plymouth.in.h:4
++#: themes/bgrt/bgrt.plymouth.desktop:58
++#: themes/spinner/spinner.plymouth.desktop:54
+ #, fuzzy
+ #| msgid "Upgrading System..."
+ msgid "Upgrading Firmware..."
+ msgstr "正在升級系統……"
++
++#: themes/spinner/spinner.plymouth.desktop:3
++msgid "Spinner"
++msgstr ""
+-- 
+2.29.2
+
