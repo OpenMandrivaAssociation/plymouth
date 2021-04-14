@@ -1,7 +1,7 @@
-diff -Naur plymouth-0.9.4-20200326/configure.ac plymouth-0.9.4-20200326.tpg/configure.ac
---- plymouth-0.9.4-20200326/configure.ac	2020-03-25 19:27:11.000000000 +0000
-+++ plymouth-0.9.4-20200326.tpg/configure.ac	2020-03-26 10:33:53.482010298 +0000
-@@ -336,6 +336,7 @@
+diff -Naur a/configure.ac b/configure.ac
+--- a/configure.ac	2021-04-06 11:53:40.000000000 +0000
++++ b/configure.ac	2021-04-14 10:05:09.765211341 +0000
+@@ -333,6 +333,7 @@
  	   scripts/plymouth-populate-initrd
  	   scripts/plymouth-set-default-theme
             scripts/Makefile
@@ -9,18 +9,18 @@ diff -Naur plymouth-0.9.4-20200326/configure.ac plymouth-0.9.4-20200326.tpg/conf
             systemd-units/plymouth-halt.service
             systemd-units/plymouth-kexec.service
             systemd-units/plymouth-poweroff.service
-diff -Naur plymouth-0.9.4-20200326/systemd-units/Makefile.am plymouth-0.9.4-20200326.tpg/systemd-units/Makefile.am
---- plymouth-0.9.4-20200326/systemd-units/Makefile.am	2020-03-25 19:27:11.000000000 +0000
-+++ plymouth-0.9.4-20200326.tpg/systemd-units/Makefile.am	2020-03-26 10:44:59.284014137 +0000
+diff -Naur a/systemd-units/Makefile.am b/systemd-units/Makefile.am
+--- a/systemd-units/Makefile.am	2021-04-06 11:53:40.000000000 +0000
++++ b/systemd-units/Makefile.am	2021-04-14 10:05:38.513226371 +0000
 @@ -1,4 +1,5 @@
  systemd_unit_templates =                                                     \
 +        plymouth-deactivate.service.in                                       \
          plymouth-switch-root.service.in                                      \
+         plymouth-switch-root-initramfs.service.in                            \
          plymouth-start.service.in                                            \
-         plymouth-read-write.service.in                                       \
-diff -Naur plymouth-0.9.4-20200326/systemd-units/plymouth-deactivate.service.in plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-deactivate.service.in
---- plymouth-0.9.4-20200326/systemd-units/plymouth-deactivate.service.in	1970-01-01 00:00:00.000000000 +0000
-+++ plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-deactivate.service.in	2020-03-26 10:31:03.117009315 +0000
+diff -Naur a/systemd-units/plymouth-deactivate.service.in b/systemd-units/plymouth-deactivate.service.in
+--- a/systemd-units/plymouth-deactivate.service.in	1970-01-01 00:00:00.000000000 +0000
++++ b/systemd-units/plymouth-deactivate.service.in	2021-04-14 10:06:08.494255512 +0000
 @@ -0,0 +1,10 @@
 +[Unit]
 +Description=Deactivate Plymouth Boot Screen
@@ -32,9 +32,9 @@ diff -Naur plymouth-0.9.4-20200326/systemd-units/plymouth-deactivate.service.in 
 +Type=oneshot
 +RemainAfterExit=yes
 +TimeoutSec=20
-diff -Naur plymouth-0.9.4-20200326/systemd-units/plymouth-quit.service.in plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-quit.service.in
---- plymouth-0.9.4-20200326/systemd-units/plymouth-quit.service.in	2020-03-25 19:27:11.000000000 +0000
-+++ plymouth-0.9.4-20200326.tpg/systemd-units/plymouth-quit.service.in	2020-03-26 10:31:50.946009591 +0000
+diff -Naur a/systemd-units/plymouth-quit.service.in b/systemd-units/plymouth-quit.service.in
+--- a/systemd-units/plymouth-quit.service.in	2021-04-06 11:53:40.000000000 +0000
++++ b/systemd-units/plymouth-quit.service.in	2021-04-14 10:11:26.025103567 +0000
 @@ -1,9 +1,10 @@
  [Unit]
  Description=Terminate Plymouth Boot Screen

@@ -6,20 +6,20 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 0
+%define snapshot 20210414
 
 %bcond_with x11_renderer
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.5
+Version:	0.9.6
 %if %snapshot
-Release:	6.%snapshot.6
+Release:	1.%snapshot.1
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
-# git archive --format=tar --prefix plymouth-0.9.4-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.4-$(date +%Y%m%d).tar.xz
+# git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	5
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -33,28 +33,8 @@ Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
 Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
+
 # UPSTREAM GIT PATCHES
-
-Patch100:	0000-systemd-switch-to-KillMode-mixed.patch
-Patch101:	0001-autogoo-use-proc-self-fd-0-instead-of-dev-stdin.patch
-Patch102:	0002-Use-the-correct-key-name-for-title-and-subtitle.patch
-Patch103:	0003-Initialize-the-translations-on-start-if-they-are-ava.patch
-Patch104:	0004-use-resolution-of-higher-res-monitor-for-window-size.patch
-Patch105:	0005-drm-Honor-modes-selected-by-the-user-through-video-k.patch
-Patch106:	0006-NL-translation-update.patch
-Patch107:	0007-Update-translations-from-Zanata.patch
-Patch108:	0008-boot-server-Ref-count-the-connections.patch
-Patch109:	0009-boot-server-Handle-client-disconnecting-while-trigge.patch
-Patch110:	0010-Update-translation-files.patch
-Patch111:	0011-Translated-using-Weblate-Turkish.patch
-Patch112:	0012-Translated-using-Weblate-Polish.patch
-Patch113:	0013-Translated-using-Weblate-Ukrainian.patch
-Patch114:	0014-Translated-using-Weblate-Chinese-Simplified.patch
-Patch115:	0015-Translated-using-Weblate-Portuguese-Brazil.patch
-Patch116:	0016-Don-t-wait-forever-for-a-ping-reply.patch
-Patch117:	0017-Revert-Don-t-wait-forever-for-a-ping-reply.patch
-Patch118:	0018-client-Don-t-wait-forever-for-a-ping-reply.patch
-
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	pkgconfig(libdrm)
@@ -66,6 +46,8 @@ BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
 # (tpg) needed for udevadm and systemd-tty-ask-password-agent
 BuildRequires:	systemd
+# (tpg) needed for watermark.png and bgrt-fallback.png
+BuildRequires:	distro-release-theme
 %if %{snapshot}
 BuildRequires:	intltool
 %endif
@@ -221,9 +203,11 @@ Summary:	Plymouth "Spinner" theme
 Requires:	%{name}-plugin-two-step = %{EVRD}
 Requires:	abattis-cantarell-fonts
 Requires(post):	plymouth-scripts = %{EVRD}
+# no need to provide a separate package for this, ass difference is on one file
+%rename %{name}-theme-bgrt
 
 %description theme-spinner
-This package contains the "Spinner" boot splash theme for
+This package contains the "Spinner" and "BGRT" boot splash theme for
 Plymouth.
 
 %package plugin-two-step
@@ -295,16 +279,6 @@ Requires:	plymouth-plugin-tribar = %{EVRD}
 %description theme-tribar
 This package contains the "Tribar" boot splash theme for Plymouth.
 
-%package theme-bgrt
-Group:		System/Kernel and hardware
-Summary:	Plymouth "BGRT" plugin
-Requires(post):	plymouth-scripts  = %{EVRD}
-Requires:	%{name}-plugin-two-step = %{EVRD}
-Requires:	%{name}-theme-spinner = %{EVRD}
-
-%description theme-bgrt
-This package contains the "bgrt" boot splash theme for Plymouth.
-
 %prep
 %if %{snapshot}
 %setup -q -n %{name}-%{version}-%{snapshot}
@@ -362,7 +336,12 @@ find %{buildroot} -name \*.a -delete -o -name \*.la -delete
 
 # (tpg) add watermark to all the themes that relies on two-step plugin
 for i in bgrt charge glow spinfinity spinner; do
-    ln -s /usr/share/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/watermark.png
+    cp %{_datadir}/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/watermark.png
+done
+
+# (tpg) display something if BGRT image is empty
+for i in bgrt spinner; do
+    cp %{_datadir}/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/bgrt-fallback.png
 done
 
 %find_lang %{name}
@@ -473,6 +452,7 @@ fi \
 
 %files theme-spinner
 %{_datadir}/plymouth/themes/spinner
+%{_datadir}/plymouth/themes/bgrt
 
 %files plugin-space-flares
 %{_libdir}/plymouth/space-flares.so
@@ -494,8 +474,5 @@ fi \
 
 %files theme-glow
 %{_datadir}/plymouth/themes/glow
-
-%files theme-bgrt
-%{_datadir}/plymouth/themes/bgrt
 
 %files system-theme
