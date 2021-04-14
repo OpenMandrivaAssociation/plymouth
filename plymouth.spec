@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.1
+Release:	1.%snapshot.2
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -26,10 +26,11 @@ License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
-# OpenMandriva theme
+# use kernel-install is systemd-boot is used
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
 # this patch is important as it implements smooth transistion between plymouth and display managers
 Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
+# OpenMandriva default theme
 Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
@@ -54,6 +55,7 @@ BuildRequires:	intltool
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
+Requires:	%{name}-scripts
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -65,7 +67,7 @@ after boot.
 Group:		System/Kernel and hardware
 Summary:	Plymouth default theme
 Requires:	plymouth(system-theme)
-Requires:	plymouth = %{EVRD}
+Requires:	%{name} = %{EVRD}
 
 %description system-theme
 This metapackage tracks the current distribution default theme.
@@ -75,10 +77,7 @@ Summary:	Plymouth libraries
 Group:		System/Libraries
 Obsoletes:	%{_lib}ply2 < 0.9.0-11
 Provides:	%{_lib}ply2 = 0.9.0-11
-Requires:	%{libply_boot_client}
 Requires:	%{libply_boot_client} = %{EVRD}
-Requires:	%{libply_splash_graphics} = %{EVRD}
-Requires:	%{libply_splash_core} = %{EVRD}
 
 %description -n %{libply}
 This package contains the libply library used by Plymouth.
@@ -86,7 +85,6 @@ This package contains the libply library used by Plymouth.
 %package -n %{libply_boot_client}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-boot-client2 < 0.9.0-11
 Provides:	%{_lib}ply-boot-client2 = 0.9.0-11
 
@@ -96,7 +94,6 @@ This package contains the libply-boot-client library used by Plymouth.
 %package -n %{libply_splash_graphics}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-splash-graphics2 < 0.9.0-11
 Provides:	%{_lib}ply-splash-graphics2 = 0.9.0-11
 
@@ -106,7 +103,6 @@ This package contains the libply-splash-graphic library used by Plymouth.
 %package -n %{libply_splash_core}
 Summary:	Plymouth libraries
 Group:		System/Libraries
-Requires:	%{libply} = %{EVRD}
 Obsoletes:	%{_lib}ply-splash-core2 < 0.9.0-11
 Provides:	%{_lib}ply-splash-core2 = 0.9.0-11
 
@@ -129,8 +125,13 @@ and headers needed to develop 3rd party splash plugins for Plymouth.
 %package scripts
 Group:		System/Kernel and hardware
 Summary:	Plymouth related scripts
-Conflicts:	mkinitrd < 6.0.92-6mdv
-Requires(pre):	%{name} = %{EVRD}
+BuildArch:	noarch
+Requires:	findutils
+Requires:	coreutils
+Requires:	gzip
+Requires:	cpio
+Requires:	dracut
+Requires:	%{name} = %{EVRD}
 Provides:	bootsplash = 3.4.3
 Obsoletes:	bootsplash < 3.4.3
 Conflicts:	bootsplash < 3.4.3
@@ -142,6 +143,8 @@ the system.
 %package plugin-label
 Group:		System/Kernel and hardware
 Summary:	Plymouth label plugin
+Requires:	%{name}
+Requires:	%{libply_splash_graphics}
 
 %description plugin-label
 This package contains the label control plugin for
@@ -151,6 +154,9 @@ graphical boot splashes using pango and cairo.
 %package plugin-fade-throbber
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Fade-Throbber" plugin
+Requires:	%{name}
+Requires:	%{libply_splash_core}
+Requires:	%{libply_splash_graphics}
 
 %description plugin-fade-throbber
 This package contains the "Fade-In" boot splash plugin for
@@ -160,60 +166,17 @@ while other images pulsate around during system boot up.
 %package plugin-script
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Script" plugin
-Requires:	plymouth-plugin-label = %{EVRD}
+Requires:	%{libply_splash_core}
+Requires:	%{libply_splash_graphics}
 
 %description plugin-script
 This package contains the "Script" plugin for Plymouth. 
 
-%package theme-script
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Script" theme
-Requires:	%{name}-plugin-script = %{EVRD}
-Requires(post):	plymouth-scripts = %{EVRD}
-
-%description theme-script
-This package contains the "Script" boot splash theme for
-Plymouth.
-
-%package theme-fade-in
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Fade-In" theme
-Requires:	%{name}-plugin-fade-throbber = %{EVRD}
-Requires(post):	plymouth-scripts = %{EVRD}
-
-%description theme-fade-in
-This package contains the "Fade-In" boot splash theme for
-Plymouth. It features a centered logo that fades in and out
-while stars twinkle around the logo during system boot up.
-
-%package theme-spinfinity
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Spinfinity" theme
-Requires:	%{name}-plugin-two-step = %{EVRD}
-Requires(post):	plymouth-scripts = %{EVRD}
-
-%description theme-spinfinity
-This package contains the "Spinfinity" boot splash theme for
-Plymouth. It features a centered logo and animated spinner that
-spins in the shape of an infinity sign.
-
-%package theme-spinner
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Spinner" theme
-Requires:	%{name}-plugin-two-step = %{EVRD}
-Requires:	abattis-cantarell-fonts
-Requires(post):	plymouth-scripts = %{EVRD}
-# no need to provide a separate package for this, ass difference is on one file
-%rename %{name}-theme-bgrt
-
-%description theme-spinner
-This package contains the "Spinner" and "BGRT" boot splash theme for
-Plymouth.
-
 %package plugin-two-step
 Group:		System/Kernel and hardware
 Summary:	Plymouth "two-step" plugin
-Requires:	plymouth-plugin-label = %{EVRD}
+Requires:	%{libply_splash_core}
+Requires:	%{name}-plugin-label = %{version}
 %rename %{name}-plugin-throbgress
 
 %description plugin-two-step
@@ -225,17 +188,79 @@ short, fast one-shot animation.
 %package plugin-space-flares
 Group:		System/Kernel and hardware
 Summary:	Plymouth "space-flares" plugin
-Requires:	plymouth-plugin-label = %{EVRD}
+Requires:	%{libply_splash_core}
+Requires:	%{name}-plugin-label = %{version}
 
 %description plugin-space-flares
 This package contains the "space-flares" boot splash plugin for
 Plymouth. It features a corner image with animated flares.
 
+%package plugin-tribar
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Tribar" plugin
+Requires:	%{libply_splash_core}
+Requires:	%{libply_splash_graphics}
+
+%description plugin-tribar
+This package contains the "tribar" boot splash plugin for
+Plymouth.
+
+%package theme-script
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Script" theme
+BuildArch:	noarch
+Requires:	%{name}-plugin-script = %{version}
+Requires(post):	%{name}-scripts
+
+%description theme-script
+This package contains the "Script" boot splash theme for
+Plymouth.
+
+%package theme-fade-in
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Fade-In" theme
+BuildArch:	noarch
+Requires:	%{name}-plugin-fade-throbber = %{version}
+Requires:	%{name}-plugin-label = %{version}
+Requires(post):	%{name}-scripts
+
+%description theme-fade-in
+This package contains the "Fade-In" boot splash theme for
+Plymouth. It features a centered logo that fades in and out
+while stars twinkle around the logo during system boot up.
+
+%package theme-spinfinity
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Spinfinity" theme
+BuildArch:	noarch
+Requires:	%{name}-plugin-two-step = %{version}
+Requires(post):	%{name}-scripts
+
+%description theme-spinfinity
+This package contains the "Spinfinity" boot splash theme for
+Plymouth. It features a centered logo and animated spinner that
+spins in the shape of an infinity sign.
+
+%package theme-spinner
+Group:		System/Kernel and hardware
+Summary:	Plymouth "Spinner" theme
+BuildArch:	noarch
+Requires:	abattis-cantarell-fonts
+Requires:	%{name}-plugin-two-step = %{version}
+Requires(post):	%{name}-scripts
+# no need to provide a separate package for this, ass difference is on one file
+%rename %{name}-theme-bgrt
+
+%description theme-spinner
+This package contains the "Spinner" and "BGRT" boot splash theme for
+Plymouth.
+
 %package theme-solar
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Solar" theme
-Requires:	%{name}-plugin-space-flares = %{EVRD}
-Requires(post):	plymouth-scripts = %{EVRD}
+BuildArch:	noarch
+Requires:	%{name}-plugin-space-flares = %{version}
+Requires(post):	%{name}-scripts
 
 %description theme-solar
 This package contains the "Solar" boot splash theme for
@@ -244,8 +269,9 @@ Plymouth. It features a blue flamed sun with animated solar flares.
 %package theme-charge
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Charge" plugin
-Requires:	%{name}-plugin-two-step = %{EVRD}
-Requires(post):	plymouth-scripts = %{EVRD}
+BuildArch:	noarch
+Requires:	%{name}-plugin-two-step = %{version}
+Requires(post):	%{name}-scripts
 
 %description theme-charge
 This package contains the "charge" boot splash theme for
@@ -255,26 +281,19 @@ and finally burst into full form.
 %package theme-glow
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Glow" plugin
-Requires(post):	plymouth-scripts  = %{EVRD}
-Requires:	plymouth-plugin-two-step = %{EVRD}
+BuildArch:	noarch
+Requires:	%{name}-plugin-two-step = %{version}
+Requires(post):	%{name}-scripts
 
 %description theme-glow
 This package contains the "Glow" boot splash theme for Plymouth.
 
-%package plugin-tribar
-Group:		System/Kernel and hardware
-Summary:	Plymouth "Tribar" plugin
-Requires:	plymouth-plugin-label = %{EVRD}
-
-%description plugin-tribar
-This package contains the "tribar" boot splash plugin for
-Plymouth.
-
 %package theme-tribar
 Group:		System/Kernel and hardware
 Summary:	Plymouth "Tribar" plugin
-Requires(post):	plymouth-scripts  = %{EVRD}
-Requires:	plymouth-plugin-tribar = %{EVRD}
+BuildArch:	noarch
+Requires:	%{name}-plugin-tribar = %{version}
+Requires(post):	%{name}-scripts
 
 %description theme-tribar
 This package contains the "Tribar" boot splash theme for Plymouth.
@@ -346,11 +365,6 @@ done
 
 %find_lang %{name}
 
-%postun
-if [ $1 -eq 0 ]; then
-    rm -f %{_libdir}/plymouth/default.so ||:
-fi
-
 %define theme_scripts() \
 %post -n %{name}-theme-%{1} \
 if [ -x %{_sbindir}/plymouth-set-default-theme ]; then \
@@ -359,7 +373,7 @@ if [ -x %{_sbindir}/plymouth-set-default-theme ]; then \
       %{_sbindir}/plymouth-set-default-theme --rebuild-initrd %{1} \
   else \
       THEME=$(%{_sbindir}/plymouth-set-default-theme) \
-      if [ "$THEME" == "text" -o "$THEME" == "%{1}" ]; then \
+      if [ "$THEME" = "text" ] || [ "$THEME" = "%{1}" ]; then \
           %{_sbindir}/plymouth-set-default-theme --rebuild-initrd %{1} \
       fi \
   fi \
@@ -367,8 +381,8 @@ fi \
 \
 %postun -n %{name}-theme-%{1} \
 export LIB=%{_lib} \
-if [ $1 -eq 0 -a -x %{_sbindir}/plymouth-set-default-theme ]; then \
-    if [ "$(%{_sbindir}/plymouth-set-default-theme)" == "%{1}" ]; then \
+if [ $1 -eq 0 ] && [ -x %{_sbindir}/plymouth-set-default-theme ]; then \
+    if [ "$(%{_sbindir}/plymouth-set-default-theme)" = "%{1}" ]; then \
         %{_sbindir}/plymouth-set-default-theme --reset --rebuild-initrd \
     fi \
 fi \
@@ -385,26 +399,25 @@ fi \
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
+%dir %{_datadir}/plymouth/themes/details
+%dir %{_datadir}/plymouth/themes/text
 %dir %{_libdir}/plymouth
+%dir %{_libdir}/plymouth/renderers
+%dir %{_libexecdir}/plymouth
 %dir %{_localstatedir}/lib/plymouth
 %{_sbindir}/plymouthd
 /bin/plymouth
 %{_bindir}/plymouth
+%{_libexecdir}/plymouth/plymouthd-fd-escrow
 %{_sysconfdir}/logrotate.d/bootlog
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_unitdir}/*plymouth*.service
 %{_unitdir}/systemd-*.path
 %{_unitdir}/*.wants/plymouth-*.service
-%dir %{_libdir}/plymouth/renderers
-%{_libdir}/plymouth/renderers/drm*
-%{_libdir}/plymouth/renderers/frame-buffer*
-%if %{with x11_renderer}
-%{_libdir}/plymouth/renderers/x11*
-%endif
 %{_datadir}/plymouth/plymouthd.defaults
-%{_datadir}/plymouth/themes/details
-%{_datadir}/plymouth/themes/text
+%{_datadir}/plymouth/themes/details/details.plymouth
+%{_datadir}/plymouth/themes/text/text.plymouth
 %{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
 
@@ -416,6 +429,11 @@ fi \
 
 %files -n %{libply_splash_graphics}
 %{_libdir}/libply-splash-graphics.so.%{major}*
+%{_libdir}/plymouth/renderers/drm*
+%{_libdir}/plymouth/renderers/frame-buffer*
+%if %{with x11_renderer}
+%{_libdir}/plymouth/renderers/x11*
+%endif
 
 %files -n %{libply_splash_core}
 %{_libdir}/libply-splash-core.so.%{major}*
@@ -430,7 +448,9 @@ fi \
 
 %files scripts
 %{_sbindir}/plymouth-set-default-theme
-%{_libexecdir}/plymouth
+%{_libexecdir}/plymouth/plymouth-update-initrd
+%{_libexecdir}/plymouth/plymouth-generate-initrd
+%{_libexecdir}/plymouth/plymouth-populate-initrd
 
 %files plugin-label
 %{_libdir}/plymouth/label.so

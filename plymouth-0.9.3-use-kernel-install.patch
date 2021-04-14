@@ -1,14 +1,13 @@
-diff -Naur plymouth-0.9.3-20160608/scripts/plymouth-update-initrd plymouth-0.9.3-20160608.tpg/scripts/plymouth-update-initrd
---- plymouth-0.9.3-20160608/scripts/plymouth-update-initrd	2016-06-07 12:28:03.000000000 +0000
-+++ plymouth-0.9.3-20160608.tpg/scripts/plymouth-update-initrd	2016-06-08 18:30:35.295574949 +0000
-@@ -1,2 +1,9 @@
+diff -Naur a/scripts/plymouth-update-initrd b/scripts/plymouth-update-initrd
+--- a/scripts/plymouth-update-initrd	2021-04-06 11:53:40.000000000 +0000
++++ b/scripts/plymouth-update-initrd	2021-04-14 20:45:32.600009773 +0000
+@@ -1,2 +1,8 @@
  #!/bin/bash
 -dracut -f
-+kver=$(uname -r)
 +
-+if [ -d /lib/modules/${kver} ] && [ -x /usr/bin/kernel-install ]; then
-+    /usr/bin/kernel-install remove ${kver} ||:
-+    /usr/bin/kernel-install add ${kver} /boot/vmlinuz-${kver} ||:
++if [ -x $(command -v kernel-install) ] && [ -d /lib/modules/$(uname -r) ] && [ $(bootctl is-installed) = 'yes' ]; then
++    kernel-install remove $(uname -r) ||:
++    kernel-install add $(uname -r) /boot/vmlinuz-$(uname -r) ||:
 +else
 +    dracut -f
 +fi
