@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.4
+Release:	1.%snapshot.5
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
