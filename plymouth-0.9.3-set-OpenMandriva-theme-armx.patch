@@ -1,0 +1,11 @@
+diff -Naur plymouth-0.9.4-20191015/src/plymouthd.defaults plymouth-0.9.4-20191015.tpg/src/plymouthd.defaults
+--- plymouth-0.9.4-20191015/src/plymouthd.defaults	2019-10-15 07:07:39.000000000 +0000
++++ plymouth-0.9.4-20191015.tpg/src/plymouthd.defaults	2019-10-15 20:26:54.561729554 +0000
+@@ -1,6 +1,6 @@
+ # Distribution defaults. Changes to this file will get overwritten during
+ # upgrades.
+ [Daemon]
+-Theme=spinner
++Theme=bgrt
+ ShowDelay=0
+ DeviceTimeout=8

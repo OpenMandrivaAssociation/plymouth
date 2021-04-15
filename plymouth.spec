@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.3
+Release:	1.%snapshot.4
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -31,7 +31,11 @@ Patch0:		plymouth-0.9.3-use-kernel-install.patch
 # this patch is important as it implements smooth transistion between plymouth and display managers
 Patch1:		plymouth-0.9.4-smooth-transistion-support.patch
 # OpenMandriva default theme
+%ifnarch %{armx} %{riscv}
 Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
+%else
+Patch2:		%{name}-0.9.3-set-OpenMandriva-theme-armx.patch
+%endif
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
 
@@ -248,6 +252,9 @@ BuildArch:	noarch
 Requires:	abattis-cantarell-fonts
 Requires:	%{name}-plugin-two-step = %{version}
 Requires(post):	%{name}-scripts
+%ifarch %{armx} %{riscv}
+Provides:	plymouth(system-theme) = %{EVRD}
+%endif
 # no need to provide a separate package for this, ass difference is on one file
 %rename %{name}-theme-spinner
 
