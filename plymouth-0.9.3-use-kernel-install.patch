@@ -5,7 +5,7 @@ diff -Naur a/scripts/plymouth-update-initrd b/scripts/plymouth-update-initrd
  #!/bin/bash
 -dracut -f
 +
-+if [ -x $(command -v kernel-install) ] && [ -d /lib/modules/$(uname -r) ] && [ $(bootctl is-installed) = 'yes' ]; then
++if [ -x $(command -v kernel-install) ] && [ -d "/lib/modules/$(uname -r)" ] && [ -x $(command -v bootctl) ] && [ "$(bootctl is-installed)" = 'yes' ]; then
 +    kernel-install remove $(uname -r) ||:
 +    kernel-install add $(uname -r) /boot/vmlinuz-$(uname -r) ||:
 +else

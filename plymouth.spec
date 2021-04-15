@@ -14,7 +14,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.2
+Release:	1.%snapshot.3
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -241,18 +241,18 @@ This package contains the "Spinfinity" boot splash theme for
 Plymouth. It features a centered logo and animated spinner that
 spins in the shape of an infinity sign.
 
-%package theme-spinner
+%package theme-bgrt
 Group:		System/Kernel and hardware
-Summary:	Plymouth "Spinner" theme
+Summary:	Plymouth "BGRT" and "Spinner" theme
 BuildArch:	noarch
 Requires:	abattis-cantarell-fonts
 Requires:	%{name}-plugin-two-step = %{version}
 Requires(post):	%{name}-scripts
 # no need to provide a separate package for this, ass difference is on one file
-%rename %{name}-theme-bgrt
+%rename %{name}-theme-spinner
 
-%description theme-spinner
-This package contains the "Spinner" and "BGRT" boot splash theme for
+%description theme-bgrt
+This package contains the "BGRT" and "Spinner" boot splash theme for
 Plymouth.
 
 %package theme-solar
@@ -470,9 +470,9 @@ fi \
 %files theme-spinfinity
 %{_datadir}/plymouth/themes/spinfinity
 
-%files theme-spinner
-%{_datadir}/plymouth/themes/spinner
+%files theme-bgrt
 %{_datadir}/plymouth/themes/bgrt
+%{_datadir}/plymouth/themes/spinner
 
 %files plugin-space-flares
 %{_libdir}/plymouth/space-flares.so
