@@ -1,3 +1,5 @@
+%global optflags %{optflags} -Oz
+
 %define major 5
 %define libname %mklibname %{name} %{major}
 %define libply %mklibname ply %{major}
