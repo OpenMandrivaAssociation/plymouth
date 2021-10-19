@@ -1,4 +1,4 @@
-%global optflags %{optflags} -Oz
+%global optflags %{optflags} -O2
 
 %define major 5
 %define libname %mklibname %{name} %{major}
