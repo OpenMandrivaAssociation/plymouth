@@ -8,7 +8,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20211010
+%define snapshot 20211021
 
 %bcond_with x11_renderer
 
@@ -16,7 +16,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.6
+Release:	1.%snapshot.7
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -49,7 +49,7 @@ BuildRequires:	pkgconfig(libudev)
 BuildRequires:	pkgconfig(gtk+-3.0)
 %endif
 BuildRequires:	pkgconfig(libsystemd)
-BuildRequires:	systemd-macros
+BuildRequires:	systemd-rpm-macros
 # (tpg) needed for udevadm and systemd-tty-ask-password-agent
 BuildRequires:	systemd
 # (tpg) needed for watermark.png and bgrt-fallback.png
@@ -308,11 +308,10 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 
 %prep
 %if %{snapshot}
-%setup -q -n %{name}-%{version}-%{snapshot}
+%autosetup -n %{name}-%{version}-%{snapshot} -p1
 %else
-%setup -q
+%autosetup -p1
 %endif
-%autopatch -p1
 
 %if %{snapshot}
 export NOCONFIGURE=1
