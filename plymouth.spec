@@ -8,7 +8,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20211021
+%define snapshot 20211105
 
 %bcond_with x11_renderer
 
@@ -16,7 +16,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	0.9.6
 %if %snapshot
-Release:	1.%snapshot.7
+Release:	1.%snapshot.8
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -28,7 +28,7 @@ License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
-# use kernel-install is systemd-boot is used
+# use kernel-install if systemd-boot is used
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
 # OpenMandriva default theme
 %ifnarch %{armx} %{riscv}
