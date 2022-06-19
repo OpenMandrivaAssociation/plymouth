@@ -349,10 +349,6 @@ autoreconf -fi
 %install
 %make_install
 
-# (tpg) add symlink for systemd
-mkdir -p %{buildroot}/bin
-ln -sf %{_bindir}/plymouth %{buildroot}/bin/plymouth
-
 # Add charge
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} %{buildroot}%{_datadir}/plymouth/themes/charge
@@ -413,7 +409,6 @@ fi \
 %dir %{_libexecdir}/plymouth
 %dir %{_localstatedir}/lib/plymouth
 %{_sbindir}/plymouthd
-/bin/plymouth
 %{_bindir}/plymouth
 %{_libexecdir}/plymouth/plymouthd-fd-escrow
 %{_sysconfdir}/logrotate.d/bootlog
