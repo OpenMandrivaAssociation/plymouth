@@ -133,7 +133,7 @@ Summary:	Plymouth related scripts
 BuildArch:	noarch
 Requires:	findutils
 Requires:	coreutils
-Requires:	gzip
+Requires:	pigz
 Requires:	cpio
 Requires:	dracut
 Requires:	%{name} = %{EVRD}
