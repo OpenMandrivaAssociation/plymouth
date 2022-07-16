@@ -8,20 +8,20 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20220526
+%define snapshot 20220716
 
 %bcond_with x11_renderer
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
-Version:	0.9.6
+Version:	22.02.122
 %if %snapshot
-Release:	1.%snapshot.10
+Release:	0.%snapshot.1
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
-# git archive --format=tar --prefix plymouth-0.9.6-$(date +%Y%m%d)/ HEAD | xz -vf -T0 > plymouth-0.9.6-$(date +%Y%m%d).tar.xz
+# git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	2
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
@@ -136,6 +136,7 @@ Requires:	coreutils
 Requires:	pigz
 Requires:	cpio
 Requires:	dracut
+Requires:	awk
 Requires:	%{name} = %{EVRD}
 Provides:	bootsplash = 3.4.3
 Obsoletes:	bootsplash < 3.4.3
