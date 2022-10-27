@@ -8,7 +8,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20220716
+%define snapshot 20221027
 
 %bcond_with x11_renderer
 
@@ -16,7 +16,7 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	22.02.122
 %if %snapshot
-Release:	0.%snapshot.2
+Release:	0.%snapshot.3
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
@@ -42,7 +42,7 @@ Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
 # UPSTREAM GIT PATCHES
 
 BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(pangocairo)
+BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(libudev)
 %if %{with x11_renderer}
@@ -56,6 +56,7 @@ BuildRequires:	systemd
 BuildRequires:	distro-release-theme
 %if %{snapshot}
 BuildRequires:	intltool
+BuildRequires:	xsltproc
 %endif
 %rename		splashy
 Conflicts:	systemd-units < 186
@@ -155,7 +156,7 @@ Requires:	%{libply_splash_graphics}
 %description plugin-label
 This package contains the label control plugin for
 Plymouth. It provides the ability to render text on
-graphical boot splashes using pango and cairo.
+graphical boot splashes using freetype.
 
 %package plugin-fade-throbber
 Group:		System/Kernel and hardware
@@ -333,7 +334,7 @@ autoreconf -fi
 	--without-system-root-install \
 	--enable-systemd-integration \
 	--with-systemdunitdir="%{_unitdir}" \
-	--with-runtimedir="%{_rundir}" \
+	--runstatedir="%{_rundir}" \
 	--with-release-file=/etc/os-release \
 	--with-udev \
 	--enable-drm \
@@ -341,7 +342,8 @@ autoreconf -fi
 	--disable-gtk \
 	--enable-gtk=no \
 %endif
-	--enable-pango \
+	--disable-pango \
+	--enable-freetype \
 	--disable-documentation \
 	--disable-upstart-monitoring
 
@@ -399,7 +401,7 @@ fi \
 %theme_scripts script
 
 %files -f %{name}.lang
-%doc AUTHORS NEWS README
+%doc AUTHORS NEWS README.md
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
@@ -421,7 +423,6 @@ fi \
 %{_datadir}/plymouth/plymouthd.defaults
 %{_datadir}/plymouth/themes/details/details.plymouth
 %{_datadir}/plymouth/themes/text/text.plymouth
-%{_localstatedir}/run/plymouth
 %{_localstatedir}/spool/plymouth
 
 %files -n %{libply}
@@ -456,7 +457,7 @@ fi \
 %{_libexecdir}/plymouth/plymouth-populate-initrd
 
 %files plugin-label
-%{_libdir}/plymouth/label.so
+%{_libdir}/plymouth/label-freetype.so
 
 %files plugin-fade-throbber
 %{_libdir}/plymouth/fade-throbber.so
