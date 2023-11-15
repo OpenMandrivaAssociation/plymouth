@@ -38,13 +38,18 @@ Patch2:		%{name}-0.9.3-set-OpenMandriva-theme-armx.patch
 %endif
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
+Patch4:		plymouth-fix-generate-version-script.patch
 
 # UPSTREAM GIT PATCHES
 
+BuildRequires:	meson
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(libdrm)
 BuildRequires:	pkgconfig(libudev)
+BuildRequires:	pkgconfig(libevdev)
+BuildRequires:	pkgconfig(xkbcommon)
+BuildRequires:	pkgconfig(xkeyboard-config)
 %if %{with x11_renderer}
 BuildRequires:	pkgconfig(gtk+-3.0)
 %endif
@@ -57,6 +62,7 @@ BuildRequires:	distro-release-theme
 %if %{snapshot}
 BuildRequires:	intltool
 BuildRequires:	xsltproc
+BuildRequires:	git
 %endif
 %rename		splashy
 Conflicts:	systemd-units < 186
@@ -315,42 +321,20 @@ This package contains the "Tribar" boot splash theme for Plymouth.
 %autosetup -p1
 %endif
 
-%if %{snapshot}
-export NOCONFIGURE=1
-sh ./autogen.sh
-libtoolize --copy --force
-autoreconf -fi
-%endif
-
 %build
-%configure \
-	--disable-static \
-	--disable-tracing \
-	--with-logo="%{_datadir}/pixmaps/system-logo-white.png" \
-	--with-background-start-color-stop=0x0073B3 \
-	--with-background-end-color-stop=0x00457E \
-	--with-background-color=0x3391cd \
-	--without-rhgb-compat-link \
-	--without-system-root-install \
-	--enable-systemd-integration \
-	--with-systemdunitdir="%{_unitdir}" \
-	--runstatedir="%{_rundir}" \
-	--with-release-file=/etc/os-release \
-	--with-udev \
-	--enable-drm \
+%meson \
+    -Dlogo="%{_datadir}/pixmaps/system-logo-white.png" \
+    -Dtracing=false \
+    -Dpango=disabled \
 %if %{without x11_renderer}
-	--disable-gtk \
-	--enable-gtk=no \
+    -Dgtk=disabled \
 %endif
-	--disable-pango \
-	--enable-freetype \
-	--disable-documentation \
-	--disable-upstart-monitoring
+    -Ddocs=false
 
-%make_build
+%meson_build -C build
 
 %install
-%make_install
+%meson_install -C build
 
 # Add charge
 mkdir -p %{buildroot}%{_datadir}/plymouth/themes/charge
@@ -401,7 +385,7 @@ fi \
 %theme_scripts script
 
 %files -f %{name}.lang
-%doc AUTHORS NEWS README.md
+%doc AUTHORS README.md
 %config(noreplace) %{_sysconfdir}/plymouth
 %dir %{_datadir}/plymouth
 %dir %{_datadir}/plymouth/themes
