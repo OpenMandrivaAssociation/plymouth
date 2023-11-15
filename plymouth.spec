@@ -8,7 +8,7 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot 20221027
+%define snapshot 20231115
 
 %bcond_with x11_renderer
 
@@ -16,12 +16,12 @@ Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	22.02.122
 %if %snapshot
-Release:	0.%snapshot.3
+Release:	0.%{snapshot}.4
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 %else
-Release:	2
+Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 %endif
 License:	GPLv2+
