@@ -1,18 +1,16 @@
-diff -Naur plymouth-22.02.122-20231115/scripts/generate-version.sh plymouth-22.02.122-20231115.tpg/scripts/generate-version.sh
---- plymouth-22.02.122-20231115/scripts/generate-version.sh	2023-08-31 10:14:36.000000000 +0000
-+++ plymouth-22.02.122-20231115.tpg/scripts/generate-version.sh	2023-11-29 14:00:36.510563404 +0000
-@@ -1,7 +1,6 @@
+diff -uraN plymouth-24.004.60/scripts/generate-version.sh omv-plymouth-24.004.60/scripts/generate-version.sh
+--- plymouth-24.004.60/scripts/generate-version.sh	2024-01-04 22:08:14.000000000 +0100
++++ omv-plymouth-24.004.60/scripts/generate-version.sh	2024-01-07 20:25:30.612143475 +0100
+@@ -1,13 +1,12 @@
  #!/bin/sh
  exec 3>&2 2> /dev/null
- SRCDIR=$(dirname "$0")
+ SRCDIR=$(dirname "$0")/..
 -cd "$SRCDIR"
  CWD=$(realpath "$PWD")
- TOPLEVEL_WORKING_DIR=$(realpath "$(git rev-parse --show-toplevel)")
- SCRIPTDIR=${SRCDIR#"${TOPLEVEL_WORKING_DIR}/"}
-@@ -9,7 +8,7 @@
+ exec 2>&3
  
  # If it's not from a git checkout, assume it's from a tarball
- if [ "${TOPLEVEL_WORKING_DIR}/${SCRIPTDIR}" != "$CWD" ]; then
+ if ! git rev-parse --is-inside-git-dir > /dev/null 2>&1; then
 -    VERSION_FROM_DIR_NAME=$(basename "$CWD" | sed -n 's/^plymouth-\([^-]*\)$/\1/p')
 +    VERSION_FROM_DIR_NAME=$(basename "$CWD" | sed -n 's/^plymouth-\([^-].*\)$/\1/p')
  
