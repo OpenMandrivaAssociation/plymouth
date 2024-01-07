@@ -63,7 +63,7 @@ BuildRequires:	distro-release-theme
 #BuildRequires:	intltool
 #BuildRequires:	xsltproc
 #BuildRequires:	git
-%endif
+#endif
 %rename		splashy
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
