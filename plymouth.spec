@@ -42,6 +42,7 @@ Patch4:		plymouth-fix-generate-version-script.patch
 
 # UPSTREAM GIT PATCHES
 
+BuildRequires:  gettext
 BuildRequires:	meson
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(freetype2)
