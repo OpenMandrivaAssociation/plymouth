@@ -8,22 +8,22 @@
 %define libply_splash_core %mklibname ply-splash-core %{major}
 %define devname %mklibname %{name} -d
 
-%define snapshot %{nil}
+#define snapshot %{nil}
 
 %bcond_with x11_renderer
 
 Summary:	Graphical Boot Animation and Logger
 Name:		plymouth
 Version:	24.004.60
-%if %snapshot
-Release:	0.%{snapshot}.4
+#if %snapshot
+#Release:	0.%{snapshot}.4
 # git clone https://gitlab.freedesktop.org/plymouth/plymouth.git
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
-Source0:	%{name}-%{version}-%{snapshot}.tar.xz
-%else
+#Source0:	%{name}-%{version}-%{snapshot}.tar.xz
+#else
 Release:	1
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
-%endif
+#endif
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		http://www.freedesktop.org/wiki/Software/Plymouth
@@ -59,10 +59,10 @@ BuildRequires:	systemd-rpm-macros
 BuildRequires:	systemd
 # (tpg) needed for watermark.png and bgrt-fallback.png
 BuildRequires:	distro-release-theme
-%if %{snapshot}
-BuildRequires:	intltool
-BuildRequires:	xsltproc
-BuildRequires:	git
+#if %{snapshot}
+#BuildRequires:	intltool
+#BuildRequires:	xsltproc
+#BuildRequires:	git
 %endif
 %rename		splashy
 Conflicts:	systemd-units < 186
@@ -315,11 +315,11 @@ Requires(post):	%{name}-scripts
 This package contains the "Tribar" boot splash theme for Plymouth.
 
 %prep
-%if %{snapshot}
-%autosetup -n %{name}-%{version}-%{snapshot} -p1
-%else
+#if %{snapshot}
+#autosetup -n %{name}-%{version}-%{snapshot} -p1
+#else
 %autosetup -p1
-%endif
+#endif
 
 %build
 %meson \
