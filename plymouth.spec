@@ -354,6 +354,12 @@ for i in bgrt spinner; do
     cp %{_datadir}/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/bgrt-fallback.png
 done
 
+%if %{cross_compiling}
+# The meson script gets the systemd unit location wrong when crosscompiling
+# FIXME this should be fixed properly instead of curing the symptom
+mv %{buildroot}%{_prefix}/%{_target_platform}%{_prefix}/* %{buildroot}%{_prefix}/
+%endif
+
 %find_lang %{name}
 
 %define theme_scripts() \
