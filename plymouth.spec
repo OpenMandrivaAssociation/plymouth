@@ -26,7 +26,7 @@ Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version
 #endif
 License:	GPLv2+
 Group:		System/Kernel and hardware
-Url:		http://www.freedesktop.org/wiki/Software/Plymouth
+Url:		https://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
 # use kernel-install if systemd-boot is used
 Patch0:		plymouth-0.9.3-use-kernel-install.patch
