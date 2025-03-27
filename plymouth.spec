@@ -21,26 +21,13 @@ Version:	24.004.60
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 #Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 #else
-Release:	1
+Release:	2
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 #endif
 License:	GPLv2+
 Group:		System/Kernel and hardware
 Url:		https://www.freedesktop.org/wiki/Software/Plymouth
 Source2:	charge.plymouth
-# use kernel-install if systemd-boot is used
-Patch0:		plymouth-0.9.3-use-kernel-install.patch
-# OpenMandriva default theme
-%ifnarch %{armx} %{riscv}
-Patch2:		%{name}-0.9.3-set-OpenMandriva-theme.patch
-%else
-Patch2:		%{name}-0.9.3-set-OpenMandriva-theme-armx.patch
-%endif
-#(tpg) these days nobody even does not know what is /var/log/boot.log
-Patch3:		plymouth-0.9.4-by-default-disable-boot-log.patch
-Patch4:		plymouth-fix-generate-version-script.patch
-
-# UPSTREAM GIT PATCHES
 
 BuildRequires:  gettext
 BuildRequires:	meson
@@ -69,6 +56,31 @@ BuildRequires:	distro-release-theme
 Conflicts:	systemd-units < 186
 %rename	plymouth-utils
 Requires:	%{name}-scripts
+
+%patchlist
+# use kernel-install if systemd-boot is used
+plymouth-0.9.3-use-kernel-install.patch
+# OpenMandriva default theme
+%ifnarch %{armx} %{riscv}
+%{name}-0.9.3-set-OpenMandriva-theme.patch
+%else
+%{name}-0.9.3-set-OpenMandriva-theme-armx.patch
+%endif
+#(tpg) these days nobody even does not know what is /var/log/boot.log
+plymouth-0.9.4-by-default-disable-boot-log.patch
+plymouth-fix-generate-version-script.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-Revert-src-Hide-console-text-when-splash-is-requeste.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-ply-boot-splash-Set-unbuffered-input-when-creating-a.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-ply-device-manager-Revert-Fall-back-to-text-plugin-i.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/plymouth-24.004.60-immediately-probe-simpledrm.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-renderers-Do-not-assume-all-keyboards-have-LEDs.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-ply-keymap-icon-Make-Dvorak-check-case-insensitive.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/0001-label-freetype-fix-fallback-not-working-when-fc-matc.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/plymouth-24.004.60-device-scale-fixes.patch
+https://src.fedoraproject.org/rpms/plymouth/raw/rawhide/f/plymouth-24.004.60-use_simpledrm-config.patch
+https://sources.debian.org/data/main/p/plymouth/24.004.60-2/debian/patches/0005-cmdline.patch
+
+# UPSTREAM GIT PATCHES
 
 %description
 Plymouth provides an attractive graphical boot animation in
