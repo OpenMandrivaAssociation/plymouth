@@ -1,6 +1,7 @@
-diff -Naur a/scripts/plymouth-update-initrd b/scripts/plymouth-update-initrd
---- a/scripts/plymouth-update-initrd	2021-04-06 11:53:40.000000000 +0000
-+++ b/scripts/plymouth-update-initrd	2021-04-14 20:45:32.600009773 +0000
+diff --git a/scripts/plymouth-update-initrd b/scripts/plymouth-update-initrd
+index 4ed5709..8ef6bc4 100755
+--- a/scripts/plymouth-update-initrd
++++ b/scripts/plymouth-update-initrd
 @@ -1,2 +1,8 @@
  #!/bin/bash
 -dracut -f
