@@ -21,7 +21,7 @@ Version:	26.134.222
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 #Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 #else
-Release:	1
+Release:	2
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 #endif
 License:	GPLv2+
@@ -365,12 +365,6 @@ done
 for i in bgrt spinner; do
     cp %{_datadir}/pixmaps/system-logo-white.png %{buildroot}%{_datadir}/plymouth/themes/$i/bgrt-fallback.png
 done
-
-%if %{cross_compiling}
-# The meson script gets the systemd unit location wrong when crosscompiling
-# FIXME this should be fixed properly instead of curing the symptom
-mv %{buildroot}%{_prefix}/%{_target_platform}%{_prefix}/* %{buildroot}%{_prefix}/
-%endif
 
 %find_lang %{name}
 
