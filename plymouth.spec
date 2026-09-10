@@ -21,7 +21,7 @@ Version:	26.134.222
 # git archive --format=tar --prefix plymouth-22.02.122-$(date +%Y%m%d)/ HEAD | xz -vf -T0 -9e > plymouth-22.02.122-$(date +%Y%m%d).tar.xz
 #Source0:	%{name}-%{version}-%{snapshot}.tar.xz
 #else
-Release:	2
+Release:	3
 Source0:	http://www.freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.xz
 #endif
 License:	GPLv2+
@@ -61,11 +61,7 @@ Requires:	%{name}-scripts
 # use kernel-install if systemd-boot is used
 plymouth-0.9.3-use-kernel-install.patch
 # OpenMandriva default theme
-%ifnarch %{armx} %{riscv}
 %{name}-0.9.3-set-OpenMandriva-theme.patch
-%else
-%{name}-0.9.3-set-OpenMandriva-theme-armx.patch
-%endif
 #(tpg) these days nobody even does not know what is /var/log/boot.log
 plymouth-0.9.4-by-default-disable-boot-log.patch
 plymouth-fix-generate-version-script.patch
@@ -194,6 +190,7 @@ Group:		System/Kernel and hardware
 Summary:	Plymouth "Script" plugin
 Requires:	%{libply_splash_core}
 Requires:	%{libply_splash_graphics}
+Requires:	%{name}-plugin-label = %{EVRD}
 
 %description plugin-script
 This package contains the "Script" plugin for Plymouth. 
@@ -274,9 +271,6 @@ BuildArch:	noarch
 Requires:	abattis-cantarell-fonts
 Requires:	%{name}-plugin-two-step = %{version}
 Requires(post):	%{name}-scripts
-%ifarch %{armx} %{riscv}
-Provides:	plymouth(system-theme) = %{EVRD}
-%endif
 # no need to provide a separate package for this, ass difference is on one file
 %rename %{name}-theme-spinner
 
